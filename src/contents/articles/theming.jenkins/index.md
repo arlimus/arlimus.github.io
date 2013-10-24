@@ -13,7 +13,19 @@ Jenkins has a nice theming plugin available. To use it you need to set up a styl
 
 The themes are found on github and hosted via github pages. They can easily be used in jenkins by copying the css of the theme you like into the configuration of the Simple Theme Plugin for Jenkins.
 
-I have create a theme for my company's Jenkins:
+My orange moon theme for Jenkins:
+
+<img src="orange.moon.jenkins.png" style="max-width: 201px; margin-left: auto; margin-right: auto;" />
+
+Link to the css:
+
+```
+http://arlimus.github.io/jenkins-style/orange.moon.css
+```
+
+The source is written in SASS and can be found [here](https://github.com/arlimus/jenkins-style/blob/master/css/orange.moon.scss).
+
+I have also create a theme for my company's Jenkins:
 
 <img src="magenta.jenkins.png" style="max-width: 174px; margin-left: auto; margin-right: auto;" />
 

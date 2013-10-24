@@ -21,14 +21,20 @@
     <div id="content">
       <div class="content-wrap">
         <article class="article">
-          <section class="content"><p>Jenkins comes with a nice theming plugin. To use it you need to set up a stylesheet that is accessible to everyone who uses&nbsp;jenkins.</p>
+          <section class="content"><p><a href="https://github.com/arlimus/jenkins-style"><img id="fork-me-ribbon" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a></p>
+<p>Jenkins has a nice theming plugin available. To use it you need to set up a stylesheet that is accessible to everyone user. I created a few themes found <a href="https://github.com/arlimus/jenkins-style">here</a>.</p>
 <p><span class="more"></span></p>
-<p>The plugin will only&nbsp;insert</p>
-<pre><code class="lang-html">&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;...&quot; /&gt;</code></pre>
-<p>into the page the client&nbsp;receives. </p>
-<p>Like many others I decided to use github to serve a <span class="caps">CSS</span> file. Unfortunately you can&#39;t just use gists or raw blobs to serve your css, since the mime-time will be <code>text/plain</code> instead of <code>text/css</code>. Your browser will ignore it. The solution is to set up a <a href="http://pages.github.com/">github page</a> to serve your&nbsp;css.</p>
-<p>I have create a theme for my company&#39;s&nbsp;Jenkins:</p>
+<p>The themes are found on github and hosted via github pages. They can easily be used in jenkins by copying the css of the theme you like into the configuration of the Simple Theme Plugin for&nbsp;Jenkins.</p>
+<p>My orange moon theme for&nbsp;Jenkins:</p>
+<p><img src="orange.moon.jenkins.png" style="max-width: 201px; margin-left: auto; margin-right: auto;" /></p>
+<p>Link to the&nbsp;css:</p>
+<pre><code>http://arlimus.github.io/jenkins-style/orange.moon.css</code></pre>
+<p>The source is written in <span class="caps">SASS</span> and can be found <a href="https://github.com/arlimus/jenkins-style/blob/master/css/orange.moon.scss">here</a>.</p>
+<p>I have also create a theme for my company&#39;s&nbsp;Jenkins:</p>
 <p><img src="magenta.jenkins.png" style="max-width: 174px; margin-left: auto; margin-right: auto;" /></p>
+<p>Link to the&nbsp;css:</p>
+<pre><code>http://arlimus.github.io/jenkins-style/telekom.css</code></pre>
+<p>The source is written in <span class="caps">SASS</span> and can be found <a href="https://github.com/arlimus/jenkins-style/blob/master/css/telekom.scss">here</a>.</p>
 </section>
         </article>
       </div>

@@ -14,14 +14,20 @@
       <pubDate>Thu, 24 Oct 2013 02:00:00 +0200</pubDate>
       <guid isPermaLink="true">http://arlimus.github.io/articles/theming.jenkins/</guid>
       <author></author>
-      <description>&lt;p&gt;Jenkins comes with a nice theming plugin. To use it you need to set up a stylesheet that is accessible to everyone who uses jenkins.&lt;/p&gt;
+      <description>&lt;p&gt;&lt;a href=&quot;https://github.com/arlimus/jenkins-style&quot;&gt;&lt;img id=&quot;fork-me-ribbon&quot; src=&quot;https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png&quot; alt=&quot;Fork me on GitHub&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Jenkins has a nice theming plugin available. To use it you need to set up a stylesheet that is accessible to everyone user. I created a few themes found &lt;a href=&quot;https://github.com/arlimus/jenkins-style&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;The plugin will only insert&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;lang-html&quot;&gt;&amp;lt;link rel=&amp;quot;stylesheet&amp;quot; type=&amp;quot;text/css&amp;quot; href=&amp;quot;...&amp;quot; /&amp;gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;into the page the client receives. &lt;/p&gt;
-&lt;p&gt;Like many others I decided to use github to serve a CSS file. Unfortunately you can&amp;#39;t just use gists or raw blobs to serve your css, since the mime-time will be &lt;code&gt;text/plain&lt;/code&gt; instead of &lt;code&gt;text/css&lt;/code&gt;. Your browser will ignore it. The solution is to set up a &lt;a href=&quot;http://pages.github.com/&quot;&gt;github page&lt;/a&gt; to serve your css.&lt;/p&gt;
-&lt;p&gt;I have create a theme for my company&amp;#39;s Jenkins:&lt;/p&gt;
+&lt;p&gt;The themes are found on github and hosted via github pages. They can easily be used in jenkins by copying the css of the theme you like into the configuration of the Simple Theme Plugin for Jenkins.&lt;/p&gt;
+&lt;p&gt;My orange moon theme for Jenkins:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;orange.moon.jenkins.png&quot; style=&quot;max-width: 201px; margin-left: auto; margin-right: auto;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;Link to the css:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;http://arlimus.github.io/jenkins-style/orange.moon.css&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The source is written in SASS and can be found &lt;a href=&quot;https://github.com/arlimus/jenkins-style/blob/master/css/orange.moon.scss&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I have also create a theme for my company&amp;#39;s Jenkins:&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;magenta.jenkins.png&quot; style=&quot;max-width: 174px; margin-left: auto; margin-right: auto;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;Link to the css:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;http://arlimus.github.io/jenkins-style/telekom.css&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The source is written in SASS and can be found &lt;a href=&quot;https://github.com/arlimus/jenkins-style/blob/master/css/telekom.scss&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
   </channel>

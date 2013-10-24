@@ -432,3 +432,13 @@ code.lang-markdown .bullet {
   }
 }
 
+#fork-me-ribbon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: 0;
+  width: 149px;
+  width: 9.3125rem;
+  height: 149px;
+  height: 9.3125rem;
+}
