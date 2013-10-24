@@ -1,9 +1,13 @@
 {
+  "output": "./../",
   "locals": {
-    "url": "http://localhost:8080",
+    "url": "http://arlimus.github.io",
     "name": "Silversmith",
     "owner": "Dominik Richter",
-    "description": ""
+    "description": "",
+    "keywords": [
+      "chef", "puppet", "html5", "security"
+    ]
   },
   "plugins": [
     "./plugins/paginator.coffee"
