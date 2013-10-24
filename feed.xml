@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Silversmith</title>
+    <atom:link href="http://arlimus.github.io/feed.xml" rel="self" type="application/rss+xml"></atom:link>
+    <link>http://arlimus.github.io</link>
+    <description></description>
+    <pubDate>Thu, 24 Oct 2013 02:00:00 +0200</pubDate>
+    <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
+    <language>en</language>
+    <item>
+      <title>Styling Jenkins</title>
+      <link>http://arlimus.github.io/articles/theming.jenkins/</link>
+      <pubDate>Thu, 24 Oct 2013 02:00:00 +0200</pubDate>
+      <guid isPermaLink="true">http://arlimus.github.io/articles/theming.jenkins/</guid>
+      <author></author>
+      <description>&lt;p&gt;Jenkins comes with a nice theming plugin. To use it you need to set up a stylesheet that is accessible to everyone who uses jenkins.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The plugin will only insert&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-html&quot;&gt;&amp;lt;link rel=&amp;quot;stylesheet&amp;quot; type=&amp;quot;text/css&amp;quot; href=&amp;quot;...&amp;quot; /&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;into the page the client receives. &lt;/p&gt;
+&lt;p&gt;Like many others I decided to use github to serve a CSS file. Unfortunately you can&amp;#39;t just use gists or raw blobs to serve your css, since the mime-time will be &lt;code&gt;text/plain&lt;/code&gt; instead of &lt;code&gt;text/css&lt;/code&gt;. Your browser will ignore it. The solution is to set up a &lt;a href=&quot;http://pages.github.com/&quot;&gt;github page&lt;/a&gt; to serve your css.&lt;/p&gt;
+&lt;p&gt;I have create a theme for my company&amp;#39;s Jenkins:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;magenta.jenkins.png&quot; style=&quot;max-width: 174px; margin-left: auto; margin-right: auto;&quot; /&gt;&lt;/p&gt;
+</description>
+    </item>
+  </channel>
+</rss>

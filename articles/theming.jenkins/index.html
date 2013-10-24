@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Styling Jenkins - Silversmith
+    </title>
+    <link rel="alternate" href="http://arlimus.github.io/feed.xml" type="application/rss+xml" title="">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Styling Jenkins</h1>
+        <p class="author">Written by <span class="author"><a href="mailto:dominik.richter@gmail.com">Dominik Richter</a></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>Jenkins comes with a nice theming plugin. To use it you need to set up a stylesheet that is accessible to everyone who uses&nbsp;jenkins.</p>
+<p><span class="more"></span></p>
+<p>The plugin will only&nbsp;insert</p>
+<pre><code class="lang-html">&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;...&quot; /&gt;</code></pre>
+<p>into the page the client&nbsp;receives. </p>
+<p>Like many others I decided to use github to serve a <span class="caps">CSS</span> file. Unfortunately you can&#39;t just use gists or raw blobs to serve your css, since the mime-time will be <code>text/plain</code> instead of <code>text/css</code>. Your browser will ignore it. The solution is to set up a <a href="http://pages.github.com/">github page</a> to serve your&nbsp;css.</p>
+<p>I have create a theme for my company&#39;s&nbsp;Jenkins:</p>
+<p><img src="magenta.jenkins.png" style="max-width: 174px; margin-left: auto; margin-right: auto;" /></p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about">
+        </section>
+        <section class="copy">
+          <p>&copy; 2013 Dominik Richter &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>
