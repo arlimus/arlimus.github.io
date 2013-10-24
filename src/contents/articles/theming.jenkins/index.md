@@ -5,21 +5,21 @@ date: 2013-10-24
 template: article.jade
 ---
 
-Jenkins comes with a nice theming plugin. To use it you need to set up a stylesheet that is accessible to everyone who uses jenkins.
+
+Jenkins has a nice theming plugin available. To use it you need to set up a stylesheet that is accessible to everyone user. I created a few themes found [here](https://github.com/arlimus/jenkins-style).
 
 <span class="more"></span>
 
-The plugin will only insert
-
-```html
-<link rel="stylesheet" type="text/css" href="..." />
-```
-
-into the page the client receives. 
-
-
-Like many others I decided to use github to serve a CSS file. Unfortunately you can't just use gists or raw blobs to serve your css, since the mime-time will be `text/plain` instead of `text/css`. Your browser will ignore it. The solution is to set up a [github page](http://pages.github.com/) to serve your css.
+The themes are found on github and hosted via github pages. They can easily be used in jenkins by copying the css of the theme you like into the configuration of the Simple Theme Plugin for Jenkins.
 
 I have create a theme for my company's Jenkins:
 
 <img src="magenta.jenkins.png" style="max-width: 174px; margin-left: auto; margin-right: auto;" />
+
+Link to the css:
+
+```
+http://arlimus.github.io/jenkins-style/telekom.css
+```
+
+The source is written in SASS and can be found [here](https://github.com/arlimus/jenkins-style/blob/master/css/telekom.scss).
