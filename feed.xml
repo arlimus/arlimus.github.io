@@ -14,8 +14,7 @@
       <pubDate>Sat, 26 Oct 2013 02:00:00 +0200</pubDate>
       <guid isPermaLink="true">http://arlimus.github.io/articles/kitchen-server/</guid>
       <author></author>
-      <description>&lt;p&gt;&lt;a href=&quot;https://github.com/arlimus/kitchen-server&quot;&gt;&lt;img id=&quot;fork-me-ribbon&quot; src=&quot;https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png&quot; alt=&quot;Fork me on GitHub&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;I have a few bare servers lying around, pre-installed with Ubuntu, not integrated in any chef/puppte/saltstack workflow, with a lot of power ready to go. They are a perfect place for some labour-intensive vagrant boxes, which have recently been eating up my SSD. Due to the lack of bootstrap, I have found myself installing and configuring the same components one too many times.&lt;/p&gt;
+      <description>&lt;p&gt;I have a few bare servers lying around, pre-installed with Ubuntu, not integrated in any chef/puppte/saltstack workflow, with a lot of power ready to go. They are a perfect place for some labour-intensive vagrant boxes, which have recently been eating up my SSD. Due to the lack of bootstrap, I have found myself installing and configuring the same components one too many times.&lt;/p&gt;
 &lt;p&gt;At this point I decided to revisit &lt;a href=&quot;https://github.com/matschaffer/knife-solo&quot;&gt;knife solo&lt;/a&gt; and take it out for a spin.&lt;span class=&quot;more&quot;&gt;&lt;/span&gt; The result is &lt;a href=&quot;https://github.com/arlimus/kitchen-server&quot;&gt;kitchen-server&lt;/a&gt;, an easy way to configure a server and make it your second home away from home.&lt;/p&gt;
 &lt;p&gt;The only requirement to get started is &lt;a href=&quot;https://github.com/matschaffer/knife-solo&quot;&gt;knife-solo&lt;/a&gt;.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&quot;lang-bash&quot;&gt;gem install knife-solo&lt;/code&gt;&lt;/pre&gt;
@@ -31,6 +30,7 @@ ssh knife@192.168.200.204&lt;/code&gt;&lt;/pre&gt;
 
 ssh katana@192.168.200.204&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The kitchen itself is simply a configuration stack on top of many great cookbooks out there. The default configuration will get you started with vagrant quickly and easily. Feel free to fork and edit it as you like.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/arlimus/kitchen-server&quot;&gt;&lt;img id=&quot;fork-me-ribbon&quot; src=&quot;https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png&quot; alt=&quot;Fork me on GitHub&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     <item>
@@ -39,8 +39,7 @@ ssh katana@192.168.200.204&lt;/code&gt;&lt;/pre&gt;
       <pubDate>Thu, 24 Oct 2013 02:00:00 +0200</pubDate>
       <guid isPermaLink="true">http://arlimus.github.io/articles/theming.jenkins/</guid>
       <author></author>
-      <description>&lt;p&gt;&lt;a href=&quot;https://github.com/arlimus/jenkins-style&quot;&gt;&lt;img id=&quot;fork-me-ribbon&quot; src=&quot;https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png&quot; alt=&quot;Fork me on GitHub&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Jenkins has a nice theming plugin available. To use it you need to set up a stylesheet that is accessible to everyone user. I created a few themes found &lt;a href=&quot;https://github.com/arlimus/jenkins-style&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+      <description>&lt;p&gt;Jenkins has a nice theming plugin available. To use it you need to set up a stylesheet that is accessible to everyone user. I created a few themes found &lt;a href=&quot;https://github.com/arlimus/jenkins-style&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;The themes are found on github and hosted via github pages. They can easily be used in jenkins by copying the css of the theme you like into the configuration of the Simple Theme Plugin for Jenkins.&lt;/p&gt;
 &lt;p&gt;My orange moon theme for Jenkins:&lt;/p&gt;
@@ -53,6 +52,7 @@ ssh katana@192.168.200.204&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Link to the css:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;http://arlimus.github.io/jenkins-style/telekom.css&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The source is written in SASS and can be found &lt;a href=&quot;https://github.com/arlimus/jenkins-style/blob/master/css/telekom.scss&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/arlimus/jenkins-style&quot;&gt;&lt;img id=&quot;fork-me-ribbon&quot; src=&quot;https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png&quot; alt=&quot;Fork me on GitHub&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
   </channel>
