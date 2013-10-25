@@ -5,9 +5,34 @@
     <atom:link href="http://arlimus.github.io/feed.xml" rel="self" type="application/rss+xml"></atom:link>
     <link>http://arlimus.github.io</link>
     <description></description>
-    <pubDate>Thu, 24 Oct 2013 02:00:00 +0200</pubDate>
+    <pubDate>Sat, 26 Oct 2013 02:00:00 +0200</pubDate>
     <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
     <language>en</language>
+    <item>
+      <title>A kitchen for your server</title>
+      <link>http://arlimus.github.io/articles/kitchen-server/</link>
+      <pubDate>Sat, 26 Oct 2013 02:00:00 +0200</pubDate>
+      <guid isPermaLink="true">http://arlimus.github.io/articles/kitchen-server/</guid>
+      <author></author>
+      <description>&lt;p&gt;&lt;a href=&quot;https://github.com/arlimus/kitchen-server&quot;&gt;&lt;img id=&quot;fork-me-ribbon&quot; src=&quot;https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png&quot; alt=&quot;Fork me on GitHub&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;I have a few bare servers lying around, pre-installed with Ubuntu, not integrated in any chef/puppte/saltstack workflow, with a lot of power ready to go. They are a perfect place for some labour-intensive vagrant boxes, which have recently been eating up my SSD. Due to the lack of bootstrap, I have found myself installing and configuring the same components one too many times.&lt;/p&gt;
+&lt;p&gt;At this point I decided to revisit &lt;a href=&quot;https://github.com/matschaffer/knife-solo&quot;&gt;knife solo&lt;/a&gt; and take it out for a spin.&lt;span class=&quot;more&quot;&gt;&lt;/span&gt; The result is &lt;a href=&quot;https://github.com/arlimus/kitchen-server&quot;&gt;kitchen-server&lt;/a&gt;, an easy way to configure a server and make it your second home away from home.&lt;/p&gt;
+&lt;p&gt;The only requirement to get started is &lt;a href=&quot;https://github.com/matschaffer/knife-solo&quot;&gt;knife-solo&lt;/a&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-bash&quot;&gt;gem install knife-solo&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let&amp;#39;s say my server is running at &lt;code&gt;192.168.200.204&lt;/code&gt;. I have the user &lt;code&gt;ubuntu&lt;/code&gt; preconfigured and ready to go (with ssh key on server or. The basic setup is as easy as:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-bash&quot;&gt;git clone https://github.com/arlimus/kitchen-server
+cd kitchen-server
+
+./setup.sh ubuntu@192.168.200.204
+
+ssh knife@192.168.200.204&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I tend to use the extended version, to have zsh and git configured:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-bash&quot;&gt;./setup.sh ubuntu@192.168.200.204 ext
+
+ssh katana@192.168.200.204&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The kitchen itself is simply a configuration stack on top of many great cookbooks out there. The default configuration will get you started with vagrant quickly and easily. Feel free to fork and edit it as you like.&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>Styling Jenkins</title>
       <link>http://arlimus.github.io/articles/theming.jenkins/</link>
