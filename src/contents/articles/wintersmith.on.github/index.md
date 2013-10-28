@@ -27,16 +27,17 @@ There are some excellent tutorials for setting up Wintersmith out there. This is
 
         npm install wintersmith -g
 
-4. Create your blog in folder `src/`
-
-        wintersmith new src/
-
-5. Make sure GitHub doesn't treat is as a Jekyll project and ignore node modules:
+4. Make sure GitHub doesn't treat is as a Jekyll project and ignore node modules:
 
         touch .nojekyll
         echo "node_modules" > .gitignore
 
-6. Edit the start of `src/config.json`:
+5. Create your blog in folder `src/`
+
+        wintersmith new src/
+        cd src/
+
+6. In this folder you will find the source of your blog. Edit the start of `config.json`:
 
         {
           "output": "./../",
@@ -49,12 +50,10 @@ There are some excellent tutorials for setting up Wintersmith out there. This is
 
 7. Write articles, change templates, do whatever you like to it. To preview in [localhost:8080](http://localhost:8080):
 
-        cd src/
         wintersmith preview
 
 8. Once you are done, you can build it and push it online
 
-        cd src/
         wintersmith build
 
         git add ../.
@@ -62,5 +61,3 @@ There are some excellent tutorials for setting up Wintersmith out there. This is
         git push -u origin master
 
 It may take GitHub a bit to update your page, but once it's done you can visit it at <a href="http://{{username || 'username'}}.github.io"><code>http://{{username || 'username'}}.github.io</code></a>
-
-
