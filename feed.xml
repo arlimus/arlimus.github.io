@@ -5,9 +5,56 @@
     <atom:link href="http://arlimus.github.io/feed.xml" rel="self" type="application/rss+xml"></atom:link>
     <link>http://arlimus.github.io</link>
     <description></description>
-    <pubDate>Sat, 26 Oct 2013 02:00:00 +0200</pubDate>
+    <pubDate>Mon, 28 Oct 2013 01:00:00 +0100</pubDate>
     <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
     <language>en</language>
+    <item>
+      <title>Wintersmith setup</title>
+      <link>http://arlimus.github.io/articles/wintersmith.on.github/</link>
+      <pubDate>Mon, 28 Oct 2013 01:00:00 +0100</pubDate>
+      <guid isPermaLink="true">http://arlimus.github.io/articles/wintersmith.on.github/</guid>
+      <author></author>
+      <description>&lt;p&gt;There are some excellent tutorials for setting up Wintersmith out there. This is a summary for a quick and easy setup with Github Pages.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;div&gt;
+&lt;label&gt;Enter your GitHub username:&lt;/label&gt; &lt;input type=&quot;text&quot; ng-model=&quot;username&quot; placeholder=&quot;username&quot; /&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Steps&lt;/strong&gt;&lt;/p&gt;
+&lt;ol style=&quot;list-style-type: decimal&quot;&gt;
+&lt;li&gt;&lt;p&gt;Create a GitHub repo for your user. As the name, type in: &lt;code&gt;{{username || 'username'}}.github.io&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Clone this repo to your local folder&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clone git@github.com:{{username || 'username'}}/{{username || 'username'}}.github.io.git ~/blog
+cd ~/blog&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Install wintersmith&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;npm install wintersmith -g&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Create your blog in folder &lt;code&gt;src/&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;wintersmith new src/&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Make sure GitHub doesn’t treat is as a Jekyll project and ignore node modules:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;touch .nojekyll
+echo &amp;quot;node_modules&amp;quot; &amp;gt; .gitignore&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Edit the start of &lt;code&gt;src/config.json&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;output&amp;quot;: &amp;quot;./../&amp;quot;,
+  &amp;quot;locals&amp;quot;: {
+    &amp;quot;url&amp;quot;: &amp;quot;http://{{username || 'username'}}.github.io&amp;quot;,
+    &amp;quot;name&amp;quot;: &amp;quot;Wintersmith meets {{username || 'username'}}&amp;quot;
+    &amp;quot;owner&amp;quot;: &amp;quot;{{username || 'username'}}&amp;quot;
+    &amp;quot;description&amp;quot;: &amp;quot;This is the blog of {{username || 'username'}}&amp;quot;
+    //..&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Write articles, change templates, do whatever you like to it. To preview:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cd src/
+wintersmith preview&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Once you are done, you can build it and push it online&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cd src/
+wintersmith build
+
+git add ../.
+git commit -m &amp;quot;finished setup for first blog release&amp;quot;
+git push -u origin master&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;It may take GitHub a bit to update your page, but once it’s done you can visit it at &lt;a href=&quot;http://{{username || 'username'}}.github.io&quot;&gt;&lt;code&gt;http://{{username || 'username'}}.github.io&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>A kitchen for your server</title>
       <link>http://arlimus.github.io/articles/kitchen-server/</link>
@@ -17,18 +64,18 @@
       <description>&lt;p&gt;I have a few bare servers lying around, pre-installed with Ubuntu, not integrated in any chef/puppte/saltstack workflow, with a lot of power ready to go. They are a perfect place for some labour-intensive vagrant boxes, which have recently been eating up my SSD. Due to the lack of bootstrap, I have found myself installing and configuring the same components one too many times.&lt;/p&gt;
 &lt;p&gt;At this point I decided to revisit &lt;a href=&quot;https://github.com/matschaffer/knife-solo&quot;&gt;knife solo&lt;/a&gt; and take it out for a spin.&lt;span class=&quot;more&quot;&gt;&lt;/span&gt; The result is &lt;a href=&quot;https://github.com/arlimus/kitchen-server&quot;&gt;kitchen-server&lt;/a&gt;, an easy way to configure a server and make it your second home away from home.&lt;/p&gt;
 &lt;p&gt;The only requirement to get started is &lt;a href=&quot;https://github.com/matschaffer/knife-solo&quot;&gt;knife-solo&lt;/a&gt;.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;lang-bash&quot;&gt;gem install knife-solo&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Let&amp;#39;s say my server is running at &lt;code&gt;192.168.200.204&lt;/code&gt;. I have the user &lt;code&gt;ubuntu&lt;/code&gt; preconfigured and ready to go (with ssh key on server or. The basic setup is as easy as:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;lang-bash&quot;&gt;git clone https://github.com/arlimus/kitchen-server
-cd kitchen-server
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;gem&lt;/span&gt; install knife-solo&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let’s say my server is running at &lt;code&gt;192.168.200.204&lt;/code&gt;. I have the user &lt;code&gt;ubuntu&lt;/code&gt; preconfigured and ready to go (with ssh key on server or. The basic setup is as easy as:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; clone https://github.com/arlimus/kitchen-server
+&lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; kitchen-server
 
-./setup.sh ubuntu@192.168.200.204
+&lt;span class=&quot;kw&quot;&gt;./setup.sh&lt;/span&gt; ubuntu@192.168.200.204
 
-ssh knife@192.168.200.204&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;ssh&lt;/span&gt; knife@192.168.200.204&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;I tend to use the extended version, to have zsh and git configured:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;lang-bash&quot;&gt;./setup.sh ubuntu@192.168.200.204 ext
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;./setup.sh&lt;/span&gt; ubuntu@192.168.200.204 ext
 
-ssh katana@192.168.200.204&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;ssh&lt;/span&gt; katana@192.168.200.204&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The kitchen itself is simply a configuration stack on top of many great cookbooks out there. The default configuration will get you started with vagrant quickly and easily. Feel free to fork and edit it as you like.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/arlimus/kitchen-server&quot;&gt;&lt;img id=&quot;fork-me-ribbon&quot; src=&quot;https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png&quot; alt=&quot;Fork me on GitHub&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 </description>
@@ -43,12 +90,12 @@ ssh katana@192.168.200.204&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;The themes are found on github and hosted via github pages. They can easily be used in jenkins by copying the css of the theme you like into the configuration of the Simple Theme Plugin for Jenkins.&lt;/p&gt;
 &lt;p&gt;My orange moon theme for Jenkins:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;orange.moon.jenkins.png&quot; style=&quot;max-width: 201px; margin-left: auto; margin-right: auto;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://arlimus.github.io/articles/theming.jenkins/orange.moon.jenkins.png&quot; style=&quot;max-width: 201px; margin-left: auto; margin-right: auto;&quot; /&gt;&lt;/p&gt;
 &lt;p&gt;Link to the css:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;http://arlimus.github.io/jenkins-style/orange.moon.css&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The source is written in SASS and can be found &lt;a href=&quot;https://github.com/arlimus/jenkins-style/blob/master/css/orange.moon.scss&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;I have also create a theme for my company&amp;#39;s Jenkins:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;magenta.jenkins.png&quot; style=&quot;max-width: 174px; margin-left: auto; margin-right: auto;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;I have also create a theme for my company’s Jenkins:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://arlimus.github.io/articles/theming.jenkins/magenta.jenkins.png&quot; style=&quot;max-width: 174px; margin-left: auto; margin-right: auto;&quot; /&gt;&lt;/p&gt;
 &lt;p&gt;Link to the css:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;http://arlimus.github.io/jenkins-style/telekom.css&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The source is written in SASS and can be found &lt;a href=&quot;https://github.com/arlimus/jenkins-style/blob/master/css/telekom.scss&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;

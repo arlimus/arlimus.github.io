@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Wintersmith setup - Silversmith
+    </title>
+    <link rel="alternate" href="http://arlimus.github.io/feed.xml" type="application/rss+xml" title="">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Wintersmith setup</h1>
+        <p class="author">Written by <span class="author"><a href="mailto:dominik.richter@gmail.com">Dominik Richter</a></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>There are some excellent tutorials for setting up Wintersmith out there. This is a summary for a quick and easy setup with Github&nbsp;Pages.</p>
+<p><span class="more"></span></p>
+<div>
+<label>Enter your GitHub username:</label> <input type="text" ng-model="username" placeholder="username" />
+</div>
+<p><strong>Steps</strong></p>
+<ol style="list-style-type: decimal">
+<li><p>Create a GitHub repo for your user. As the name, type in: <code>{{username || 'username'}}.github.io</code>.</p></li>
+<li><p>Clone this repo to your local&nbsp;folder</p>
+<pre><code>git clone git@github.com:{{username || 'username'}}/{{username || 'username'}}.github.io.git ~/blog
+cd ~/blog</code></pre></li>
+<li><p>Install&nbsp;wintersmith</p>
+<pre><code>npm install wintersmith -g</code></pre></li>
+<li><p>Create your blog in folder <code>src/</code></p>
+<pre><code>wintersmith new src/</code></pre></li>
+<li><p>Make sure GitHub doesn’t treat is as a Jekyll project and ignore node&nbsp;modules:</p>
+<pre><code>touch .nojekyll
+echo &quot;node_modules&quot; &gt; .gitignore</code></pre></li>
+<li><p>Edit the start of <code>src/config.json</code>:</p>
+<pre><code>{
+  &quot;output&quot;: &quot;./../&quot;,
+  &quot;locals&quot;: {
+    &quot;url&quot;: &quot;http://{{username || 'username'}}.github.io&quot;,
+    &quot;name&quot;: &quot;Wintersmith meets {{username || 'username'}}&quot;
+    &quot;owner&quot;: &quot;{{username || 'username'}}&quot;
+    &quot;description&quot;: &quot;This is the blog of {{username || 'username'}}&quot;
+    //..</code></pre></li>
+<li><p>Write articles, change templates, do whatever you like to it. To&nbsp;preview:</p>
+<pre><code>cd src/
+wintersmith preview</code></pre></li>
+<li><p>Once you are done, you can build it and push it&nbsp;online</p>
+<pre><code>cd src/
+wintersmith build
+
+git add ../.
+git commit -m &quot;finished setup for first blog release&quot;
+git push -u origin master</code></pre></li>
+</ol>
+<p>It may take GitHub a bit to update your page, but once it’s done you can visit it at <a href="http://{{username || 'username'}}.github.io"><code>http://{{username || 'username'}}.github.io</code></a></p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about">
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2013 Dominik Richter &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>
