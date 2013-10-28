@@ -5,7 +5,7 @@ date: 2013-10-28
 template: article.jade
 ---
 
-There are some excellent tutorials for setting up Wintersmith out there. This is a summary for a quick and easy setup with Github Pages. 
+There are some excellent tutorials for setting up Wintersmith out there. This is a summary for a quick and easy setup with Github Pages.
 
 <span class="more"></span>
 
@@ -47,7 +47,7 @@ There are some excellent tutorials for setting up Wintersmith out there. This is
             "description": "This is the blog of {{username || 'username'}}"
             //..
 
-7. Write articles, change templates, do whatever you like to it. To preview:
+7. Write articles, change templates, do whatever you like to it. To preview in [localhost:8080](http://localhost:8080):
 
         cd src/
         wintersmith preview
