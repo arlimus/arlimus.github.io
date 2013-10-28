@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width">
+    <meta name="google-site-verification" content="gRPSZeaTzicrrtM-WwBOvqx_szx4Av0stLFxBjR3QWU">
     <title>Wintersmith setup - Silversmith
     </title>
     <link rel="alternate" href="http://arlimus.github.io/feed.xml" type="application/rss+xml" title="">
@@ -35,26 +36,25 @@
 cd ~/blog</code></pre></li>
 <li><p>Install&nbsp;wintersmith</p>
 <pre><code>npm install wintersmith -g</code></pre></li>
-<li><p>Create your blog in folder <code>src/</code></p>
-<pre><code>wintersmith new src/</code></pre></li>
 <li><p>Make sure GitHub doesn’t treat is as a Jekyll project and ignore node&nbsp;modules:</p>
 <pre><code>touch .nojekyll
 echo &quot;node_modules&quot; &gt; .gitignore</code></pre></li>
-<li><p>Edit the start of <code>src/config.json</code>:</p>
+<li><p>Create your blog in folder <code>src/</code></p>
+<pre><code>wintersmith new src/
+cd src/</code></pre></li>
+<li><p>In this folder you will find the source of your blog. Edit the start of <code>config.json</code>:</p>
 <pre><code>{
   &quot;output&quot;: &quot;./../&quot;,
   &quot;locals&quot;: {
     &quot;url&quot;: &quot;http://{{username || 'username'}}.github.io&quot;,
-    &quot;name&quot;: &quot;Wintersmith meets {{username || 'username'}}&quot;,
-    &quot;owner&quot;: &quot;{{username || 'username'}}&quot;,
+    &quot;name&quot;: &quot;Wintersmith meets {{username || 'username'}}&quot;
+    &quot;owner&quot;: &quot;{{username || 'username'}}&quot;
     &quot;description&quot;: &quot;This is the blog of {{username || 'username'}}&quot;
     //..</code></pre></li>
-<li><p>Write articles, change templates, do whatever you like to it. To&nbsp;preview:</p>
-<pre><code>cd src/
-wintersmith preview</code></pre></li>
+<li><p>Write articles, change templates, do whatever you like to it. To preview in <a href="http://localhost:8080">localhost:8080</a>:</p>
+<pre><code>wintersmith preview</code></pre></li>
 <li><p>Once you are done, you can build it and push it&nbsp;online</p>
-<pre><code>cd src/
-wintersmith build
+<pre><code>wintersmith build
 
 git add ../.
 git commit -m &quot;finished setup for first blog release&quot;

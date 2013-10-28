@@ -5,7 +5,7 @@ date: 2013-10-28
 template: article.jade
 ---
 
-There are some excellent tutorials for setting up Wintersmith out there. This is a summary for a quick and easy setup with Github Pages.
+There are some excellent tutorials for setting up Wintersmith out there. This is a summary for a quick and easy setup with Github Pages. 
 
 <span class="more"></span>
 

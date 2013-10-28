@@ -27,12 +27,13 @@
 cd ~/blog&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Install wintersmith&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;npm install wintersmith -g&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Create your blog in folder &lt;code&gt;src/&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;wintersmith new src/&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Make sure GitHub doesn’t treat is as a Jekyll project and ignore node modules:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;touch .nojekyll
 echo &amp;quot;node_modules&amp;quot; &amp;gt; .gitignore&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Edit the start of &lt;code&gt;src/config.json&lt;/code&gt;:&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;Create your blog in folder &lt;code&gt;src/&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;wintersmith new src/
+cd src/&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In this folder you will find the source of your blog. Edit the start of &lt;code&gt;config.json&lt;/code&gt;:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;{
   &amp;quot;output&amp;quot;: &amp;quot;./../&amp;quot;,
   &amp;quot;locals&amp;quot;: {
@@ -41,12 +42,10 @@ echo &amp;quot;node_modules&amp;quot; &amp;gt; .gitignore&lt;/code&gt;&lt;/pre&g
     &amp;quot;owner&amp;quot;: &amp;quot;{{username || 'username'}}&amp;quot;
     &amp;quot;description&amp;quot;: &amp;quot;This is the blog of {{username || 'username'}}&amp;quot;
     //..&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Write articles, change templates, do whatever you like to it. To preview:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;cd src/
-wintersmith preview&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Write articles, change templates, do whatever you like to it. To preview in &lt;a href=&quot;http://localhost:8080&quot;&gt;localhost:8080&lt;/a&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;wintersmith preview&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Once you are done, you can build it and push it online&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;cd src/
-wintersmith build
+&lt;pre&gt;&lt;code&gt;wintersmith build
 
 git add ../.
 git commit -m &amp;quot;finished setup for first blog release&amp;quot;
