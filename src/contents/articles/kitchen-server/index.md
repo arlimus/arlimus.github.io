@@ -15,7 +15,7 @@ The only requirement to get started is [knife-solo](https://github.com/matschaff
 gem install knife-solo
 ```
 
-Let's say my server is running at `192.168.200.204`. I have the user `ubuntu` preconfigured and ready to go (with ssh key on server or. The basic setup is as easy as:
+Let's say my server is running at `192.168.200.204`. I have the user `ubuntu` preconfigured and ready to go (with ssh key on server). The basic setup is as easy as:
 
 ```bash
 git clone https://github.com/arlimus/kitchen-server

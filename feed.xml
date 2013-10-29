@@ -64,7 +64,7 @@ git push -u origin master&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;p&gt;At this point I decided to revisit &lt;a href=&quot;https://github.com/matschaffer/knife-solo&quot;&gt;knife solo&lt;/a&gt; and take it out for a spin.&lt;span class=&quot;more&quot;&gt;&lt;/span&gt; The result is &lt;a href=&quot;https://github.com/arlimus/kitchen-server&quot;&gt;kitchen-server&lt;/a&gt;, an easy way to configure a server and make it your second home away from home.&lt;/p&gt;
 &lt;p&gt;The only requirement to get started is &lt;a href=&quot;https://github.com/matschaffer/knife-solo&quot;&gt;knife-solo&lt;/a&gt;.&lt;/p&gt;
 &lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;gem&lt;/span&gt; install knife-solo&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Let’s say my server is running at &lt;code&gt;192.168.200.204&lt;/code&gt;. I have the user &lt;code&gt;ubuntu&lt;/code&gt; preconfigured and ready to go (with ssh key on server or. The basic setup is as easy as:&lt;/p&gt;
+&lt;p&gt;Let’s say my server is running at &lt;code&gt;192.168.200.204&lt;/code&gt;. I have the user &lt;code&gt;ubuntu&lt;/code&gt; preconfigured and ready to go (with ssh key on server). The basic setup is as easy as:&lt;/p&gt;
 &lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; clone https://github.com/arlimus/kitchen-server
 &lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; kitchen-server
 
