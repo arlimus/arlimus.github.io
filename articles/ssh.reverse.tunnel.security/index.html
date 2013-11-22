@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <meta name="google-site-verification" content="gRPSZeaTzicrrtM-WwBOvqx_szx4Av0stLFxBjR3QWU">
+    <title>Securing reverse SSH tunnels - Silversmith
+    </title>
+    <link rel="alternate" href="http://arlimus.github.io/feed.xml" type="application/rss+xml" title="">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <script type="text/javascript">
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-45216258-1', 'arlimus.github.io');
+      ga('send', 'pageview');
+      
+    </script>
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Securing reverse SSH tunnels</h1>
+        <p class="author">Written by <span class="author"><a href="mailto:dominik.richter@gmail.com">Dominik Richter</a></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p><span class="caps">SSH</span> reverse tunnels are a quick way to expose client services on a server, if you want to control access to this service without additional firewall rules. In cloud scenarios it’s especially difficult to configure firewalls without reverting to DNS names, since IP addresses may change at any time. But there are some hidden traps when using reverse tunnels that you may not be aware&nbsp;of.</p>
+<p><span class="more"></span></p>
+<p>Let’s start with a simple usage example where one client wants to expose a local service to a&nbsp;server:</p>
+<pre><code>client1&gt; ssh -T -N -R 8001:localhost:80 server</code></pre>
+<p><img src="/articles/ssh.reverse.tunnel.security/1.jpeg" style="width: 100%; max-width: 1435px; margin-left: auto; margin-right: auto;" /></p>
+<p>As you can see, the server can now access the client’s service on port&nbsp;8001.</p>
+<p>We used this trick for clients that have simple service APIs that only few servers should be able to reach. While we could have gone the route of configuring static <span class="caps">IP</span> addresses or overarching DNS names for all of these clients and securing it with firewall rules, we instead went with reverse tunnels. Now every client can control the access to his service, by creating a secure (and verified) connection to the&nbsp;server.</p>
+<p>Let’s add another&nbsp;client:</p>
+<pre><code>client2&gt; ssh -T -N -R 8002:localhost:80 server</code></pre>
+<p><img src="/articles/ssh.reverse.tunnel.security/2.jpeg" style="width: 100%; max-width: 1435px; margin-left: auto; margin-right: auto;" /></p>
+<p>Now, let’s say that <code>client1</code> belongs to one customer and <code>client2</code> to another. What looks like directional pipes going from these clients to the central hub is by default actually a two-way road. That means, that without adjustments, you can potentially do&nbsp;this:</p>
+<pre><code>client2&gt; ssh -T -N -L 81:localhost:8001 server</code></pre>
+<p><img src="/articles/ssh.reverse.tunnel.security/3.jpeg" style="width: 100%; max-width: 1435px; margin-left: auto; margin-right: auto;" /></p>
+<p>This may not be something you want, especially with backend systems. Many of these APIs aren’t hardened and offer a nice way to jump from one tenant or client to another, once you get an entry point. In a cloud scenario this is a disaster waiting to&nbsp;happen.</p>
+<p>Alas, there are a few ways to get around this&nbsp;issue.</p>
+<p>First, if you have OpenSSH at version <a href="http://www.openssh.com/txt/release-6.2">6.2</a> or above you can add this configuration to your <code>sshd_config</code> on the&nbsp;server:</p>
+<pre><code>GatewayPorts no
+AllowTcpForwarding remote</code></pre>
+<p>This means that you can still create reverse tunnels to localhost, but forwarding tunnels can only be created to remote&nbsp;ports:</p>
+<p><img src="/articles/ssh.reverse.tunnel.security/4.jpeg" style="width: 100%; max-width: 1435px; margin-left: auto; margin-right: auto;" /></p>
+<p>If you want to play around with this configuration, have a look at this <a href="https://gist.github.com/arlimus/7592670">Vagrantfile</a>.</p>
+<p>Another option, which also works with older versions of OpenSSH, is to use whitelisting in the <code>.ssh/authorized_keys</code>:</p>
+<pre><code>permitopen=&quot;255.255.255.255:9&quot; ssh-rsa AAAAB3Nza.... user@client2</code></pre>
+<p>This will prevent clients from opening forwarding ports to any address except the one specified. For clarification: <code>255.255.255.255</code> is officially reserved for future use and <a href="http://en.wikipedia.org/wiki/Discard_Protocol">port 9</a> is a fancy way of saying <em>“discard my input”</em>. Kudos to Kurt Huwig for the whitelisting&nbsp;idea.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about">
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2013 Dominik Richter &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

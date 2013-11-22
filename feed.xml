@@ -5,9 +5,41 @@
     <atom:link href="http://arlimus.github.io/feed.xml" rel="self" type="application/rss+xml"></atom:link>
     <link>http://arlimus.github.io</link>
     <description></description>
-    <pubDate>Mon, 28 Oct 2013 01:00:00 +0100</pubDate>
+    <pubDate>Tue, 05 Nov 2013 01:00:00 +0100</pubDate>
     <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
     <language>en</language>
+    <item>
+      <title>Securing reverse SSH tunnels</title>
+      <link>http://arlimus.github.io/articles/ssh.reverse.tunnel.security/</link>
+      <pubDate>Tue, 05 Nov 2013 01:00:00 +0100</pubDate>
+      <guid isPermaLink="true">http://arlimus.github.io/articles/ssh.reverse.tunnel.security/</guid>
+      <author></author>
+      <description>&lt;p&gt;SSH reverse tunnels are a quick way to expose client services on a server, if you want to control access to this service without additional firewall rules. In cloud scenarios it’s especially difficult to configure firewalls without reverting to DNS names, since IP addresses may change at any time. But there are some hidden traps when using reverse tunnels that you may not be aware of.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Let’s start with a simple usage example where one client wants to expose a local service to a server:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;client1&amp;gt; ssh -T -N -R 8001:localhost:80 server&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&quot;http://arlimus.github.io/articles/ssh.reverse.tunnel.security/1.jpeg&quot; style=&quot;width: 100%; max-width: 1435px; margin-left: auto; margin-right: auto;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;As you can see, the server can now access the client’s service on port 8001.&lt;/p&gt;
+&lt;p&gt;We used this trick for clients that have simple service APIs that only few servers should be able to reach. While we could have gone the route of configuring static IP addresses or overarching DNS names for all of these clients and securing it with firewall rules, we instead went with reverse tunnels. Now every client can control the access to his service, by creating a secure (and verified) connection to the server.&lt;/p&gt;
+&lt;p&gt;Let’s add another client:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;client2&amp;gt; ssh -T -N -R 8002:localhost:80 server&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&quot;http://arlimus.github.io/articles/ssh.reverse.tunnel.security/2.jpeg&quot; style=&quot;width: 100%; max-width: 1435px; margin-left: auto; margin-right: auto;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;Now, let’s say that &lt;code&gt;client1&lt;/code&gt; belongs to one customer and &lt;code&gt;client2&lt;/code&gt; to another. What looks like directional pipes going from these clients to the central hub is by default actually a two-way road. That means, that without adjustments, you can potentially do this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;client2&amp;gt; ssh -T -N -L 81:localhost:8001 server&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&quot;http://arlimus.github.io/articles/ssh.reverse.tunnel.security/3.jpeg&quot; style=&quot;width: 100%; max-width: 1435px; margin-left: auto; margin-right: auto;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;This may not be something you want, especially with backend systems. Many of these APIs aren’t hardened and offer a nice way to jump from one tenant or client to another, once you get an entry point. In a cloud scenario this is a disaster waiting to happen.&lt;/p&gt;
+&lt;p&gt;Alas, there are a few ways to get around this issue.&lt;/p&gt;
+&lt;p&gt;First, if you have OpenSSH at version &lt;a href=&quot;http://www.openssh.com/txt/release-6.2&quot;&gt;6.2&lt;/a&gt; or above you can add this configuration to your &lt;code&gt;sshd_config&lt;/code&gt; on the server:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;GatewayPorts no
+AllowTcpForwarding remote&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This means that you can still create reverse tunnels to localhost, but forwarding tunnels can only be created to remote ports:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://arlimus.github.io/articles/ssh.reverse.tunnel.security/4.jpeg&quot; style=&quot;width: 100%; max-width: 1435px; margin-left: auto; margin-right: auto;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;If you want to play around with this configuration, have a look at this &lt;a href=&quot;https://gist.github.com/arlimus/7592670&quot;&gt;Vagrantfile&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Another option, which also works with older versions of OpenSSH, is to use whitelisting in the &lt;code&gt;.ssh/authorized_keys&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;permitopen=&amp;quot;255.255.255.255:9&amp;quot; ssh-rsa AAAAB3Nza.... user@client2&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This will prevent clients from opening forwarding ports to any address except the one specified. For clarification: &lt;code&gt;255.255.255.255&lt;/code&gt; is officially reserved for future use and &lt;a href=&quot;http://en.wikipedia.org/wiki/Discard_Protocol&quot;&gt;port 9&lt;/a&gt; is a fancy way of saying &lt;em&gt;“discard my input”&lt;/em&gt;. Kudos to Kurt Huwig for the whitelisting idea.&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>Wintersmith setup</title>
       <link>http://arlimus.github.io/articles/wintersmith.on.github/</link>
