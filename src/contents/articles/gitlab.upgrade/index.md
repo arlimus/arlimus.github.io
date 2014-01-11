@@ -75,9 +75,9 @@ After some cutting the basic versions I ended up stepping through were: 3.1, 4.0
 
 The final script is found [here](https://gist.github.com/arlimus/8365108). To sum up the extra steps:
 
-* older Gitlab migration steps need ruby 1.9, newer need ruby 2.0; ruby must be adjusted during migration
-* gitlab 3.1 (and older) need a configuration file, to run migrations; so mock one up on the run
-* gitlab 6.0 transfers repos into a new structure; since we don't have it running live, it will fail when trying to update the project. However, if we rescue this step, it will still correctly migrate files on the system. So a tiny patch is introduced to accomplish this.
+* Older Gitlab migration steps need Ruby 1.9, newer need Ruby 2.0; Ruby must be adjusted during migration
+* Gitlab 3.1 (and older) need a configuration file, to run migrations; so mock one up on the run
+* Gitlab 6.0 transfers repos into a new structure; since we don't have it running live, it will fail when trying to update the project. However, if we rescue this step, it will still correctly migrate files on the system. So a tiny patch is introduced to accomplish this.
 
 Additionally, even after a successful migration, I still ended up with errors. As it turns out, we were already having database inconsistencies in our original gitlab after some users were deleted. 
 

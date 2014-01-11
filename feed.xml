@@ -57,9 +57,9 @@ bundle install
 &lt;p&gt;After some cutting the basic versions I ended up stepping through were: 3.1, 4.0, 4.1, 4.2, 5.0, 5.1, 5.4, 6.0, 6.2, and finally 6.4. It doesn’t just run through, however, it requries some work.&lt;/p&gt;
 &lt;p&gt;The final script is found &lt;a href=&quot;https://gist.github.com/arlimus/8365108&quot;&gt;here&lt;/a&gt;. To sum up the extra steps:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;older Gitlab migration steps need ruby 1.9, newer need ruby 2.0; ruby must be adjusted during migration&lt;/li&gt;
-&lt;li&gt;gitlab 3.1 (and older) need a configuration file, to run migrations; so mock one up on the run&lt;/li&gt;
-&lt;li&gt;gitlab 6.0 transfers repos into a new structure; since we don’t have it running live, it will fail when trying to update the project. However, if we rescue this step, it will still correctly migrate files on the system. So a tiny patch is introduced to accomplish this.&lt;/li&gt;
+&lt;li&gt;Older Gitlab migration steps need Ruby 1.9, newer need Ruby 2.0; Ruby must be adjusted during migration&lt;/li&gt;
+&lt;li&gt;Gitlab 3.1 (and older) need a configuration file, to run migrations; so mock one up on the run&lt;/li&gt;
+&lt;li&gt;Gitlab 6.0 transfers repos into a new structure; since we don’t have it running live, it will fail when trying to update the project. However, if we rescue this step, it will still correctly migrate files on the system. So a tiny patch is introduced to accomplish this.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Additionally, even after a successful migration, I still ended up with errors. As it turns out, we were already having database inconsistencies in our original gitlab after some users were deleted.&lt;/p&gt;
 &lt;p&gt;So in addition to all these steps, I had to fix the database as well. Update projects whose user doesn’t exist anymore to have an owner and get some namespace during migration:&lt;/p&gt;
