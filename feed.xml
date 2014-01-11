@@ -5,9 +5,77 @@
     <atom:link href="http://arlimus.github.io/feed.xml" rel="self" type="application/rss+xml"></atom:link>
     <link>http://arlimus.github.io</link>
     <description></description>
-    <pubDate>Tue, 05 Nov 2013 01:00:00 +0100</pubDate>
+    <pubDate>Fri, 10 Jan 2014 00:00:00 +0100</pubDate>
     <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
     <language>en</language>
+    <item>
+      <title>Gitlab 2.8 to 6.4</title>
+      <link>http://arlimus.github.io/articles/gitlab.upgrade/</link>
+      <pubDate>Fri, 10 Jan 2014 00:00:00 +0100</pubDate>
+      <guid isPermaLink="true">http://arlimus.github.io/articles/gitlab.upgrade/</guid>
+      <author></author>
+      <description>&lt;p&gt;We’ve been happily running Gitlab for more than a year now, even though it was unmanaged and never upgraded. A few weeks ago I got my hands on it and decide to give upgrading a shot. “Can’t be that hard”. Fast-forward 3 weeks: I’m in the middle of an 1 hour automated upgrade procedure which is taking gitlab from the stone age to the future.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;How did we get there? First off: Gitlab was running on a physical machine productively which I couldn’t just take down without causing service downtimes. After all, it was Christmas, and that’s not something you want to find in a giftbox. I switched to virtual machines which were easy to clone and back up.&lt;/p&gt;
+&lt;h2 id=&quot;blind-copy&quot;&gt;Blind copy&lt;/h2&gt;
+&lt;p&gt;I wanted to see if I could recreate Gitlab 2.8 with all of my old data on a new box first. It’s certainly possible, but I soon realized it’s not as easy as it looks. Copying all files and migrating mysql data wasn’t enough, as a persistent “500 Error” quickly told me. Since the goal isn’t necessarily to upgrade Gitlab itself but only get all our data into a new Gitlab, I decided to go a different route.&lt;/p&gt;
+&lt;h2 id=&quot;bootstrapping-gitlab-6.4&quot;&gt;Bootstrapping Gitlab 6.4&lt;/h2&gt;
+&lt;p&gt;Instead of recreating Gitlab 2.8, I went for the version I wanted to end up with: Gitlab 6.4. I used &lt;a href=&quot;https://github.com/matschaffer/knife-solo&quot;&gt;knife-solo&lt;/a&gt; for deployment and the &lt;a href=&quot;https://github.com/ogom/cookbook-gitlab&quot;&gt;gitlab cookbook&lt;/a&gt;. Whip up a kitchen:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;knife solo init .&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and configure gitlab for the destination node. It’s well described in the &lt;a href=&quot;https://github.com/ogom/cookbook-gitlab/blob/master/README.md#usage&quot;&gt;readme&lt;/a&gt;. After all is done, deployment was easy:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;knife solo prepare git.mydomain.com
+knife solo cook git.mydomain.com --no-chef-check&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&quot;harsh-upgrade&quot;&gt;Harsh upgrade&lt;/h2&gt;
+&lt;p&gt;So the ‘only’ issue was getting all data into shape.&lt;/p&gt;
+&lt;p&gt;Collecting it was easy:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;mysqldump -uUSER -pPASS gitlabhq_production | gzip &amp;gt; gitlab.sql-dump.gz
+tar czf gitlab.repo-dump.tar.gz /home/git/repositories /home/git/.ssh/authorized_keys&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So was extracting it on the new machine:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# extract the repositories
+cd /
+tar xf /root/gitlab.repo-dump.tar.gz
+
+# inject the old db
+# 1. create the structure in mysql
+# 2. inject the data
+echo &amp;quot;create database gitlabhq_production;&amp;quot; | mysql -u root -p$MYSQL_PW
+gunzip &amp;lt; /root/gitlab.sql-dump.gz | mysql -u root -p$MYSQL_PW gitlabhq_production&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, how about about a DB migration?&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;bundle exec rake db:migrate RAILS_ENV=production&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Errors, as expected. After straightening out some migration sections, the core ran through, but I was greeted with the familiar “500 Error” again.&lt;/p&gt;
+&lt;h2 id=&quot;chain-of-fools&quot;&gt;Chain of fools&lt;/h2&gt;
+&lt;p&gt;Remember the &lt;a href=&quot;http://www.youtube.com/watch?v=vPnehDhGa14&quot;&gt;chain of fools&lt;/a&gt;? It’s a great video on upgrading Windows from caveman to to the modern-age pain in the rear we know so well. Great stuff, let’s try that.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;service gitlab stop
+cd /home/git/gitlab&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Running as root is no issue, permission can be reset later.&lt;/p&gt;
+&lt;p&gt;Gitlab comes with &lt;a href=&quot;https://github.com/gitlabhq/gitlabhq/tree/master/doc/update&quot;&gt;great update instructions&lt;/a&gt;. Since we already have the latest version, we only have to worry about whatever transforms data. That simplifies the steps a lot!&lt;/p&gt;
+&lt;p&gt;The basic steps boil down to:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git reset --hard HEAD
+git checkout -t origin/XXX-stable
+bundle install
+... do upgrade ...&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;After some cutting the basic versions I ended up stepping through were: 3.1, 4.0, 4.1, 4.2, 5.0, 5.1, 5.4, 6.0, 6.2, and finally 6.4. It doesn’t just run through, however, it requries some work.&lt;/p&gt;
+&lt;p&gt;The final script is found &lt;a href=&quot;https://gist.github.com/arlimus/8365108&quot;&gt;here&lt;/a&gt;. To sum up the extra steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;older Gitlab migration steps need ruby 1.9, newer need ruby 2.0; ruby must be adjusted during migration&lt;/li&gt;
+&lt;li&gt;gitlab 3.1 (and older) need a configuration file, to run migrations; so mock one up on the run&lt;/li&gt;
+&lt;li&gt;gitlab 6.0 transfers repos into a new structure; since we don’t have it running live, it will fail when trying to update the project. However, if we rescue this step, it will still correctly migrate files on the system. So a tiny patch is introduced to accomplish this.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Additionally, even after a successful migration, I still ended up with errors. As it turns out, we were already having database inconsistencies in our original gitlab after some users were deleted.&lt;/p&gt;
+&lt;p&gt;So in addition to all these steps, I had to fix the database as well. Update projects whose user doesn’t exist anymore to have an owner and get some namespace during migration:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# find all projects without a valid owner
+select P.id from projects P left join users U on P.owner_id = U.id where U.id is null;
+
+# set their owner to a valid id
+update projects set owner_id = &amp;quot;1&amp;quot; where id = &amp;quot;...&amp;quot;;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;as well as update all projects’ users to not include anyone who doesn’t exist anymore:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;select P.id from users_projects P left join users U on P.user_id = U.id where U.id is null
+delete from users_projects where id = &amp;quot;...&amp;quot;;&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&quot;results&quot;&gt;Results&lt;/h2&gt;
+&lt;p&gt;The final script ran for 20min backup and 30min migration. It didn’t require and intervention. We found one more bug in the deployment keys after all was done, which required manual fixing. All in all, very successful! Thanks to everyone working on Gitlab for making this possible :)&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://gist.github.com/arlimus/8365108&quot;&gt;&lt;img id=&quot;fork-me-ribbon&quot; src=&quot;https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png&quot; alt=&quot;Fork me on GitHub&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>Securing reverse SSH tunnels</title>
       <link>http://arlimus.github.io/articles/ssh.reverse.tunnel.security/</link>
