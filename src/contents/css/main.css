@@ -432,7 +432,8 @@ code.lang-markdown .bullet {
   }
 }
 
-#fork-me-ribbon {
+#fork-me-ribbon,
+#gist-ribbon {
   position: absolute;
   top: 0;
   right: 0;

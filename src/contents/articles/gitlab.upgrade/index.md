@@ -99,4 +99,4 @@ Also, update all projects' users to not include anyone who doesn't exist anymore
 
 The final script ran for 20min backup and 30min migration. It didn't require and intervention. We found one more bug in the deployment keys after all was done, which required a quick manual fix. All in all, very successful! Thanks to everyone working on Gitlab for making this possible :)
 
-<a href="https://gist.github.com/arlimus/8365108"><img id="fork-me-ribbon" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+<a href="https://gist.github.com/arlimus/8365108"><img id="gist-ribbon" src="/css/gistbanner.png" alt="Gist on GitHub"></a>

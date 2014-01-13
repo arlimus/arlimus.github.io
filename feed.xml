@@ -74,7 +74,7 @@ update projects set owner_id = &amp;quot;1&amp;quot; where id = &amp;quot;...&am
 delete from users_projects where id = &amp;quot;...&amp;quot;;&lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&quot;results&quot;&gt;Results&lt;/h2&gt;
 &lt;p&gt;The final script ran for 20min backup and 30min migration. It didn’t require and intervention. We found one more bug in the deployment keys after all was done, which required a quick manual fix. All in all, very successful! Thanks to everyone working on Gitlab for making this possible :)&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://gist.github.com/arlimus/8365108&quot;&gt;&lt;img id=&quot;fork-me-ribbon&quot; src=&quot;https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png&quot; alt=&quot;Fork me on GitHub&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://gist.github.com/arlimus/8365108&quot;&gt;&lt;img id=&quot;gist-ribbon&quot; src=&quot;http://arlimus.github.io/css/gistbanner.png&quot; alt=&quot;Gist on GitHub&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     <item>
