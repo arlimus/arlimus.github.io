@@ -19,12 +19,16 @@ I wanted to see if I could recreate Gitlab 2.8 with all of my old data on a new 
 
 Instead of recreating Gitlab 2.8, I went for the version I wanted to end up with: Gitlab 6.4. I used [knife-solo](https://github.com/matschaffer/knife-solo) for deployment and the [gitlab cookbook](https://github.com/ogom/cookbook-gitlab). Simply whip up a kitchen:
 
-    knife solo init .
+```bash
+knife solo init .
+```
 
 and configure gitlab for the destination node. It's well described in the [readme](https://github.com/ogom/cookbook-gitlab/blob/master/README.md#usage). After all is done, deployment was easy:
 
-    knife solo prepare git.mydomain.com
-    knife solo cook git.mydomain.com --no-chef-check
+```bash
+knife solo prepare git.mydomain.com
+knife solo cook git.mydomain.com --no-chef-check
+```
 
 # Harsh upgrade
 
@@ -32,42 +36,50 @@ So the 'only' issue was getting all data into shape. The brute-force way of doin
 
 Collecting old data was easy:
 
-    # get all mysql data
-    mysqldump -uUSER -pPASS gitlabhq_production | gzip > gitlab.sql-dump.gz
+```bash
+# get all mysql data
+mysqldump -uUSER -pPASS gitlabhq_production | gzip > gitlab.sql-dump.gz
 
-    # get all repositories and keys
-    tar czf gitlab.repo-dump.tar.gz /home/git/repositories /home/git/.ssh/authorized_keys
+# get all repositories and keys
+tar czf gitlab.repo-dump.tar.gz /home/git/repositories /home/git/.ssh/authorized_keys
+```
 
 So was extracting it on the new machine:
 
-    # extract the repositories
-    cd /
-    tar xf /root/gitlab.repo-dump.tar.gz
+```bash
+# extract the repositories
+cd /
+tar xf /root/gitlab.repo-dump.tar.gz
 
-    # inject the old db
-    # 1. create the structure in mysql
-    # 2. inject the data
-    echo "create database gitlabhq_production;" | mysql -u root -p$MYSQL_PW
-    gunzip < /root/gitlab.sql-dump.gz | mysql -u root -p$MYSQL_PW gitlabhq_production
+# inject the old db
+# 1. create the structure in mysql
+# 2. inject the data
+echo "create database gitlabhq_production;" | mysql -u root -p$MYSQL_PW
+gunzip < /root/gitlab.sql-dump.gz | mysql -u root -p$MYSQL_PW gitlabhq_production
+```
 
 Now, how about about a DB migration?
 
-    bundle exec rake db:migrate RAILS_ENV=production
+```bash
+bundle exec rake db:migrate RAILS_ENV=production
+```
 
 Errors, as expected. After straightening out some migration sections, the core ran through, but I was greeted with the familiar "500 Error" again.
 
 # Chain of fools
 
-Remember the [chain of fools](http://www.youtube.com/watch?v=vPnehDhGa14)? It's a great video on upgrading Windows from caveman to to the modern-age  pain in the rear we know so well. Great stuff, let's try that.
+Remember the [chain of fools](http://www.youtube.com/watch?v=vPnehDhGa14)? Upgrading Windows from caveman to to the modern-age pain in the rear we know so well? Great stuff, let's try that.
 
 Gitlab comes with [great update instructions](https://github.com/gitlabhq/gitlabhq/tree/master/doc/update). Since we already have the latest version, we only have to worry about whatever transforms data and ignore everything that transforms Gitlab itself.
 
 The basic steps boil down to:
 
-    git reset --hard HEAD
-    git checkout -t origin/XXX-stable
-    bundle install
-    ... do upgrade ...
+```bash
+git reset --hard HEAD
+git checkout -t origin/XXX-stable
+bundle install
+... do upgrade ...
+```
 
 After some cutting, the versions I ended up stepping through were: 3.1, 4.0, 4.1, 4.2, 5.0, 5.1, 5.4, 6.0, 6.2, and finally 6.4. It doesn't just run through, however, it requries some work. 
 
@@ -81,18 +93,25 @@ Additionally, even after a successful migration, I still ended up with errors. A
 
 So in addition to all these steps, I had to fix the database as well. First I had to upgrade projects whose user doesn't exist anymore to have an owner:
 
-    # find all projects without a valid owner
-    select P.id from projects P left join users U on P.owner_id = U.id where U.id is null;
+```mysql
+# find all projects without a valid owner
+select P.id from projects P left join users U on P.owner_id = U.id where U.id is null;
 
-    # set their owner to a valid id
-    update projects set owner_id = "1" where id = "...";
+# set their owner to a valid id
+update projects set owner_id = "1" where id = "...";
+```
 
 Without this step these repos would not have been migrated into namespaces and thus would not have been available in new gitlab.
 
 Also, update all projects' users to not include anyone who doesn't exist anymore:
 
-    select P.id from users_projects P left join users U on P.user_id = U.id where U.id is null
-    delete from users_projects where id = "...";
+```mysql
+# find all users assigned to projects that don't exist anymore
+select P.id from users_projects P left join users U on P.user_id = U.id where U.id is null
+
+# remove these users
+delete from users_projects where id = "...";
+```
 
 
 # Results
