@@ -8,9 +8,9 @@
     <title>Gitlab 2.8 to 6.4 - Silversmith
     </title>
     <link rel="alternate" href="http://arlimus.github.io/feed.xml" type="application/rss+xml" title="">
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto+Slab:700|Source+Code+Pro" type="text/css">
     <link rel="stylesheet" href="/css/main.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <link rel="stylesheet" href="/vendor/highlight/styles/dark.css">
     <script type="text/javascript">
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -25,8 +25,6 @@
     <header class="header">
       <div class="content-wrap">
         <h1>Gitlab 2.8 to 6.4</h1>
-        <p class="author">Written by <span class="author"><a href="mailto:dominik.richter@gmail.com">Dominik Richter</a></span>
-        </p>
       </div>
     </header>
     <div id="content">
@@ -35,43 +33,43 @@
           <section class="content"><p>We’ve been happily running Gitlab for more than a year now, even though it was unmanaged and never upgraded. A few weeks ago I got my hands on it and decide to give upgrading a shot. “Can’t be that hard”. Fast-forward 3 weeks: I’m in the middle of an 1 hour automated upgrade procedure which is taking gitlab from the stone age to the&nbsp;future.</p>
 <p><span class="more"></span></p>
 <p>How is it done? First off: Gitlab was running on a physical machine productively which I couldn’t just take down without causing service downtimes. After all, it was Christmas, and that’s not something you want to find in a giftbox. I switched to virtual machines which were easy to clone and back&nbsp;up.</p>
-<h2 id="blind-copy">Blind&nbsp;copy</h2>
+<h1 id="blind-copy">Blind&nbsp;copy</h1>
 <p>I wanted to see if I could recreate Gitlab 2.8 with all of my old data on a new box. It’s certainly possible, but I soon realized it’s not as easy as it looks. Copying all files and migrating MySQL data wasn’t enough, as a persistent “500 Error” quickly told me. Since the goal isn’t necessarily to upgrade Gitlab itself but only to get all the data into a new Gitlab, I decided to go a different&nbsp;route.</p>
-<h2 id="bootstrapping-gitlab-6.4">Bootstrapping Gitlab&nbsp;6.4</h2>
+<h1 id="bootstrapping-gitlab-6.4">Bootstrapping Gitlab&nbsp;6.4</h1>
 <p>Instead of recreating Gitlab 2.8, I went for the version I wanted to end up with: Gitlab 6.4. I used <a href="https://github.com/matschaffer/knife-solo">knife-solo</a> for deployment and the <a href="https://github.com/ogom/cookbook-gitlab">gitlab cookbook</a>. Simply whip up a&nbsp;kitchen:</p>
-<pre><code>knife solo init .</code></pre>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">knife</span> solo init .</code></pre>
 <p>and configure gitlab for the destination node. It’s well described in the <a href="https://github.com/ogom/cookbook-gitlab/blob/master/README.md#usage">readme</a>. After all is done, deployment was&nbsp;easy:</p>
-<pre><code>knife solo prepare git.mydomain.com
-knife solo cook git.mydomain.com --no-chef-check</code></pre>
-<h2 id="harsh-upgrade">Harsh&nbsp;upgrade</h2>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">knife</span> solo prepare git.mydomain.com
+<span class="kw">knife</span> solo cook git.mydomain.com --no-chef-check</code></pre>
+<h1 id="harsh-upgrade">Harsh&nbsp;upgrade</h1>
 <p>So the ‘only’ issue was getting all data into shape. The brute-force way of doing this is taking all data, throwing it into Gitlab 6.4 and pressing the migrate&nbsp;button.</p>
 <p>Collecting old data was&nbsp;easy:</p>
-<pre><code># get all mysql data
-mysqldump -uUSER -pPASS gitlabhq_production | gzip &gt; gitlab.sql-dump.gz
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># get all mysql data</span>
+<span class="kw">mysqldump</span> -uUSER -pPASS gitlabhq_production <span class="kw">|</span> <span class="kw">gzip</span> <span class="kw">&gt;</span> gitlab.sql-dump.gz
 
-# get all repositories and keys
-tar czf gitlab.repo-dump.tar.gz /home/git/repositories /home/git/.ssh/authorized_keys</code></pre>
+<span class="co"># get all repositories and keys</span>
+<span class="kw">tar</span> czf gitlab.repo-dump.tar.gz /home/git/repositories /home/git/.ssh/authorized_keys</code></pre>
 <p>So was extracting it on the new&nbsp;machine:</p>
-<pre><code># extract the repositories
-cd /
-tar xf /root/gitlab.repo-dump.tar.gz
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># extract the repositories</span>
+<span class="kw">cd</span> /
+<span class="kw">tar</span> xf /root/gitlab.repo-dump.tar.gz
 
-# inject the old db
-# 1. create the structure in mysql
-# 2. inject the data
-echo &quot;create database gitlabhq_production;&quot; | mysql -u root -p$MYSQL_PW
-gunzip &lt; /root/gitlab.sql-dump.gz | mysql -u root -p$MYSQL_PW gitlabhq_production</code></pre>
+<span class="co"># inject the old db</span>
+<span class="co"># 1. create the structure in mysql</span>
+<span class="co"># 2. inject the data</span>
+<span class="kw">echo</span> <span class="st">&quot;create database gitlabhq_production;&quot;</span> <span class="kw">|</span> <span class="kw">mysql</span> -u root -p<span class="ot">$MYSQL_PW</span>
+<span class="kw">gunzip</span> <span class="kw">&lt;</span> /root/gitlab.sql-dump.gz <span class="kw">|</span> <span class="kw">mysql</span> -u root -p<span class="ot">$MYSQL_PW</span> gitlabhq_production</code></pre>
 <p>Now, how about about a <span class="caps">DB</span>&nbsp;migration?</p>
-<pre><code>bundle exec rake db:migrate RAILS_ENV=production</code></pre>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bundle</span> exec rake db:migrate RAILS_ENV=production</code></pre>
 <p>Errors, as expected. After straightening out some migration sections, the core ran through, but I was greeted with the familiar “500 Error”&nbsp;again.</p>
-<h2 id="chain-of-fools">Chain of&nbsp;fools</h2>
-<p>Remember the <a href="http://www.youtube.com/watch?v=vPnehDhGa14">chain of fools</a>? It’s a great video on upgrading Windows from caveman to to the modern-age pain in the rear we know so well. Great stuff, let’s try&nbsp;that.</p>
+<h1 id="chain-of-fools">Chain of&nbsp;fools</h1>
+<p>Remember the <a href="http://www.youtube.com/watch?v=vPnehDhGa14">chain of fools</a>? Upgrading Windows from caveman to to the modern-age pain in the rear we know so well? Great stuff, let’s try&nbsp;that.</p>
 <p>Gitlab comes with <a href="https://github.com/gitlabhq/gitlabhq/tree/master/doc/update">great update instructions</a>. Since we already have the latest version, we only have to worry about whatever transforms data and ignore everything that transforms Gitlab&nbsp;itself.</p>
 <p>The basic steps boil down&nbsp;to:</p>
-<pre><code>git reset --hard HEAD
-git checkout -t origin/XXX-stable
-bundle install
-... do upgrade ...</code></pre>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">git</span> reset --hard <span class="caps">HEAD</span>
+<span class="kw">git</span> checkout -t origin/<span class="caps">XXX</span>-stable
+<span class="kw">bundle</span> install
+<span class="kw">...</span> do upgrade ...</code></pre>
 <p>After some cutting, the versions I ended up stepping through were: 3.1, 4.0, 4.1, 4.2, 5.0, 5.1, 5.4, 6.0, 6.2, and finally 6.4. It doesn’t just run through, however, it requries some&nbsp;work.</p>
 <p>The final script is found <a href="https://gist.github.com/arlimus/8365108">here</a>. The adjustments required&nbsp;are:</p>
 <ul>
@@ -81,16 +79,19 @@ bundle install
 </ul>
 <p>Additionally, even after a successful migration, I still ended up with errors. As it turns out, we were already having database inconsistencies in our old gitlab after some users were&nbsp;deleted.</p>
 <p>So in addition to all these steps, I had to fix the database as well. First I had to upgrade projects whose user doesn’t exist anymore to have an&nbsp;owner:</p>
-<pre><code># find all projects without a valid owner
+<pre class="mysql"><code># find all projects without a valid owner
 select P.id from projects P left join users U on P.owner_id = U.id where U.id is null;
 
 # set their owner to a valid id
 update projects set owner_id = &quot;1&quot; where id = &quot;...&quot;;</code></pre>
 <p>Without this step these repos would not have been migrated into namespaces and thus would not have been available in new&nbsp;gitlab.</p>
 <p>Also, update all projects’ users to not include anyone who doesn’t exist&nbsp;anymore:</p>
-<pre><code>select P.id from users_projects P left join users U on P.user_id = U.id where U.id is null
+<pre class="mysql"><code># find all users assigned to projects that don&#39;t exist anymore
+select P.id from users_projects P left join users U on P.user_id = U.id where U.id is null
+
+# remove these users
 delete from users_projects where id = &quot;...&quot;;</code></pre>
-<h2 id="results">Results</h2>
+<h1 id="results">Results</h1>
 <p>The final script ran for 20min backup and 30min migration. It didn’t require and intervention. We found one more bug in the deployment keys after all was done, which required a quick manual fix. All in all, very successful! Thanks to everyone working on Gitlab for making this possible&nbsp;:)</p>
 <p><a href="https://gist.github.com/arlimus/8365108"><img id="gist-ribbon" src="/css/gistbanner.png" alt="Gist on GitHub"></a></p>
 </section>
@@ -109,5 +110,7 @@ delete from users_projects where id = &quot;...&quot;;</code></pre>
         </section>
       </div>
     </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <script src="/vendor/highlight/highlight.pack.js" onload="hljs.initHighlightingOnLoad();"></script>
   </body>
 </html>

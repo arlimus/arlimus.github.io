@@ -17,43 +17,43 @@
       <description>&lt;p&gt;We’ve been happily running Gitlab for more than a year now, even though it was unmanaged and never upgraded. A few weeks ago I got my hands on it and decide to give upgrading a shot. “Can’t be that hard”. Fast-forward 3 weeks: I’m in the middle of an 1 hour automated upgrade procedure which is taking gitlab from the stone age to the future.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;How is it done? First off: Gitlab was running on a physical machine productively which I couldn’t just take down without causing service downtimes. After all, it was Christmas, and that’s not something you want to find in a giftbox. I switched to virtual machines which were easy to clone and back up.&lt;/p&gt;
-&lt;h2 id=&quot;blind-copy&quot;&gt;Blind copy&lt;/h2&gt;
+&lt;h1 id=&quot;blind-copy&quot;&gt;Blind copy&lt;/h1&gt;
 &lt;p&gt;I wanted to see if I could recreate Gitlab 2.8 with all of my old data on a new box. It’s certainly possible, but I soon realized it’s not as easy as it looks. Copying all files and migrating MySQL data wasn’t enough, as a persistent “500 Error” quickly told me. Since the goal isn’t necessarily to upgrade Gitlab itself but only to get all the data into a new Gitlab, I decided to go a different route.&lt;/p&gt;
-&lt;h2 id=&quot;bootstrapping-gitlab-6.4&quot;&gt;Bootstrapping Gitlab 6.4&lt;/h2&gt;
+&lt;h1 id=&quot;bootstrapping-gitlab-6.4&quot;&gt;Bootstrapping Gitlab 6.4&lt;/h1&gt;
 &lt;p&gt;Instead of recreating Gitlab 2.8, I went for the version I wanted to end up with: Gitlab 6.4. I used &lt;a href=&quot;https://github.com/matschaffer/knife-solo&quot;&gt;knife-solo&lt;/a&gt; for deployment and the &lt;a href=&quot;https://github.com/ogom/cookbook-gitlab&quot;&gt;gitlab cookbook&lt;/a&gt;. Simply whip up a kitchen:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;knife solo init .&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;knife&lt;/span&gt; solo init .&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;and configure gitlab for the destination node. It’s well described in the &lt;a href=&quot;https://github.com/ogom/cookbook-gitlab/blob/master/README.md#usage&quot;&gt;readme&lt;/a&gt;. After all is done, deployment was easy:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;knife solo prepare git.mydomain.com
-knife solo cook git.mydomain.com --no-chef-check&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&quot;harsh-upgrade&quot;&gt;Harsh upgrade&lt;/h2&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;knife&lt;/span&gt; solo prepare git.mydomain.com
+&lt;span class=&quot;kw&quot;&gt;knife&lt;/span&gt; solo cook git.mydomain.com --no-chef-check&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&quot;harsh-upgrade&quot;&gt;Harsh upgrade&lt;/h1&gt;
 &lt;p&gt;So the ‘only’ issue was getting all data into shape. The brute-force way of doing this is taking all data, throwing it into Gitlab 6.4 and pressing the migrate button.&lt;/p&gt;
 &lt;p&gt;Collecting old data was easy:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;# get all mysql data
-mysqldump -uUSER -pPASS gitlabhq_production | gzip &amp;gt; gitlab.sql-dump.gz
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;co&quot;&gt;# get all mysql data&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;mysqldump&lt;/span&gt; -uUSER -pPASS gitlabhq_production &lt;span class=&quot;kw&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;gzip&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt; gitlab.sql-dump.gz
 
-# get all repositories and keys
-tar czf gitlab.repo-dump.tar.gz /home/git/repositories /home/git/.ssh/authorized_keys&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;co&quot;&gt;# get all repositories and keys&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;tar&lt;/span&gt; czf gitlab.repo-dump.tar.gz /home/git/repositories /home/git/.ssh/authorized_keys&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;So was extracting it on the new machine:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;# extract the repositories
-cd /
-tar xf /root/gitlab.repo-dump.tar.gz
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;co&quot;&gt;# extract the repositories&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; /
+&lt;span class=&quot;kw&quot;&gt;tar&lt;/span&gt; xf /root/gitlab.repo-dump.tar.gz
 
-# inject the old db
-# 1. create the structure in mysql
-# 2. inject the data
-echo &amp;quot;create database gitlabhq_production;&amp;quot; | mysql -u root -p$MYSQL_PW
-gunzip &amp;lt; /root/gitlab.sql-dump.gz | mysql -u root -p$MYSQL_PW gitlabhq_production&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;co&quot;&gt;# inject the old db&lt;/span&gt;
+&lt;span class=&quot;co&quot;&gt;# 1. create the structure in mysql&lt;/span&gt;
+&lt;span class=&quot;co&quot;&gt;# 2. inject the data&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;st&quot;&gt;&amp;quot;create database gitlabhq_production;&amp;quot;&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;mysql&lt;/span&gt; -u root -p&lt;span class=&quot;ot&quot;&gt;$MYSQL_PW&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;gunzip&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;&amp;lt;&lt;/span&gt; /root/gitlab.sql-dump.gz &lt;span class=&quot;kw&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;mysql&lt;/span&gt; -u root -p&lt;span class=&quot;ot&quot;&gt;$MYSQL_PW&lt;/span&gt; gitlabhq_production&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Now, how about about a DB migration?&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;bundle exec rake db:migrate RAILS_ENV=production&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bundle&lt;/span&gt; exec rake db:migrate RAILS_ENV=production&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Errors, as expected. After straightening out some migration sections, the core ran through, but I was greeted with the familiar “500 Error” again.&lt;/p&gt;
-&lt;h2 id=&quot;chain-of-fools&quot;&gt;Chain of fools&lt;/h2&gt;
-&lt;p&gt;Remember the &lt;a href=&quot;http://www.youtube.com/watch?v=vPnehDhGa14&quot;&gt;chain of fools&lt;/a&gt;? It’s a great video on upgrading Windows from caveman to to the modern-age pain in the rear we know so well. Great stuff, let’s try that.&lt;/p&gt;
+&lt;h1 id=&quot;chain-of-fools&quot;&gt;Chain of fools&lt;/h1&gt;
+&lt;p&gt;Remember the &lt;a href=&quot;http://www.youtube.com/watch?v=vPnehDhGa14&quot;&gt;chain of fools&lt;/a&gt;? Upgrading Windows from caveman to to the modern-age pain in the rear we know so well? Great stuff, let’s try that.&lt;/p&gt;
 &lt;p&gt;Gitlab comes with &lt;a href=&quot;https://github.com/gitlabhq/gitlabhq/tree/master/doc/update&quot;&gt;great update instructions&lt;/a&gt;. Since we already have the latest version, we only have to worry about whatever transforms data and ignore everything that transforms Gitlab itself.&lt;/p&gt;
 &lt;p&gt;The basic steps boil down to:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;git reset --hard HEAD
-git checkout -t origin/XXX-stable
-bundle install
-... do upgrade ...&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; reset --hard HEAD
+&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; checkout -t origin/XXX-stable
+&lt;span class=&quot;kw&quot;&gt;bundle&lt;/span&gt; install
+&lt;span class=&quot;kw&quot;&gt;...&lt;/span&gt; do upgrade ...&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;After some cutting, the versions I ended up stepping through were: 3.1, 4.0, 4.1, 4.2, 5.0, 5.1, 5.4, 6.0, 6.2, and finally 6.4. It doesn’t just run through, however, it requries some work.&lt;/p&gt;
 &lt;p&gt;The final script is found &lt;a href=&quot;https://gist.github.com/arlimus/8365108&quot;&gt;here&lt;/a&gt;. The adjustments required are:&lt;/p&gt;
 &lt;ul&gt;
@@ -63,16 +63,19 @@ bundle install
 &lt;/ul&gt;
 &lt;p&gt;Additionally, even after a successful migration, I still ended up with errors. As it turns out, we were already having database inconsistencies in our old gitlab after some users were deleted.&lt;/p&gt;
 &lt;p&gt;So in addition to all these steps, I had to fix the database as well. First I had to upgrade projects whose user doesn’t exist anymore to have an owner:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;# find all projects without a valid owner
+&lt;pre class=&quot;mysql&quot;&gt;&lt;code&gt;# find all projects without a valid owner
 select P.id from projects P left join users U on P.owner_id = U.id where U.id is null;
 
 # set their owner to a valid id
 update projects set owner_id = &amp;quot;1&amp;quot; where id = &amp;quot;...&amp;quot;;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Without this step these repos would not have been migrated into namespaces and thus would not have been available in new gitlab.&lt;/p&gt;
 &lt;p&gt;Also, update all projects’ users to not include anyone who doesn’t exist anymore:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;select P.id from users_projects P left join users U on P.user_id = U.id where U.id is null
+&lt;pre class=&quot;mysql&quot;&gt;&lt;code&gt;# find all users assigned to projects that don&amp;#39;t exist anymore
+select P.id from users_projects P left join users U on P.user_id = U.id where U.id is null
+
+# remove these users
 delete from users_projects where id = &amp;quot;...&amp;quot;;&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&quot;results&quot;&gt;Results&lt;/h2&gt;
+&lt;h1 id=&quot;results&quot;&gt;Results&lt;/h1&gt;
 &lt;p&gt;The final script ran for 20min backup and 30min migration. It didn’t require and intervention. We found one more bug in the deployment keys after all was done, which required a quick manual fix. All in all, very successful! Thanks to everyone working on Gitlab for making this possible :)&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://gist.github.com/arlimus/8365108&quot;&gt;&lt;img id=&quot;gist-ribbon&quot; src=&quot;http://arlimus.github.io/css/gistbanner.png&quot; alt=&quot;Gist on GitHub&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 </description>

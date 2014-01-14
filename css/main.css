@@ -12,12 +12,16 @@ body {
 }
 
 .content-wrap {
-  width: 34em;
+  width: 940px;
   margin: 0 auto;
 }
 
-body, a {
+body {
   color: #171717;
+}
+
+a {
+  color: #0091E2;
 }
 
 a:hover {
@@ -32,15 +36,22 @@ p {
 pre {
   font-size: 0.9em;
   overflow: auto;
-  background: #fff;
-  border: 1px dashed #d2d2d2;
   border-radius: 0.25em;
   margin-bottom: 1.8em;
-  padding: 1em;
+  padding: 0.5em;
+  background-color: rgb(68, 68, 68);
+}
+
+pre > code {
+  font-family: "Source Code Pro",Menlo,Monaco,Consolas,monospace;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Roboto Slab', Helvetica, Arial, sans-serif;
 }
 
 h1 {
-  font-size: 2em;
+  font-size: 1.8em;
   margin-bottom: 1em;
 }
 
@@ -61,7 +72,7 @@ h3 {
 }
 
 ol, ul {
-  margin: 0 1.4em 1.4em 4em;
+  margin: 0 1.4em 1.4em 3em;
 }
 
 li {
@@ -109,7 +120,7 @@ hr {
   letter-spacing: 1px;
 }
 
-.header .description {
+.description {
   font-size: 1.2em;
   font-style: italic;
   text-align: center;
@@ -118,7 +129,6 @@ hr {
 
 body.article-detail > header h1 {
   font-size: 2.5em;
-  font-style: italic;
   font-weight: 400;
   margin-bottom: -0.2em;
 }
@@ -190,6 +200,7 @@ footer .copy, footer .copy a {
 
 .article header h2 a {
   text-decoration: none;
+  color: #000;
 }
 
 .article header .date {
