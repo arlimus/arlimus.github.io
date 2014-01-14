@@ -11,11 +11,11 @@ We've been happily running Gitlab for more than a year now, even though it was u
 
 How is it done? First off: Gitlab was running on a physical machine productively which I couldn't just take down without causing service downtimes. After all, it was Christmas, and that's not something you want to find in a giftbox. I switched to virtual machines which were easy to clone and back up.
 
-## Blind copy
+# Blind copy
 
 I wanted to see if I could recreate Gitlab 2.8 with all of my old data on a new box. It's certainly possible, but I soon realized it's not as easy as it looks. Copying all files and migrating MySQL data wasn't enough, as a persistent "500 Error" quickly told me. Since the goal isn't necessarily to upgrade Gitlab itself but only to get all the data into a new Gitlab, I decided to go a different route.
 
-## Bootstrapping Gitlab 6.4
+# Bootstrapping Gitlab 6.4
 
 Instead of recreating Gitlab 2.8, I went for the version I wanted to end up with: Gitlab 6.4. I used [knife-solo](https://github.com/matschaffer/knife-solo) for deployment and the [gitlab cookbook](https://github.com/ogom/cookbook-gitlab). Simply whip up a kitchen:
 
@@ -26,7 +26,7 @@ and configure gitlab for the destination node. It's well described in the [readm
     knife solo prepare git.mydomain.com
     knife solo cook git.mydomain.com --no-chef-check
 
-## Harsh upgrade
+# Harsh upgrade
 
 So the 'only' issue was getting all data into shape. The brute-force way of doing this is taking all data, throwing it into Gitlab 6.4 and pressing the migrate button.
 
@@ -56,7 +56,7 @@ Now, how about about a DB migration?
 
 Errors, as expected. After straightening out some migration sections, the core ran through, but I was greeted with the familiar "500 Error" again.
 
-## Chain of fools
+# Chain of fools
 
 Remember the [chain of fools](http://www.youtube.com/watch?v=vPnehDhGa14)? It's a great video on upgrading Windows from caveman to to the modern-age  pain in the rear we know so well. Great stuff, let's try that.
 
@@ -95,7 +95,7 @@ Also, update all projects' users to not include anyone who doesn't exist anymore
     delete from users_projects where id = "...";
 
 
-## Results
+# Results
 
 The final script ran for 20min backup and 30min migration. It didn't require and intervention. We found one more bug in the deployment keys after all was done, which required a quick manual fix. All in all, very successful! Thanks to everyone working on Gitlab for making this possible :)
 
