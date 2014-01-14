@@ -14,9 +14,10 @@
       <pubDate>Fri, 10 Jan 2014 00:00:00 +0100</pubDate>
       <guid isPermaLink="true">http://arlimus.github.io/articles/gitlab.upgrade/</guid>
       <author></author>
-      <description>&lt;p&gt;We’ve been happily running Gitlab for more than a year now, even though it was unmanaged and never upgraded. A few weeks ago I got my hands on it and decide to give upgrading a shot. “Can’t be that hard”. Fast-forward 3 weeks: I’m in the middle of an 1 hour automated upgrade procedure which is taking gitlab from the stone age to the future.&lt;/p&gt;
+      <description>&lt;p&gt;We’ve been happily running Gitlab for more than a year now, even though it was unmanaged and never upgraded. A few weeks ago I got my hands on it and decide to give upgrading a shot. “Can’t be that hard”. Fast-forward 3 weeks: I’m in the middle of an 1 hour automated upgrade procedure which is taking Gitlab from the stone age to the future.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;How is it done? First off: Gitlab was running on a physical machine productively which I couldn’t just take down without causing service downtimes. After all, it was Christmas, and that’s not something you want to find in a giftbox. I switched to virtual machines which were easy to clone and back up.&lt;/p&gt;
+&lt;p&gt;I’ll explain how we got there and what you should consider if you’re in a similar situation.&lt;/p&gt;
+&lt;p&gt;First off: Gitlab was running on a physical machine productively which I couldn’t just take down or cause service downtimes. After all, it was Christmas, and that’s not something you want to find in a giftbox. All data had to be moved and I couldn’t clone the original system since it was running on bare metal.&lt;/p&gt;
 &lt;h1 id=&quot;blind-copy&quot;&gt;Blind copy&lt;/h1&gt;
 &lt;p&gt;I wanted to see if I could recreate Gitlab 2.8 with all of my old data on a new box. It’s certainly possible, but I soon realized it’s not as easy as it looks. Copying all files and migrating MySQL data wasn’t enough, as a persistent “500 Error” quickly told me. Since the goal isn’t necessarily to upgrade Gitlab itself but only to get all the data into a new Gitlab, I decided to go a different route.&lt;/p&gt;
 &lt;h1 id=&quot;bootstrapping-gitlab-6.4&quot;&gt;Bootstrapping Gitlab 6.4&lt;/h1&gt;

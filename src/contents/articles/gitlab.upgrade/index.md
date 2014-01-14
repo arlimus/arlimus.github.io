@@ -5,11 +5,13 @@ date: 2014-01.10
 template: article.jade
 ---
 
-We've been happily running Gitlab for more than a year now, even though it was unmanaged and never upgraded. A few weeks ago I got my hands on it and decide to give upgrading a shot. "Can't be that hard". Fast-forward 3 weeks: I'm in the middle of an 1 hour automated upgrade procedure which is taking gitlab from the stone age to the future.
+We've been happily running Gitlab for more than a year now, even though it was unmanaged and never upgraded. A few weeks ago I got my hands on it and decide to give upgrading a shot. "Can't be that hard". Fast-forward 3 weeks: I'm in the middle of an 1 hour automated upgrade procedure which is taking Gitlab from the stone age to the future.
 
 <span class="more"></span>
 
-How is it done? First off: Gitlab was running on a physical machine productively which I couldn't just take down without causing service downtimes. After all, it was Christmas, and that's not something you want to find in a giftbox. I switched to virtual machines which were easy to clone and back up.
+I'll explain how we got there and what you should consider if you're in a similar situation.
+
+First off: Gitlab was running on a physical machine productively which I couldn't just take down or cause service downtimes. After all, it was Christmas, and that's not something you want to find in a giftbox. All data had to be moved and I couldn't clone the original system since it was running on bare metal.
 
 # Blind copy
 
