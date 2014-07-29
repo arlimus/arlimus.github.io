@@ -47,15 +47,37 @@
 <p>Not quite so. In <code>usermod</code> or <code>passwd</code> terms, user locking results&nbsp;in:</p>
 <pre><code>Lock a user&#39;s password. This puts a &#39;!&#39; in front of the 
 encrypted password, effectively disabling the password. </code></pre>
-<p>So in your <code>/etc/shadow</code>, you will&nbsp;see:</p>
-<pre><code>myuser:!:16199:0:99999:7:::</code></pre>
+<p>So in your <code>/etc/shadow</code>, you will see (for user <code>kano</code>):</p>
+<pre><code>kano:!:16199:0:99999:7:::</code></pre>
 <p>The <code>!</code> in the password hash is something that cannot be reached with any password input, since the user’s input is always hashed. In essence, a locked account is one that you cannot log into with a password. So it’s not about disabling the account, as the man-page shows further&nbsp;down:</p>
 <pre><code>Note: if you wish to lock the account (not only access
 with a password), you should also set the EXPIRE_DATE to 1. </code></pre>
 <p>Locked accounts don’t make much sense in the context of <span class="caps">SSH</span> with key-based login only. The obvious solution of <code>UsePAM</code> set to <code>yes</code> has the nice byproduct of interpreting locked accounts as ‘disabled’ instead of&nbsp;‘password-locked’.</p>
 <p>For those that want to remain compliant without involving <span class="caps">PAM</span> in SSH, there’s still a way to get users with impossible password-login without account locking. Essentially, replace the <code>!</code> in the password hash with any equivalent like <code>*</code>:</p>
-<pre><code>myuser:*:16199:0:99999:7:::</code></pre>
+<pre><code>kano:*:16199:0:99999:7:::</code></pre>
 <p>In normal login terms, this account is not locked, while making any password input fail. <span class="caps">SSH</span> in the default hardening configuration will still allow users with valid keys to log into the account. This way may be longer, but keeps a few settings at their intended purpose without aiming for a simple byproduct. Though if you prefer PAM, you still have the option of enabling&nbsp;it.</p>
+<h3 id="configuring-accounts">Configuring&nbsp;accounts</h3>
+<p>If you have <code>adduser</code> installed, you gain control over this behavior when creating new users. This example demonstrates the&nbsp;difference:</p>
+<pre><code>&gt; adduser --disabled-password kano
+
+&gt; grep kano /etc/shadow
+kano:*:16280:7:60:7:::</code></pre>
+<p>Versus:</p>
+<pre><code>&gt; adduser --disabled-login kano
+
+&gt; grep kano /etc/shadow
+kano:!:16280:7:60:7:::</code></pre>
+<p>The former can log in without activating <span class="caps">PAM</span> in SSH, the latter&nbsp;can’t.</p>
+<p>A way to manage existing users is to use <code>usermod</code> or <code>passwd</code>. However, unlocking accounts that only have an <code>!</code> in their hash field will result in an&nbsp;error:</p>
+<pre><code>&gt; usermod -U kano
+usermod: unlocking the user&#39;s password would result in a passwordless account.</code></pre>
+<p>This is annoying, but unfortunately correct: When locking an account, an <code>!</code> is added in front of the password hash. Running unlock simply attempts to remove the <code>!</code> and use the “old” password. Without a previous password, that doesn’t&nbsp;work.</p>
+<p>The alternative is to set an impossible password for the&nbsp;user:</p>
+<pre><code>&gt; usermod -p &quot;*&quot; kano
+
+&gt; grep kano /etc/shadow
+kano:*:16280:7:60:7:::</code></pre>
+<p>This will keep the user unlocked, while prohibiting password-based&nbsp;logins.</p>
 </section>
         </article>
       </div>

@@ -31,15 +31,37 @@
 &lt;p&gt;Not quite so. In &lt;code&gt;usermod&lt;/code&gt; or &lt;code&gt;passwd&lt;/code&gt; terms, user locking results in:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Lock a user&amp;#39;s password. This puts a &amp;#39;!&amp;#39; in front of the 
 encrypted password, effectively disabling the password. &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;So in your &lt;code&gt;/etc/shadow&lt;/code&gt;, you will see:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;myuser:!:16199:0:99999:7:::&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So in your &lt;code&gt;/etc/shadow&lt;/code&gt;, you will see (for user &lt;code&gt;kano&lt;/code&gt;):&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kano:!:16199:0:99999:7:::&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The &lt;code&gt;!&lt;/code&gt; in the password hash is something that cannot be reached with any password input, since the user’s input is always hashed. In essence, a locked account is one that you cannot log into with a password. So it’s not about disabling the account, as the man-page shows further down:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Note: if you wish to lock the account (not only access
 with a password), you should also set the EXPIRE_DATE to 1. &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Locked accounts don’t make much sense in the context of SSH with key-based login only. The obvious solution of &lt;code&gt;UsePAM&lt;/code&gt; set to &lt;code&gt;yes&lt;/code&gt; has the nice byproduct of interpreting locked accounts as ‘disabled’ instead of ‘password-locked’.&lt;/p&gt;
 &lt;p&gt;For those that want to remain compliant without involving PAM in SSH, there’s still a way to get users with impossible password-login without account locking. Essentially, replace the &lt;code&gt;!&lt;/code&gt; in the password hash with any equivalent like &lt;code&gt;*&lt;/code&gt;:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;myuser:*:16199:0:99999:7:::&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;kano:*:16199:0:99999:7:::&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;In normal login terms, this account is not locked, while making any password input fail. SSH in the default hardening configuration will still allow users with valid keys to log into the account. This way may be longer, but keeps a few settings at their intended purpose without aiming for a simple byproduct. Though if you prefer PAM, you still have the option of enabling it.&lt;/p&gt;
+&lt;h3 id=&quot;configuring-accounts&quot;&gt;Configuring accounts&lt;/h3&gt;
+&lt;p&gt;If you have &lt;code&gt;adduser&lt;/code&gt; installed, you gain control over this behavior when creating new users. This example demonstrates the difference:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt; adduser --disabled-password kano
+
+&amp;gt; grep kano /etc/shadow
+kano:*:16280:7:60:7:::&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Versus:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt; adduser --disabled-login kano
+
+&amp;gt; grep kano /etc/shadow
+kano:!:16280:7:60:7:::&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The former can log in without activating PAM in SSH, the latter can’t.&lt;/p&gt;
+&lt;p&gt;A way to manage existing users is to use &lt;code&gt;usermod&lt;/code&gt; or &lt;code&gt;passwd&lt;/code&gt;. However, unlocking accounts that only have an &lt;code&gt;!&lt;/code&gt; in their hash field will result in an error:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt; usermod -U kano
+usermod: unlocking the user&amp;#39;s password would result in a passwordless account.&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is annoying, but unfortunately correct: When locking an account, an &lt;code&gt;!&lt;/code&gt; is added in front of the password hash. Running unlock simply attempts to remove the &lt;code&gt;!&lt;/code&gt; and use the “old” password. Without a previous password, that doesn’t work.&lt;/p&gt;
+&lt;p&gt;The alternative is to set an impossible password for the user:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt; usermod -p &amp;quot;*&amp;quot; kano
+
+&amp;gt; grep kano /etc/shadow
+kano:*:16280:7:60:7:::&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This will keep the user unlocked, while prohibiting password-based logins.&lt;/p&gt;
 </description>
     </item>
     <item>
