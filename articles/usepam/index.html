@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <meta name="google-site-verification" content="gRPSZeaTzicrrtM-WwBOvqx_szx4Av0stLFxBjR3QWU">
+    <title>SSH and locked users - Silversmith
+    </title>
+    <link rel="alternate" href="http://arlimus.github.io/feed.xml" type="application/rss+xml" title="">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto+Slab:700|Source+Code+Pro" type="text/css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/vendor/highlight/styles/dark.css">
+    <script type="text/javascript">
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-45216258-1', 'arlimus.github.io');
+      ga('send', 'pageview');
+      
+    </script>
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>SSH and locked users</h1>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>After the first release of <a href="https://github.com/TelekomLabs/chef-ssh-hardening">hardening for <span class="caps">SSH</span></a> I sometimes ran into the issue, where I suddenly couldn’t log into an account anymore. Since hardening prohibits the use of passwords, the culprit isn’t found immediately. The client’s <span class="caps">SSH</span> key was authorized and there wasn’t an obvious reason why he shouldn’t be able to&nbsp;login.</p>
+<p><span class="more"></span></p>
+<p>A quick solutions that comes to mind after throwing this question at Google, is to&nbsp;set</p>
+<pre><code>UsePAM yes</code></pre>
+<p>It works as advertised. But&nbsp;why?</p>
+<p>If you look at <code>man sshd_config</code> it will tell you,&nbsp;that:</p>
+<pre><code>UsePAM    Enables the Pluggable Authentication Module interface.
+          If set to ``yes&#39;&#39; this will enable PAM authentication
+          using ChallengeResponseAuthentication and
+          PasswordAuthentication in addition to PAM account and
+          session module processing for all authentication types.</code></pre>
+<p>Both of these authentication types are disabled by hardening, so <code>UsePAM</code> should remain off by&nbsp;default.</p>
+<p>However, if you enable this setting, there is another implication that follows: By default the system will not allow entry to any “locked” user. Once <code>UsePAM</code> is enabled, even locked users can&nbsp;enter.</p>
+<p>Initially this looks wrong. A locked user should not be “locked out of the system”,&nbsp;right?</p>
+<p>Not quite so. In <code>usermod</code> or <code>passwd</code> terms, user locking results&nbsp;in:</p>
+<pre><code>Lock a user&#39;s password. This puts a &#39;!&#39; in front of the 
+encrypted password, effectively disabling the password. </code></pre>
+<p>So in your <code>/etc/shadow</code>, you will&nbsp;see:</p>
+<pre><code>myuser:!:16199:0:99999:7:::</code></pre>
+<p>The <code>!</code> in the password hash is something that cannot be reached with any password input, since the user’s input is always hashed. In essence, a locked account is one that you cannot log into with a password. So it’s not about disabling the account, as the man-page shows further&nbsp;down:</p>
+<pre><code>Note: if you wish to lock the account (not only access
+with a password), you should also set the EXPIRE_DATE to 1. </code></pre>
+<p>Locked accounts don’t make much sense in the context of <span class="caps">SSH</span> with key-based login only. The obvious solution of <code>UsePAM</code> set to <code>yes</code> has the nice byproduct of interpreting locked accounts as ‘disabled’ instead of&nbsp;‘password-locked’.</p>
+<p>For those that want to remain compliant without involving <span class="caps">PAM</span> in SSH, there’s still a way to get users with impossible password-login without account locking. Essentially, replace the <code>!</code> in the password hash with any equivalent like <code>*</code>:</p>
+<pre><code>myuser:*:16199:0:99999:7:::</code></pre>
+<p>In normal login terms, this account is not locked, while making any password input fail. <span class="caps">SSH</span> in the default hardening configuration will still allow users with valid keys to log into the account. This way may be longer, but keeps a few settings at their intended purpose without aiming for a simple byproduct. Though if you prefer PAM, you still have the option of enabling&nbsp;it.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about">
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Dominik Richter &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <script src="/vendor/highlight/highlight.pack.js" onload="hljs.initHighlightingOnLoad();"></script>
+  </body>
+</html>
