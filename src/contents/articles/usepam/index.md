@@ -27,29 +27,29 @@ Both of these authentication types are disabled by hardening, so `UsePAM` should
 
 However, if you enable this setting, there is another implication that follows: By default the system will not allow entry to any "locked" user. Once `UsePAM` is enabled, even locked users can enter.
 
-Initially this looks wrong. A locked user should not be "locked out of the system", right?
+Initially this looks wrong. A locked user should not be "able to get into the system", right?
 
 Not quite so. In `usermod` or `passwd` terms, user locking results in:
 
     Lock a user's password. This puts a '!' in front of the 
     encrypted password, effectively disabling the password. 
 
-So in your `/etc/shadow`, you will see (for user `kano`):
+In essence, it's about disabling password-based login. So in your `/etc/shadow`, you will see (for user `kano`):
 
     kano:!:16199:0:99999:7:::
 
-The `!` in the password hash is something that cannot be reached with any password input, since the user's input is always hashed. In essence, a locked account is one that you cannot log into with a password. So it's not about disabling the account, as the man-page shows further down:
+The `!` in the password hash is something that cannot be reached with any password input, since the user's input is always hashed. In terms of `usermod` or `passwd`, account locking is not about disabling the account, as the man-page shows further down:
 
     Note: if you wish to lock the account (not only access
     with a password), you should also set the EXPIRE_DATE to 1. 
 
-Locked accounts don't make much sense in the context of SSH with key-based login only. The obvious solution of `UsePAM` set to `yes` has the nice byproduct of interpreting locked accounts as 'disabled' instead of 'password-locked'.
+This definition of locked accounts doesn't make much sense in the context of SSH with key-based logins. The obvious solution of `UsePAM` set to `yes` has the nice byproduct of interpreting "locked accounts" as "doesn't have a password" (which can be ignored for key-based logins) instead of "isn't allowed to log in".
 
-For those that want to remain compliant without involving PAM in SSH, there's still a way to get users with impossible password-login without account locking. Essentially, replace the `!` in the password hash with any equivalent like `*`:
+For those that want to remain compliant without involving PAM in SSH, there's still a way to get users with impossible password-login without locking the account. Essentially, replace the `!` in the password hash with any equivalent like `*`:
 
     kano:*:16199:0:99999:7:::
 
-In normal login terms, this account is not locked, while making any password input fail. SSH in the default hardening configuration will still allow users with valid keys to log into the account. This way may be longer, but keeps a few settings at their intended purpose without aiming for a simple byproduct. Though if you prefer PAM, you still have the option of enabling it.
+In normal login terms, this account is not locked, while making any password input fail. SSH in the default hardening configuration will allow users with keys to get in. This way may be longer, but it keeps a few settings at their intended purpose without aiming for a simple byproduct. Though if you prefer PAM, you still have the option of enabling it.
 
 ### Configuring accounts
 
@@ -83,4 +83,4 @@ The alternative is to set an impossible password for the user:
     > grep kano /etc/shadow
     kano:*:16280:7:60:7:::
 
-This will keep the user unlocked, while prohibiting password-based logins.
+This will keep the user unlocked, while prohibiting password-based logins with `UsePAM no`.

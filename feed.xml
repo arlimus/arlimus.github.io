@@ -27,19 +27,19 @@
           session module processing for all authentication types.&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Both of these authentication types are disabled by hardening, so &lt;code&gt;UsePAM&lt;/code&gt; should remain off by default.&lt;/p&gt;
 &lt;p&gt;However, if you enable this setting, there is another implication that follows: By default the system will not allow entry to any “locked” user. Once &lt;code&gt;UsePAM&lt;/code&gt; is enabled, even locked users can enter.&lt;/p&gt;
-&lt;p&gt;Initially this looks wrong. A locked user should not be “locked out of the system”, right?&lt;/p&gt;
+&lt;p&gt;Initially this looks wrong. A locked user should not be “able to get into the system”, right?&lt;/p&gt;
 &lt;p&gt;Not quite so. In &lt;code&gt;usermod&lt;/code&gt; or &lt;code&gt;passwd&lt;/code&gt; terms, user locking results in:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Lock a user&amp;#39;s password. This puts a &amp;#39;!&amp;#39; in front of the 
 encrypted password, effectively disabling the password. &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;So in your &lt;code&gt;/etc/shadow&lt;/code&gt;, you will see (for user &lt;code&gt;kano&lt;/code&gt;):&lt;/p&gt;
+&lt;p&gt;In essence, it’s about disabling password-based login. So in your &lt;code&gt;/etc/shadow&lt;/code&gt;, you will see (for user &lt;code&gt;kano&lt;/code&gt;):&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kano:!:16199:0:99999:7:::&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The &lt;code&gt;!&lt;/code&gt; in the password hash is something that cannot be reached with any password input, since the user’s input is always hashed. In essence, a locked account is one that you cannot log into with a password. So it’s not about disabling the account, as the man-page shows further down:&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;!&lt;/code&gt; in the password hash is something that cannot be reached with any password input, since the user’s input is always hashed. In terms of &lt;code&gt;usermod&lt;/code&gt; or &lt;code&gt;passwd&lt;/code&gt;, account locking is not about disabling the account, as the man-page shows further down:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Note: if you wish to lock the account (not only access
 with a password), you should also set the EXPIRE_DATE to 1. &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Locked accounts don’t make much sense in the context of SSH with key-based login only. The obvious solution of &lt;code&gt;UsePAM&lt;/code&gt; set to &lt;code&gt;yes&lt;/code&gt; has the nice byproduct of interpreting locked accounts as ‘disabled’ instead of ‘password-locked’.&lt;/p&gt;
-&lt;p&gt;For those that want to remain compliant without involving PAM in SSH, there’s still a way to get users with impossible password-login without account locking. Essentially, replace the &lt;code&gt;!&lt;/code&gt; in the password hash with any equivalent like &lt;code&gt;*&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;This definition of locked accounts doesn’t make much sense in the context of SSH with key-based logins. The obvious solution of &lt;code&gt;UsePAM&lt;/code&gt; set to &lt;code&gt;yes&lt;/code&gt; has the nice byproduct of interpreting “locked accounts” as “doesn’t have a password” (which can be ignored for key-based logins) instead of “isn’t allowed to log in”.&lt;/p&gt;
+&lt;p&gt;For those that want to remain compliant without involving PAM in SSH, there’s still a way to get users with impossible password-login without locking the account. Essentially, replace the &lt;code&gt;!&lt;/code&gt; in the password hash with any equivalent like &lt;code&gt;*&lt;/code&gt;:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kano:*:16199:0:99999:7:::&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;In normal login terms, this account is not locked, while making any password input fail. SSH in the default hardening configuration will still allow users with valid keys to log into the account. This way may be longer, but keeps a few settings at their intended purpose without aiming for a simple byproduct. Though if you prefer PAM, you still have the option of enabling it.&lt;/p&gt;
+&lt;p&gt;In normal login terms, this account is not locked, while making any password input fail. SSH in the default hardening configuration will allow users with keys to get in. This way may be longer, but it keeps a few settings at their intended purpose without aiming for a simple byproduct. Though if you prefer PAM, you still have the option of enabling it.&lt;/p&gt;
 &lt;h3 id=&quot;configuring-accounts&quot;&gt;Configuring accounts&lt;/h3&gt;
 &lt;p&gt;If you have &lt;code&gt;adduser&lt;/code&gt; installed, you gain control over this behavior when creating new users. This example demonstrates the difference:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;&amp;gt; adduser --disabled-password kano
@@ -61,7 +61,7 @@ usermod: unlocking the user&amp;#39;s password would result in a passwordless ac
 
 &amp;gt; grep kano /etc/shadow
 kano:*:16280:7:60:7:::&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This will keep the user unlocked, while prohibiting password-based logins.&lt;/p&gt;
+&lt;p&gt;This will keep the user unlocked, while prohibiting password-based logins with &lt;code&gt;UsePAM no&lt;/code&gt;.&lt;/p&gt;
 </description>
     </item>
     <item>

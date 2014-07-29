@@ -43,19 +43,19 @@
           session module processing for all authentication types.</code></pre>
 <p>Both of these authentication types are disabled by hardening, so <code>UsePAM</code> should remain off by&nbsp;default.</p>
 <p>However, if you enable this setting, there is another implication that follows: By default the system will not allow entry to any “locked” user. Once <code>UsePAM</code> is enabled, even locked users can&nbsp;enter.</p>
-<p>Initially this looks wrong. A locked user should not be “locked out of the system”,&nbsp;right?</p>
+<p>Initially this looks wrong. A locked user should not be “able to get into the system”,&nbsp;right?</p>
 <p>Not quite so. In <code>usermod</code> or <code>passwd</code> terms, user locking results&nbsp;in:</p>
 <pre><code>Lock a user&#39;s password. This puts a &#39;!&#39; in front of the 
 encrypted password, effectively disabling the password. </code></pre>
-<p>So in your <code>/etc/shadow</code>, you will see (for user <code>kano</code>):</p>
+<p>In essence, it’s about disabling password-based login. So in your <code>/etc/shadow</code>, you will see (for user <code>kano</code>):</p>
 <pre><code>kano:!:16199:0:99999:7:::</code></pre>
-<p>The <code>!</code> in the password hash is something that cannot be reached with any password input, since the user’s input is always hashed. In essence, a locked account is one that you cannot log into with a password. So it’s not about disabling the account, as the man-page shows further&nbsp;down:</p>
+<p>The <code>!</code> in the password hash is something that cannot be reached with any password input, since the user’s input is always hashed. In terms of <code>usermod</code> or <code>passwd</code>, account locking is not about disabling the account, as the man-page shows further&nbsp;down:</p>
 <pre><code>Note: if you wish to lock the account (not only access
 with a password), you should also set the EXPIRE_DATE to 1. </code></pre>
-<p>Locked accounts don’t make much sense in the context of <span class="caps">SSH</span> with key-based login only. The obvious solution of <code>UsePAM</code> set to <code>yes</code> has the nice byproduct of interpreting locked accounts as ‘disabled’ instead of&nbsp;‘password-locked’.</p>
-<p>For those that want to remain compliant without involving <span class="caps">PAM</span> in SSH, there’s still a way to get users with impossible password-login without account locking. Essentially, replace the <code>!</code> in the password hash with any equivalent like <code>*</code>:</p>
+<p>This definition of locked accounts doesn’t make much sense in the context of <span class="caps">SSH</span> with key-based logins. The obvious solution of <code>UsePAM</code> set to <code>yes</code> has the nice byproduct of interpreting “locked accounts” as “doesn’t have a password” (which can be ignored for key-based logins) instead of “isn’t allowed to log&nbsp;in”.</p>
+<p>For those that want to remain compliant without involving <span class="caps">PAM</span> in SSH, there’s still a way to get users with impossible password-login without locking the account. Essentially, replace the <code>!</code> in the password hash with any equivalent like <code>*</code>:</p>
 <pre><code>kano:*:16199:0:99999:7:::</code></pre>
-<p>In normal login terms, this account is not locked, while making any password input fail. <span class="caps">SSH</span> in the default hardening configuration will still allow users with valid keys to log into the account. This way may be longer, but keeps a few settings at their intended purpose without aiming for a simple byproduct. Though if you prefer PAM, you still have the option of enabling&nbsp;it.</p>
+<p>In normal login terms, this account is not locked, while making any password input fail. <span class="caps">SSH</span> in the default hardening configuration will allow users with keys to get in. This way may be longer, but it keeps a few settings at their intended purpose without aiming for a simple byproduct. Though if you prefer PAM, you still have the option of enabling&nbsp;it.</p>
 <h3 id="configuring-accounts">Configuring&nbsp;accounts</h3>
 <p>If you have <code>adduser</code> installed, you gain control over this behavior when creating new users. This example demonstrates the&nbsp;difference:</p>
 <pre><code>&gt; adduser --disabled-password kano
@@ -77,7 +77,7 @@ usermod: unlocking the user&#39;s password would result in a passwordless accoun
 
 &gt; grep kano /etc/shadow
 kano:*:16280:7:60:7:::</code></pre>
-<p>This will keep the user unlocked, while prohibiting password-based&nbsp;logins.</p>
+<p>This will keep the user unlocked, while prohibiting password-based logins with <code>UsePAM no</code>.</p>
 </section>
         </article>
       </div>
