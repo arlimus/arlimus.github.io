@@ -455,6 +455,29 @@ code.lang-markdown .bullet {
   height: 9.3125rem;
 }
 
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  display: block;
+  margin: 15px 0;
+  border: 0;
+}
+
+tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+  vertical-align: inherit;
+}
+
+td {
+  border: 1px solid #ddd;
+  padding: 6px 13px;
+  font-weight: normal;
+  vertical-align: top;
+  text-align: left;
+}
+
 /*TODO: replace this! (quick steal from bootstrap)*/
 input {
   -webkit-appearance: none;
