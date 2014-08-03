@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width">
     <meta name="google-site-verification" content="gRPSZeaTzicrrtM-WwBOvqx_szx4Av0stLFxBjR3QWU">
-    <title>Styling Jenkins - Silversmith
+    <title>Silversmith
     </title>
     <link rel="alternate" href="http://arlimus.github.io/feed.xml" type="application/rss+xml" title="">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto+Slab:700|Source+Code+Pro|Inconsolata" type="text/css">
@@ -24,39 +24,36 @@
     <script src="/vendor/highlight/highlight.pack.js" onload="hljs.initHighlightingOnLoad();"></script>
     <script>
       $app = angular.module('app', [])
-
+      
     </script>
   </head>
-  <body ng-app="app" class="article-detail">
+  <body ng-app="app">
     <header class="header">
       <div class="content-wrap">
-        <h1>Styling Jenkins</h1>
+        <div class="logo">
+          <h1><a href="http://arlimus.github.io">Silversmith</a></h1>
+          <p class="description"></p>
+        </div>
       </div>
     </header>
     <div id="content">
       <div class="content-wrap">
-        <article class="article">
+        <article class="article intro">
+          <header>
+            <p class="date"><span>24. October 2013</span></p>
+            <h2><a href="/articles/theming.jenkins/">Styling Jenkins</a></h2>
+          </header>
           <section class="content"><p>Jenkins has a nice theming plugin available. To use it you need to set up a stylesheet that is accessible to everyone user. I created a few themes found <a href="https://github.com/arlimus/jenkins-style">here</a>.</p>
-<p><span class="more"></span></p>
-<p>The themes are found on github and hosted via github pages. They can easily be used in jenkins by copying the css of the theme you like into the configuration of the Simple Theme Plugin for&nbsp;Jenkins.</p>
-<p>My orange moon theme for&nbsp;Jenkins:</p>
-<p><img src="/articles/theming.jenkins/orange.moon.jenkins.png" style="max-width: 201px; margin-left: auto; margin-right: auto;" /></p>
-<p>Link to the&nbsp;css:</p>
-<pre><code>http://arlimus.github.io/jenkins-style/orange.moon.css</code></pre>
-<p>The source is written in <span class="caps">SASS</span> and can be found <a href="https://github.com/arlimus/jenkins-style/blob/master/css/orange.moon.scss">here</a>.</p>
-<p>I have also create a theme for my company’s&nbsp;Jenkins:</p>
-<p><img src="/articles/theming.jenkins/magenta.jenkins.png" style="max-width: 174px; margin-left: auto; margin-right: auto;" /></p>
-<p>Link to the&nbsp;css:</p>
-<pre><code>http://arlimus.github.io/jenkins-style/telekom.css</code></pre>
-<p>The source is written in <span class="caps">SASS</span> and can be found <a href="https://github.com/arlimus/jenkins-style/blob/master/css/telekom.scss">here</a>.</p>
-<p><a href="https://github.com/arlimus/jenkins-style"><img id="fork-me-ribbon" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a></p>
-</section>
+<p>
+            <p class="more"><a href="/articles/theming.jenkins/">more</a></p>
+          </section>
         </article>
       </div>
     </div>
     <footer>
       <div class="content-wrap">
-        <div class="nav"><a href="/">« Full blog</a></div>
+        <div class="nav"><a href="/page/2/">« Newer</a>
+        </div>
         <section class="about">
 
         </section>

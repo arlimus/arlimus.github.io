@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <meta name="google-site-verification" content="gRPSZeaTzicrrtM-WwBOvqx_szx4Av0stLFxBjR3QWU">
+    <title>REST design summary - Silversmith
+    </title>
+    <link rel="alternate" href="http://arlimus.github.io/feed.xml" type="application/rss+xml" title="">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto+Slab:700|Source+Code+Pro|Inconsolata" type="text/css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/vendor/highlight/styles/dark.css">
+    <script type="text/javascript">
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-45216258-1', 'arlimus.github.io');
+      ga('send', 'pageview');
+      
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
+    <script src="/vendor/highlight/highlight.pack.js" onload="hljs.initHighlightingOnLoad();"></script>
+    <script>
+      $app = angular.module('app', [])
+      
+    </script>
+  </head>
+  <body ng-app="app" class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>REST design summary</h1>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>It feels like this has been done so many times, it could replace your favorite “Hello World” code. But since I’m a sucker for summaries, here&nbsp;goes.</p>
+<p><span class="more"></span></p>
+<script>
+$app.directive('flow', function() {
+  return {
+    template: '\
+<div class="flow clearfix">\
+  <div class="request" ng-show="!!request">\
+    <div class="rheader">{{request}}</div>\
+    <div class="rbody">{{requestBody}}</div>\
+  </div>\
+  <div class="connection" ng-show="!!request"></div>\
+  <div class="response response-type-{{responseType}}">\
+    <div class="rheader">{{response}}</div>\
+    <div class="rbody">{{responseBody}}</div>\
+  </div>\
+  <div class="help" ng-show="!!help">{{help}}</div>\
+</div>\
+',
+    scope: {
+      request: '@', requestBody: '@',
+      response: '@', responseBody: '@',
+      help: '@'
+    },
+    link: function (scope, element, attrs) {
+      var r = (/^([2345])\d\d/).exec(scope.response)
+      if(r == null){
+        scope.responseType = "0"
+      }else {
+        scope.responseType = r[1]
+      }
+    }
+  }
+})
+</script>
+
+<h2 id="read">Read</h2>
+<p>Get a list of items. If successful, it responds with an array of IDs or&nbsp;objects.</p>
+<div flow="" request="GET /items" response="200 OK" response-body="[&quot;1&quot;,&quot;2&quot;,&quot;3&quot;]">
+
+</div>
+<div flow="" request="GET /missing" response="404 Not Found">
+
+</div>
+<p>Get a specific item. If successful, returns the&nbsp;object.</p>
+<div flow="" request="GET /items/1" response="200 OK" response-body="{&quot;message&quot;, &quot;I am an item&quot;}">
+
+</div>
+<div flow="" request="GET /items/?" response="404 Not Found">
+
+</div>
+<h2 id="create">Create</h2>
+<p>If you want to create an new item (making sure it doesn’t&nbsp;exist):</p>
+<div flow="" request="POST /items" request-body="{&quot;id&quot;: &quot;4&quot;, &quot;key&quot;: &quot;val&quot;}" response="200 OK">
+
+</div>
+<div flow="" request="POST /items" request-body="incorrect data body" response="400 Bad Request">
+
+</div>
+<p>If the item already&nbsp;exists:</p>
+<div flow="" request="POST /items" request-body="{&quot;id&quot;: &quot;1&quot;, &quot;key&quot;: &quot;val&quot;}" response="409 Conflict">
+
+</div>
+<h2 id="update">Update</h2>
+<p>If you want to replace an existing&nbsp;item:</p>
+<div flow="" request="PUT /items/1" request-body="{&quot;message&quot;: &quot;hello&quot;}" response="200 OK">
+
+</div>
+<div flow="" request="PUT /items/1" request-body="incorrect data body" response="400 Bad Request">
+
+</div>
+<div flow="" request="PUT /items/4" request-body="{&quot;key&quot;: &quot;val&quot;}" response="404 Not Found">
+
+</div>
+<h2 id="update-change-some-fields">Update (change some&nbsp;fields)</h2>
+<p>If you want to update some fields of an existing&nbsp;item:</p>
+<div flow="" request="PATCH /items/1" request-body="{&quot;message&quot;: &quot;hello&quot;}" response="200 OK">
+
+</div>
+<div flow="" request="PATCH /items/1" request-body="incorrect data body" response="400 Bad Request">
+
+</div>
+<div flow="" request="PATCH /items/4" request-body="{&quot;message&quot;: &quot;hello&quot;}" response="404 Not Found">
+
+</div>
+<h2 id="delete">Delete</h2>
+<p>If you want to remove an existing&nbsp;item:</p>
+<div flow="" request="DELETE /items/1" response="200 OK">
+
+</div>
+<div flow="" request="DELETE /items/4" response="404 Not Found">
+
+</div>
+<h2 id="other-responses">Other&nbsp;responses</h2>
+<div flow="" response="401 Unauthorized" help="Not authenticated; Please log in first">
+
+</div>
+<div flow="" response="403 Forbidden" help="Not authorized; Get more permissions or leave">
+
+</div>
+<div flow="" response="500 Internal Server Error" help="Something went wrong. Marbles dropped on the floor.">
+
+</div>
+<h2 id="rarities">Rarities</h2>
+<div flow="" response="402 Payment Required" help="If someone is willing to pay for your endpoint">
+
+</div>
+<div flow="" response="418 I&#39;m a teapot" help="Obvious response if you&#39;re teapot.">
+
+</div>
+<div flow="" response="501 Not Implemented" help="Possible, but almost never seen in the wild. Stick to 404.">
+
+</div>
+<div flow="" response="503 Service Unavailable" help="Try again later. Also seldomly seen in the wild.">
+
+</div>
+<h2 id="final-words">Final&nbsp;words</h2>
+<p>This will cover 80%+ of what you need in your daily <span class="caps">REST</span> work. Users will expect this behavior and will feel comfortable with it. It also helps design clean&nbsp;APIs.</p>
+<p>If you want a longer + more comprehensive list, go <a href="/articles/restful.best.practices/www.restapitutorial.com">here</a> or <a href="/articles/restful.best.practices/restpatterns.org">here</a>.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about">
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Dominik Richter &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

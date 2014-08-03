@@ -5,9 +5,136 @@
     <atom:link href="http://arlimus.github.io/feed.xml" rel="self" type="application/rss+xml"></atom:link>
     <link>http://arlimus.github.io</link>
     <description></description>
-    <pubDate>Mon, 28 Jul 2014 02:00:00 +0200</pubDate>
+    <pubDate>Sun, 03  Aug 2014 02:00:00 +0200</pubDate>
     <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
     <language>en</language>
+    <item>
+      <title>REST design summary</title>
+      <link>http://arlimus.github.io/articles/restful.best.practices/</link>
+      <pubDate>Sun, 03  Aug 2014 02:00:00 +0200</pubDate>
+      <guid isPermaLink="true">http://arlimus.github.io/articles/restful.best.practices/</guid>
+      <author></author>
+      <description>&lt;p&gt;It feels like this has been done so many times, it could replace your favorite “Hello World” code. But since I’m a sucker for summaries, here goes.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;script&gt;
+$app.directive('flow', function() {
+  return {
+    template: '\
+&lt;div class=&quot;flow clearfix&quot;&gt;\
+  &lt;div class=&quot;request&quot; ng-show=&quot;!!request&quot;&gt;\
+    &lt;div class=&quot;rheader&quot;&gt;{{request}}&lt;/div&gt;\
+    &lt;div class=&quot;rbody&quot;&gt;{{requestBody}}&lt;/div&gt;\
+  &lt;/div&gt;\
+  &lt;div class=&quot;connection&quot; ng-show=&quot;!!request&quot;&gt;&lt;/div&gt;\
+  &lt;div class=&quot;response response-type-{{responseType}}&quot;&gt;\
+    &lt;div class=&quot;rheader&quot;&gt;{{response}}&lt;/div&gt;\
+    &lt;div class=&quot;rbody&quot;&gt;{{responseBody}}&lt;/div&gt;\
+  &lt;/div&gt;\
+  &lt;div class=&quot;help&quot; ng-show=&quot;!!help&quot;&gt;{{help}}&lt;/div&gt;\
+&lt;/div&gt;\
+',
+    scope: {
+      request: '@', requestBody: '@',
+      response: '@', responseBody: '@',
+      help: '@'
+    },
+    link: function (scope, element, attrs) {
+      var r = (/^([2345])\d\d/).exec(scope.response)
+      if(r == null){
+        scope.responseType = &quot;0&quot;
+      }else {
+        scope.responseType = r[1]
+      }
+    }
+  }
+})
+&lt;/script&gt;
+
+&lt;h2 id=&quot;read&quot;&gt;Read&lt;/h2&gt;
+&lt;p&gt;Get a list of items. If successful, it responds with an array of IDs or objects.&lt;/p&gt;
+&lt;div flow=&quot;&quot; request=&quot;GET /items&quot; response=&quot;200 OK&quot; response-body=&quot;[&amp;quot;1&amp;quot;,&amp;quot;2&amp;quot;,&amp;quot;3&amp;quot;]&quot;&gt;
+
+&lt;/div&gt;
+&lt;div flow=&quot;&quot; request=&quot;GET /missing&quot; response=&quot;404 Not Found&quot;&gt;
+
+&lt;/div&gt;
+&lt;p&gt;Get a specific item. If successful, returns the object.&lt;/p&gt;
+&lt;div flow=&quot;&quot; request=&quot;GET /items/1&quot; response=&quot;200 OK&quot; response-body=&quot;{&amp;quot;message&amp;quot;, &amp;quot;I am an item&amp;quot;}&quot;&gt;
+
+&lt;/div&gt;
+&lt;div flow=&quot;&quot; request=&quot;GET /items/?&quot; response=&quot;404 Not Found&quot;&gt;
+
+&lt;/div&gt;
+&lt;h2 id=&quot;create&quot;&gt;Create&lt;/h2&gt;
+&lt;p&gt;If you want to create an new item (making sure it doesn’t exist):&lt;/p&gt;
+&lt;div flow=&quot;&quot; request=&quot;POST /items&quot; request-body=&quot;{&amp;quot;id&amp;quot;: &amp;quot;4&amp;quot;, &amp;quot;key&amp;quot;: &amp;quot;val&amp;quot;}&quot; response=&quot;200 OK&quot;&gt;
+
+&lt;/div&gt;
+&lt;div flow=&quot;&quot; request=&quot;POST /items&quot; request-body=&quot;incorrect data body&quot; response=&quot;400 Bad Request&quot;&gt;
+
+&lt;/div&gt;
+&lt;p&gt;If the item already exists:&lt;/p&gt;
+&lt;div flow=&quot;&quot; request=&quot;POST /items&quot; request-body=&quot;{&amp;quot;id&amp;quot;: &amp;quot;1&amp;quot;, &amp;quot;key&amp;quot;: &amp;quot;val&amp;quot;}&quot; response=&quot;409 Conflict&quot;&gt;
+
+&lt;/div&gt;
+&lt;h2 id=&quot;update&quot;&gt;Update&lt;/h2&gt;
+&lt;p&gt;If you want to replace an existing item:&lt;/p&gt;
+&lt;div flow=&quot;&quot; request=&quot;PUT /items/1&quot; request-body=&quot;{&amp;quot;message&amp;quot;: &amp;quot;hello&amp;quot;}&quot; response=&quot;200 OK&quot;&gt;
+
+&lt;/div&gt;
+&lt;div flow=&quot;&quot; request=&quot;PUT /items/1&quot; request-body=&quot;incorrect data body&quot; response=&quot;400 Bad Request&quot;&gt;
+
+&lt;/div&gt;
+&lt;div flow=&quot;&quot; request=&quot;PUT /items/4&quot; request-body=&quot;{&amp;quot;key&amp;quot;: &amp;quot;val&amp;quot;}&quot; response=&quot;404 Not Found&quot;&gt;
+
+&lt;/div&gt;
+&lt;h2 id=&quot;update-change-some-fields&quot;&gt;Update (change some fields)&lt;/h2&gt;
+&lt;p&gt;If you want to update some fields of an existing item:&lt;/p&gt;
+&lt;div flow=&quot;&quot; request=&quot;PATCH /items/1&quot; request-body=&quot;{&amp;quot;message&amp;quot;: &amp;quot;hello&amp;quot;}&quot; response=&quot;200 OK&quot;&gt;
+
+&lt;/div&gt;
+&lt;div flow=&quot;&quot; request=&quot;PATCH /items/1&quot; request-body=&quot;incorrect data body&quot; response=&quot;400 Bad Request&quot;&gt;
+
+&lt;/div&gt;
+&lt;div flow=&quot;&quot; request=&quot;PATCH /items/4&quot; request-body=&quot;{&amp;quot;message&amp;quot;: &amp;quot;hello&amp;quot;}&quot; response=&quot;404 Not Found&quot;&gt;
+
+&lt;/div&gt;
+&lt;h2 id=&quot;delete&quot;&gt;Delete&lt;/h2&gt;
+&lt;p&gt;If you want to remove an existing item:&lt;/p&gt;
+&lt;div flow=&quot;&quot; request=&quot;DELETE /items/1&quot; response=&quot;200 OK&quot;&gt;
+
+&lt;/div&gt;
+&lt;div flow=&quot;&quot; request=&quot;DELETE /items/4&quot; response=&quot;404 Not Found&quot;&gt;
+
+&lt;/div&gt;
+&lt;h2 id=&quot;other-responses&quot;&gt;Other responses&lt;/h2&gt;
+&lt;div flow=&quot;&quot; response=&quot;401 Unauthorized&quot; help=&quot;Not authenticated; Please log in first&quot;&gt;
+
+&lt;/div&gt;
+&lt;div flow=&quot;&quot; response=&quot;403 Forbidden&quot; help=&quot;Not authorized; Get more permissions or leave&quot;&gt;
+
+&lt;/div&gt;
+&lt;div flow=&quot;&quot; response=&quot;500 Internal Server Error&quot; help=&quot;Something went wrong. Marbles dropped on the floor.&quot;&gt;
+
+&lt;/div&gt;
+&lt;h2 id=&quot;rarities&quot;&gt;Rarities&lt;/h2&gt;
+&lt;div flow=&quot;&quot; response=&quot;402 Payment Required&quot; help=&quot;If someone is willing to pay for your endpoint&quot;&gt;
+
+&lt;/div&gt;
+&lt;div flow=&quot;&quot; response=&quot;418 I&amp;#39;m a teapot&quot; help=&quot;Obvious response if you&amp;#39;re teapot.&quot;&gt;
+
+&lt;/div&gt;
+&lt;div flow=&quot;&quot; response=&quot;501 Not Implemented&quot; help=&quot;Possible, but almost never seen in the wild. Stick to 404.&quot;&gt;
+
+&lt;/div&gt;
+&lt;div flow=&quot;&quot; response=&quot;503 Service Unavailable&quot; help=&quot;Try again later. Also seldomly seen in the wild.&quot;&gt;
+
+&lt;/div&gt;
+&lt;h2 id=&quot;final-words&quot;&gt;Final words&lt;/h2&gt;
+&lt;p&gt;This will cover 80%+ of what you need in your daily REST work. Users will expect this behavior and will feel comfortable with it. It also helps design clean APIs.&lt;/p&gt;
+&lt;p&gt;If you want a longer + more comprehensive list, go &lt;a href=&quot;http://arlimus.github.io/articles/restful.best.practices/www.restapitutorial.com&quot;&gt;here&lt;/a&gt; or &lt;a href=&quot;http://arlimus.github.io/articles/restful.best.practices/restpatterns.org&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>SSH and locked users</title>
       <link>http://arlimus.github.io/articles/usepam/</link>
