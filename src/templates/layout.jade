@@ -1,7 +1,7 @@
 !!! 5
 block vars
   - var bodyclass = null;
-html(lang='en' ng-app)
+html(lang='en')
   head
     block head
       meta(charset='utf-8')
@@ -12,7 +12,7 @@ html(lang='en' ng-app)
         block title
           = locals.name
       link(rel='alternate', href=locals.url+'/feed.xml', type='application/rss+xml', title=locals.description)
-      link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Roboto+Slab:700|Source+Code+Pro' type='text/css')
+      link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Roboto+Slab:700|Source+Code+Pro|Inconsolata' type='text/css')
       //- link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300')
       link(rel='stylesheet', href='/css/main.css')
       link(rel='stylesheet', href='/vendor/highlight/styles/dark.css')
@@ -24,7 +24,12 @@ html(lang='en' ng-app)
         ga('create', 'UA-45216258-1', 'arlimus.github.io');
         ga('send', 'pageview');
 
-  body(class=bodyclass)
+      script(src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js")
+      script(src="/vendor/highlight/highlight.pack.js", onload="hljs.initHighlightingOnLoad();")
+      script.
+        $app = angular.module('app', [])
+
+  body(class=bodyclass ng-app='app')
     header.header
       div.content-wrap
         block header
@@ -45,6 +50,3 @@ html(lang='en' ng-app)
             p &copy; #{ new Date().getFullYear() } #{ locals.owner } &mdash; powered by&nbsp;
               a(href='https://github.com/jnordberg/wintersmith') Wintersmith
               //- please leave the "powered by" if you use the design
-
-    script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js")
-    script(src="/vendor/highlight/highlight.pack.js", onload="hljs.initHighlightingOnLoad();")

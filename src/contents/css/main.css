@@ -59,7 +59,8 @@ h2 {
   font-size: 1.2em;
   font-weight: 400;
   line-height: 1.43;
-  margin-bottom: 1.35em;
+  margin-bottom: 1em;
+  margin-top: 1.7em;
 }
 
 h3 {
@@ -547,4 +548,60 @@ input {
   vertical-align: middle;
   word-spacing: 0px;
   writing-mode: lr-tb;
+}
+
+/* FLOW STYLE */
+
+.request, .connection, .response, .help {
+  display: inline-block;
+  vertical-align: top;
+  float: left;
+}
+
+.connection {
+  width: 5rem;
+  border-bottom: 1px solid #aaa;
+  margin: 1.0rem 0 0 0;
+}
+
+.request, .response, .help {
+  border-radius: 5px;
+  padding: 3px 7px;
+  min-width: 15rem;
+  margin: 0 0 2rem 0;
+  color: #000;
+  /*font-weight: bold;*/
+  font-size: 0.8em;
+}
+
+.request, .response {
+  font-family: 'Inconsolata', monospace;
+  border: 1px solid #aaa;
+  background: #eee;
+}
+
+.help {
+  margin-left: 2rem;
+}
+
+.response-type-2 {
+  border: 1px solid #00CE08;
+  background: #EFFFF0;
+  box-shadow: 0px 0px 2px #1EF700;
+}
+
+.response-type-4, .response-type-5 {
+  border: 1px solid #FF3030;
+  background: #FFEFEF;
+  box-shadow: 0px 0px 2px #FF7676;
+}
+
+.clearfix:before,
+.clearfix:after {
+  content: " ";
+  display: table;
+}
+
+.clearfix:after {
+  clear: both;
 }
