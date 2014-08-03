@@ -552,23 +552,41 @@ input {
 
 /* FLOW STYLE */
 
-.request, .connection, .response, .help {
+.request, .response, .help {
   display: inline-block;
-  vertical-align: top;
-  float: left;
 }
 
 .connection {
-  width: 5rem;
-  border-bottom: 1px solid #aaa;
-  margin: 1.0rem 0 0 0;
+  display: block;
+  margin-top: -1.6em;
+  height: 1.6em;
+  border: none;
+  border-right: 1px solid #000;
+  width: 6em;
 }
+
+@media only screen and (min-width: 38em) {
+  .request, .connection, .response, .help {
+    display: inline-block;
+    vertical-align: top;
+    float: left;
+  }
+
+  .connection {
+    margin: 0.75em 0 0 0;
+    height: inherit;
+    border: none;
+    border-bottom: 1px solid #aaa;
+    width: 5em;
+  }
+}
+
 
 .request, .response, .help {
   border-radius: 5px;
   padding: 3px 7px;
-  min-width: 15rem;
-  margin: 0 0 2rem 0;
+  min-width: 15em;
+  margin: 0 0 2em 0;
   color: #000;
   /*font-weight: bold;*/
   font-size: 0.8em;
@@ -581,7 +599,7 @@ input {
 }
 
 .help {
-  margin-left: 2rem;
+  margin-left: 2em;
 }
 
 .response-type-2 {
