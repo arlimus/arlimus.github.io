@@ -132,7 +132,7 @@ $app.directive('flow', function() {
 &lt;/div&gt;
 &lt;h2 id=&quot;final-words&quot;&gt;Final words&lt;/h2&gt;
 &lt;p&gt;This will cover 80%+ of what you need in your daily REST work. Users will expect this behavior and will feel comfortable with it. It also helps design clean APIs.&lt;/p&gt;
-&lt;p&gt;If you want a longer + more comprehensive list, go &lt;a href=&quot;http://arlimus.github.io/articles/restful.best.practices/www.restapitutorial.com&quot;&gt;here&lt;/a&gt; or &lt;a href=&quot;http://arlimus.github.io/articles/restful.best.practices/restpatterns.org&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you want a longer + more comprehensive list, go &lt;a href=&quot;http://www.restapitutorial.com&quot;&gt;here&lt;/a&gt; or &lt;a href=&quot;http://restpatterns.org&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
     <item>

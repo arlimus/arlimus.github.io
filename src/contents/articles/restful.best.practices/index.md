@@ -106,4 +106,4 @@ If you want to remove an existing item:
 
 This will cover 80%+ of what you need in your daily REST work. Users will expect this behavior and will feel comfortable with it. It also helps design clean APIs.
 
-If you want a longer + more comprehensive list, go [here](www.restapitutorial.com) or [here](restpatterns.org).
+If you want a longer + more comprehensive list, go [here](http://www.restapitutorial.com) or [here](http://restpatterns.org).
