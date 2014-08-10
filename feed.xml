@@ -5,9 +5,73 @@
     <atom:link href="http://arlimus.github.io/feed.xml" rel="self" type="application/rss+xml"></atom:link>
     <link>http://arlimus.github.io</link>
     <description></description>
-    <pubDate>Sun, 03  Aug 2014 02:00:00 +0200</pubDate>
+    <pubDate>Sun, 10  Aug 2014 02:00:00 +0200</pubDate>
     <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
     <language>en</language>
+    <item>
+      <title>Cloning Pitfalls</title>
+      <link>http://arlimus.github.io/articles/cloning.pitfalls/</link>
+      <pubDate>Sun, 10  Aug 2014 02:00:00 +0200</pubDate>
+      <guid isPermaLink="true">http://arlimus.github.io/articles/cloning.pitfalls/</guid>
+      <author></author>
+      <description>&lt;p&gt;It’s a simple enough task: Create a copy of an object and hand it off for some jolly processing. But there’s a few traps on the way.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;h2 id=&quot;cloning-javascript&quot;&gt;Cloning (JavaScript)&lt;/h2&gt;
+&lt;p&gt;Let’s try cloning with &lt;a href=&quot;http://lodash.com/docs&quot;&gt;lo-dash&lt;/a&gt;&lt;/p&gt;
+&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;a = {&lt;span class=&quot;dt&quot;&gt;b&lt;/span&gt;: {&lt;span class=&quot;dt&quot;&gt;c&lt;/span&gt;: &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; }}
+t = &lt;span class=&quot;ot&quot;&gt;_&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;clone&lt;/span&gt;(a)
+&lt;span class=&quot;ot&quot;&gt;t&lt;/span&gt;.&lt;span class=&quot;ot&quot;&gt;b&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// = 13&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Simple.&lt;/p&gt;
+&lt;p&gt;Generally, however, you won’t clone and just read a value; Instead you’ll most likely process it in some form:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;ot&quot;&gt;t&lt;/span&gt;.&lt;span class=&quot;ot&quot;&gt;b&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;c&lt;/span&gt; = &lt;span class=&quot;dv&quot;&gt;3&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Imagine a larger project where things like this happen deep in a code-cave. It’s easy to think of the object as being fully cloned, even though it isn’t:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;ot&quot;&gt;a&lt;/span&gt;.&lt;span class=&quot;ot&quot;&gt;b&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// = 3&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Since javascript doesn’t have (verified) immutable types, this is a typical pitfall waiting for you.&lt;/p&gt;
+&lt;p&gt;You’ll quickly find a solution to this problem:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;a = {&lt;span class=&quot;dt&quot;&gt;b&lt;/span&gt;: {&lt;span class=&quot;dt&quot;&gt;c&lt;/span&gt;: &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; }}
+t = &lt;span class=&quot;ot&quot;&gt;_&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;cloneDeep&lt;/span&gt;(a)
+&lt;span class=&quot;ot&quot;&gt;t&lt;/span&gt;.&lt;span class=&quot;ot&quot;&gt;b&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;c&lt;/span&gt; = &lt;span class=&quot;dv&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;ot&quot;&gt;a&lt;/span&gt;.&lt;span class=&quot;ot&quot;&gt;b&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// = 12&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Or using jQuery’s &lt;code&gt;extend&lt;/code&gt;&lt;/p&gt;
+&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;t = &lt;span class=&quot;ot&quot;&gt;$&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;extend&lt;/span&gt;(&lt;span class=&quot;kw&quot;&gt;true&lt;/span&gt;, {}, a)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Or plain old JSON (if you don’t care about methods)&lt;/p&gt;
+&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;t = &lt;span class=&quot;ot&quot;&gt;JSON&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;parse&lt;/span&gt;(&lt;span class=&quot;ot&quot;&gt;JSON&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;stringify&lt;/span&gt;(a))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For more inspiration take a look at this &lt;a href=&quot;http://jsperf.com/deep-cloning-of-objects&quot;&gt;benchmark here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;pointers-go&quot;&gt;Pointers (Go)&lt;/h2&gt;
+&lt;p&gt;The tricky part about javascript is, that this behavior isn’t always apparent. Other languages are much more explicit with copies and references.&lt;/p&gt;
+&lt;p&gt;Here’s the same example in Go:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;type&lt;/span&gt; B &lt;span class=&quot;kw&quot;&gt;struct&lt;/span&gt; { C &lt;span class=&quot;dt&quot;&gt;int&lt;/span&gt; }
+&lt;span class=&quot;kw&quot;&gt;type&lt;/span&gt; A &lt;span class=&quot;kw&quot;&gt;struct&lt;/span&gt; { B B }
+a := A{B: B{C: &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt;}}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Versus:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;type&lt;/span&gt; B &lt;span class=&quot;kw&quot;&gt;struct&lt;/span&gt; { C &lt;span class=&quot;dt&quot;&gt;int&lt;/span&gt; }
+&lt;span class=&quot;kw&quot;&gt;type&lt;/span&gt; A &lt;span class=&quot;kw&quot;&gt;struct&lt;/span&gt; { B *B }
+a := A{B: &amp;amp;B{C: &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt;}}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This explicit pointer &lt;code&gt;*&lt;/code&gt; makes a huge difference in reasoning about the program. It clearly shows that it doesn’t hold the value itself, but a copy. It doesn’t necessarily make cloning the object any easier, but it simplifies the search for errors a lot: You know that it’s either a value &lt;code&gt;{ A Structure }&lt;/code&gt; (or a copy of such), or a pointer to some object &lt;code&gt;{ A *Structure }&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The larger your project gets, the more likely you’ll have these and similar constructs with potential cloning pits waiting (though less likely here).&lt;/p&gt;
+&lt;h2 id=&quot;constants-scala&quot;&gt;Constants (Scala)&lt;/h2&gt;
+&lt;p&gt;Go supports constants, but only in a very limited way:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;const&lt;/span&gt; c = &lt;span class=&quot;dv&quot;&gt;123&lt;/span&gt;    &lt;span class=&quot;co&quot;&gt;// possible&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;const&lt;/span&gt; a = A{...} &lt;span class=&quot;co&quot;&gt;// not&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let’s have a look at a final language for constants: Scala.&lt;/p&gt;
+&lt;p&gt;Mutability is handled explicitly here:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; a = &lt;span class=&quot;dv&quot;&gt;123&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;val&lt;/span&gt; b = &lt;span class=&quot;dv&quot;&gt;123&lt;/span&gt;
+a = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt;
+b = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// won&amp;#39;t compile&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Even if you take more complex structures like maps and lists, you’ll usually have the choice of going mutable or immutable:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;val&lt;/span&gt; a = List(&lt;span class=&quot;dv&quot;&gt;1&lt;/span&gt;,&lt;span class=&quot;dv&quot;&gt;2&lt;/span&gt;,&lt;span class=&quot;dv&quot;&gt;3&lt;/span&gt;)
+&lt;span class=&quot;fu&quot;&gt;a&lt;/span&gt;(&lt;span class=&quot;dv&quot;&gt;0&lt;/span&gt;) = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// won&amp;#39;t compile&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Versus&lt;/p&gt;
+&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; collection.&lt;span class=&quot;fu&quot;&gt;mutable&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;LinkedList&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;val&lt;/span&gt; b = LinkedList(&lt;span class=&quot;dv&quot;&gt;1&lt;/span&gt;,&lt;span class=&quot;dv&quot;&gt;2&lt;/span&gt;,&lt;span class=&quot;dv&quot;&gt;3&lt;/span&gt;)
+&lt;span class=&quot;fu&quot;&gt;b&lt;/span&gt;(&lt;span class=&quot;dv&quot;&gt;0&lt;/span&gt;) = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is much more explicit with regard to what can be changed and what can’t. Using Scala’s type system you get a lot of control over how users may use your custom objects.&lt;/p&gt;
+&lt;h2 id=&quot;final-words&quot;&gt;Final words&lt;/h2&gt;
+&lt;p&gt;In my opinion, opening up mutability in many situations gains a lot of simplicity and flexibility. Unless you’re around languages with more advanced language constructs like Scala or Haskell, you’ll often work with more mutable state than not.&lt;/p&gt;
+&lt;p&gt;Many functional languages will make immutable objects feel more accessible and usable and thus close some potential traps in your way. On the other hand, languages like Go will make you harness the full potential of you allocated memory bits, even though it requires some care in its handling.&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>REST design summary</title>
       <link>http://arlimus.github.io/articles/restful.best.practices/</link>

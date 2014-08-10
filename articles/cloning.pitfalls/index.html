@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <meta name="google-site-verification" content="gRPSZeaTzicrrtM-WwBOvqx_szx4Av0stLFxBjR3QWU">
+    <title>Cloning Pitfalls - Silversmith
+    </title>
+    <link rel="alternate" href="http://arlimus.github.io/feed.xml" type="application/rss+xml" title="">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto+Slab:700|Source+Code+Pro|Inconsolata" type="text/css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/vendor/highlight/styles/dark.css">
+    <script type="text/javascript">
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-45216258-1', 'arlimus.github.io');
+      ga('send', 'pageview');
+      
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
+    <script src="/vendor/highlight/highlight.pack.js" onload="hljs.initHighlightingOnLoad();"></script>
+    <script>
+      $app = angular.module('app', [])
+      
+    </script>
+  </head>
+  <body ng-app="app" class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Cloning Pitfalls</h1>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>It’s a simple enough task: Create a copy of an object and hand it off for some jolly processing. But there’s a few traps on the&nbsp;way.</p>
+<p><span class="more"></span></p>
+<h2 id="cloning-javascript">Cloning&nbsp;(JavaScript)</h2>
+<p>Let’s try cloning with <a href="http://lodash.com/docs">lo-dash</a></p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">a = {<span class="dt">b</span>: {<span class="dt">c</span>: <span class="dv">12</span> }}
+t = <span class="ot">_</span>.<span class="fu">clone</span>(a)
+<span class="ot">t</span>.<span class="ot">b</span>.<span class="fu">c</span> <span class="co">// = 13</span></code></pre>
+<p>Simple.</p>
+<p>Generally, however, you won’t clone and just read a value; Instead you’ll most likely process it in some&nbsp;form:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="ot">t</span>.<span class="ot">b</span>.<span class="fu">c</span> = <span class="dv">3</span></code></pre>
+<p>Imagine a larger project where things like this happen deep in a code-cave. It’s easy to think of the object as being fully cloned, even though it&nbsp;isn’t:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="ot">a</span>.<span class="ot">b</span>.<span class="fu">c</span> <span class="co">// = 3</span></code></pre>
+<p>Since javascript doesn’t have (verified) immutable types, this is a typical pitfall waiting for&nbsp;you.</p>
+<p>You’ll quickly find a solution to this&nbsp;problem:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">a = {<span class="dt">b</span>: {<span class="dt">c</span>: <span class="dv">12</span> }}
+t = <span class="ot">_</span>.<span class="fu">cloneDeep</span>(a)
+<span class="ot">t</span>.<span class="ot">b</span>.<span class="fu">c</span> = <span class="dv">1</span>
+<span class="ot">a</span>.<span class="ot">b</span>.<span class="fu">c</span> <span class="co">// = 12</span></code></pre>
+<p>Or using jQuery’s <code>extend</code></p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">t = <span class="ot">$</span>.<span class="fu">extend</span>(<span class="kw">true</span>, {}, a)</code></pre>
+<p>Or plain old <span class="caps">JSON</span> (if you don’t care about&nbsp;methods)</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">t = <span class="ot"><span class="caps">JSON</span></span>.<span class="fu">parse</span>(<span class="ot"><span class="caps">JSON</span></span>.<span class="fu">stringify</span>(a))</code></pre>
+<p>For more inspiration take a look at this <a href="http://jsperf.com/deep-cloning-of-objects">benchmark here</a>.</p>
+<h2 id="pointers-go">Pointers&nbsp;(Go)</h2>
+<p>The tricky part about javascript is, that this behavior isn’t always apparent. Other languages are much more explicit with copies and&nbsp;references.</p>
+<p>Here’s the same example in&nbsp;Go:</p>
+<pre class="sourceCode go"><code class="sourceCode go"><span class="kw">type</span> B <span class="kw">struct</span> { C <span class="dt">int</span> }
+<span class="kw">type</span> A <span class="kw">struct</span> { B B }
+a := A{B: B{C: <span class="dv">12</span>}}</code></pre>
+<p>Versus:</p>
+<pre class="sourceCode go"><code class="sourceCode go"><span class="kw">type</span> B <span class="kw">struct</span> { C <span class="dt">int</span> }
+<span class="kw">type</span> A <span class="kw">struct</span> { B *B }
+a := A{B: &amp;B{C: <span class="dv">12</span>}}</code></pre>
+<p>This explicit pointer <code>*</code> makes a huge difference in reasoning about the program. It clearly shows that it doesn’t hold the value itself, but a copy. It doesn’t necessarily make cloning the object any easier, but it simplifies the search for errors a lot: You know that it’s either a value <code>{ A Structure }</code> (or a copy of such), or a pointer to some object <code>{ A *Structure }</code>.</p>
+<p>The larger your project gets, the more likely you’ll have these and similar constructs with potential cloning pits waiting (though less likely&nbsp;here).</p>
+<h2 id="constants-scala">Constants&nbsp;(Scala)</h2>
+<p>Go supports constants, but only in a very limited&nbsp;way:</p>
+<pre class="sourceCode go"><code class="sourceCode go"><span class="kw">const</span> c = <span class="dv">123</span>    <span class="co">// possible</span>
+<span class="kw">const</span> a = A{...} <span class="co">// not</span></code></pre>
+<p>Let’s have a look at a final language for constants:&nbsp;Scala.</p>
+<p>Mutability is handled explicitly&nbsp;here:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">var</span> a = <span class="dv">123</span>
+<span class="kw">val</span> b = <span class="dv">123</span>
+a = <span class="dv">12</span>
+b = <span class="dv">12</span> <span class="co">// won&#39;t compile</span></code></pre>
+<p>Even if you take more complex structures like maps and lists, you’ll usually have the choice of going mutable or&nbsp;immutable:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">val</span> a = List(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>)
+<span class="fu">a</span>(<span class="dv">0</span>) = <span class="dv">12</span> <span class="co">// won&#39;t compile</span></code></pre>
+<p>Versus</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">import</span> collection.<span class="fu">mutable</span>.<span class="fu">LinkedList</span>
+<span class="kw">val</span> b = LinkedList(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>)
+<span class="fu">b</span>(<span class="dv">0</span>) = <span class="dv">12</span></code></pre>
+<p>This is much more explicit with regard to what can be changed and what can’t. Using Scala’s type system you get a lot of control over how users may use your custom&nbsp;objects.</p>
+<h2 id="final-words">Final&nbsp;words</h2>
+<p>In my opinion, opening up mutability in many situations gains a lot of simplicity and flexibility. Unless you’re around languages with more advanced language constructs like Scala or Haskell, you’ll often work with more mutable state than&nbsp;not.</p>
+<p>Many functional languages will make immutable objects feel more accessible and usable and thus close some potential traps in your way. On the other hand, languages like Go will make you harness the full potential of you allocated memory bits, even though it requires some care in its&nbsp;handling.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about">
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Dominik Richter &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>
