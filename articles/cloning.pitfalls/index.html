@@ -77,9 +77,9 @@ a := A{B: &amp;B{C: <span class="dv">12</span>}}</code></pre>
 <span class="kw">const</span> a = A{...} <span class="co">// not</span></code></pre>
 <p>Let’s have a look at a final language for constants:&nbsp;Scala.</p>
 <p>Mutability is handled explicitly&nbsp;here:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">var</span> a = <span class="dv">123</span>
-<span class="kw">val</span> b = <span class="dv">123</span>
-a = <span class="dv">12</span>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">var</span> a = <span class="dv">123</span> <span class="co">// mutable</span>
+<span class="kw">val</span> b = <span class="dv">123</span> <span class="co">// immutable</span>
+a = <span class="dv">12</span> <span class="co">// ok</span>
 b = <span class="dv">12</span> <span class="co">// won&#39;t compile</span></code></pre>
 <p>Even if you take more complex structures like maps and lists, you’ll usually have the choice of going mutable or&nbsp;immutable:</p>
 <pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">val</span> a = List(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>)
@@ -87,7 +87,7 @@ b = <span class="dv">12</span> <span class="co">// won&#39;t compile</span></cod
 <p>Versus</p>
 <pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">import</span> collection.<span class="fu">mutable</span>.<span class="fu">LinkedList</span>
 <span class="kw">val</span> b = LinkedList(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>)
-<span class="fu">b</span>(<span class="dv">0</span>) = <span class="dv">12</span></code></pre>
+<span class="fu">b</span>(<span class="dv">0</span>) = <span class="dv">12</span> <span class="co">// ok</span></code></pre>
 <p>This is much more explicit with regard to what can be changed and what can’t. Using Scala’s type system you get a lot of control over how users may use your custom&nbsp;objects.</p>
 <h2 id="final-words">Final&nbsp;words</h2>
 <p>In my opinion, opening up mutability in many situations gains a lot of simplicity and flexibility. Unless you’re around languages with more advanced language constructs like Scala or Haskell, you’ll often work with more mutable state than&nbsp;not.</p>

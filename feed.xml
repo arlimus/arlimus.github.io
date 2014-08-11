@@ -55,9 +55,9 @@ a := A{B: &amp;amp;B{C: &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt;}}&lt;/c
 &lt;span class=&quot;kw&quot;&gt;const&lt;/span&gt; a = A{...} &lt;span class=&quot;co&quot;&gt;// not&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Let’s have a look at a final language for constants: Scala.&lt;/p&gt;
 &lt;p&gt;Mutability is handled explicitly here:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; a = &lt;span class=&quot;dv&quot;&gt;123&lt;/span&gt;
-&lt;span class=&quot;kw&quot;&gt;val&lt;/span&gt; b = &lt;span class=&quot;dv&quot;&gt;123&lt;/span&gt;
-a = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt;
+&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; a = &lt;span class=&quot;dv&quot;&gt;123&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// mutable&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;val&lt;/span&gt; b = &lt;span class=&quot;dv&quot;&gt;123&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// immutable&lt;/span&gt;
+a = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// ok&lt;/span&gt;
 b = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// won&amp;#39;t compile&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Even if you take more complex structures like maps and lists, you’ll usually have the choice of going mutable or immutable:&lt;/p&gt;
 &lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;val&lt;/span&gt; a = List(&lt;span class=&quot;dv&quot;&gt;1&lt;/span&gt;,&lt;span class=&quot;dv&quot;&gt;2&lt;/span&gt;,&lt;span class=&quot;dv&quot;&gt;3&lt;/span&gt;)
@@ -65,7 +65,7 @@ b = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;co&quo
 &lt;p&gt;Versus&lt;/p&gt;
 &lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; collection.&lt;span class=&quot;fu&quot;&gt;mutable&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;LinkedList&lt;/span&gt;
 &lt;span class=&quot;kw&quot;&gt;val&lt;/span&gt; b = LinkedList(&lt;span class=&quot;dv&quot;&gt;1&lt;/span&gt;,&lt;span class=&quot;dv&quot;&gt;2&lt;/span&gt;,&lt;span class=&quot;dv&quot;&gt;3&lt;/span&gt;)
-&lt;span class=&quot;fu&quot;&gt;b&lt;/span&gt;(&lt;span class=&quot;dv&quot;&gt;0&lt;/span&gt;) = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;fu&quot;&gt;b&lt;/span&gt;(&lt;span class=&quot;dv&quot;&gt;0&lt;/span&gt;) = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// ok&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;This is much more explicit with regard to what can be changed and what can’t. Using Scala’s type system you get a lot of control over how users may use your custom objects.&lt;/p&gt;
 &lt;h2 id=&quot;final-words&quot;&gt;Final words&lt;/h2&gt;
 &lt;p&gt;In my opinion, opening up mutability in many situations gains a lot of simplicity and flexibility. Unless you’re around languages with more advanced language constructs like Scala or Haskell, you’ll often work with more mutable state than not.&lt;/p&gt;

@@ -97,9 +97,9 @@ Let's have a look at a final language for constants: Scala.
 Mutability is handled explicitly here:
 
 ```scala
-var a = 123
-val b = 123
-a = 12
+var a = 123 // mutable
+val b = 123 // immutable
+a = 12 // ok
 b = 12 // won't compile
 ```
 
@@ -115,7 +115,7 @@ Versus
 ```scala
 import collection.mutable.LinkedList
 val b = LinkedList(1,2,3)
-b(0) = 12
+b(0) = 12 // ok
 ```
 
 This is much more explicit with regard to what can be changed and what can't. Using Scala's type system you get a lot of control over how users may use your custom objects. 
