@@ -122,6 +122,6 @@ This is much more explicit with regard to what can be changed and what can't. Us
 
 ## Final words
 
-In my opinion, opening up mutability in many situations gains a lot of simplicity and flexibility. Unless you're around languages with more advanced language constructs like Scala or Haskell, you'll often work with more mutable state than not. 
+In my opinion, opening up mutability in many situations gains a lot of simplicity and flexibility. Unless you're around languages with more advanced language constructs like Scala or Haskell, you'll often work with more mutable state than not (even if you don't want to). 
 
 Many functional languages will make immutable objects feel more accessible and usable and thus close some potential traps in your way. On the other hand, languages like Go will make you harness the full potential of you allocated memory bits, even though it requires some care in its handling.
