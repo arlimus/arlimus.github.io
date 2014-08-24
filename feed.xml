@@ -5,9 +5,114 @@
     <atom:link href="http://arlimus.github.io/feed.xml" rel="self" type="application/rss+xml"></atom:link>
     <link>http://arlimus.github.io</link>
     <description></description>
-    <pubDate>Sun, 17  Aug 2014 02:00:00 +0200</pubDate>
+    <pubDate>Sun, 24  Aug 2014 02:00:00 +0200</pubDate>
     <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
     <language>en</language>
+    <item>
+      <title>Scala and Logstash</title>
+      <link>http://arlimus.github.io/articles/scala.logging/</link>
+      <pubDate>Sun, 24  Aug 2014 02:00:00 +0200</pubDate>
+      <guid isPermaLink="true">http://arlimus.github.io/articles/scala.logging/</guid>
+      <author></author>
+      <description>&lt;p&gt;Getting your application to write log info is easy. Just grab a small logging framework that writes to stdout or a logfile. They are available in all major languages, well-document, and easy to get going.&lt;/p&gt;
+&lt;p&gt;During the last years, logstash and friends have taken root in our environments and made our lives much easier.&lt;/p&gt;
+&lt;p&gt;With this in mind, I though it must be simple enough to get my scala applications equipped with some nice log-stashing. Here’s where I landed.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;h2 id=&quot;logstash&quot;&gt;Logstash&lt;/h2&gt;
+&lt;p&gt;First things first. You can run your log-stashing experiments against a central or remote logstash server, OR you can just quickly spin up a tiny logstash to get going locally. Here’s how:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;curl&lt;/span&gt; -O https://download.elasticsearch.org/logstash/logstash/logstash-1.4.2.tar.gz
+&lt;span class=&quot;kw&quot;&gt;tar&lt;/span&gt; xf logstash-1.4.2.tar.gz
+&lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; logstash-1.4.2&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Ìf you want to see how it looks like with good input:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bin/logstash&lt;/span&gt; -e &lt;span class=&quot;st&quot;&gt;&amp;#39;input { stdin { } } output { stdout { codec =&amp;gt; json } }&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now type anything and hit return. It will respond with a JSON object (which is an easy way to see what logstash expects as valid input).&lt;/p&gt;
+&lt;p&gt;Now, let’s say you want to test your application against the default logstash tcp endpoint and see whether it works. Set it up locally:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bin/logstash&lt;/span&gt; -e &lt;span class=&quot;st&quot;&gt;&amp;#39;input { tcp { port =&amp;gt; 9998 } } output { stdout { codec =&amp;gt; json } }&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Once everything is working, you can use it as a forwarder to your upstream elasticsearch like this:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bin/logstash&lt;/span&gt; -e &lt;span class=&quot;st&quot;&gt;&amp;#39;input { tcp { port =&amp;gt; 9998 } } output { stdout { codec =&amp;gt; json } elasticsearch_http { host =&amp;gt; &amp;quot;es.domain.com&amp;quot; port =&amp;gt; 12345 } }&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&quot;logback&quot;&gt;Logback&lt;/h2&gt;
+&lt;p&gt;Searching for Scala logging I came across &lt;a href=&quot;https://github.com/typesafehub/scala-logging&quot;&gt;scala-logging&lt;/a&gt;. It works on top of &lt;a href=&quot;http://www.slf4j.org/&quot;&gt;SLF4J&lt;/a&gt; backends. Knowing &lt;a href=&quot;http://logging.apache.org/log4j&quot;&gt;Log4J&lt;/a&gt;, I headed off to mix &lt;a href=&quot;http://arlimus.github.io/articles/scala.logging/logback.qos.ch&quot;&gt;logback&lt;/a&gt; into this framework cocktail.&lt;/p&gt;
+&lt;p&gt;It’s simple enough to get going: Add a few dependencies to your &lt;code&gt;build.sbt&lt;/code&gt;&lt;/p&gt;
+&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;ch.qos.logback&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;logback-classic&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;1.1.2&amp;quot;&lt;/span&gt;
+
+libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;com.typesafe.scala-logging&amp;quot;&lt;/span&gt; %% &lt;span class=&quot;st&quot;&gt;&amp;quot;scala-logging&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;3.1.0&amp;quot;&lt;/span&gt;
+
+libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;net.logstash.logback&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;logstash-logback-encoder&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;3.0&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then add a log object:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; com.&lt;span class=&quot;fu&quot;&gt;typesafe&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;scalalogging&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;Logger&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; org.&lt;span class=&quot;fu&quot;&gt;slf4j&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;LoggerFactory&lt;/span&gt;
+
+&lt;span class=&quot;kw&quot;&gt;val&lt;/span&gt; Log = Logger(LoggerFactory.&lt;span class=&quot;fu&quot;&gt;getLogger&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;pdfmangler&amp;quot;&lt;/span&gt;))
+Log.&lt;span class=&quot;fu&quot;&gt;info&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Finally, add a configuration file in &lt;code&gt;src/main/resources/logback.xml&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode xml&quot;&gt;&lt;code class=&quot;sourceCode xml&quot;&gt;&lt;span class=&quot;kw&quot;&gt;&amp;lt;configuration&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;appender&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; name=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;LOGSTASH&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; class=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;net.logstash.logback.appender.LogstashTcpSocketAppender&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;kw&quot;&gt;&amp;lt;remoteHost&amp;gt;&lt;/span&gt;HOST&lt;span class=&quot;kw&quot;&gt;&amp;lt;/remoteHost&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;kw&quot;&gt;&amp;lt;port&amp;gt;&lt;/span&gt;9998&lt;span class=&quot;kw&quot;&gt;&amp;lt;/port&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;/appender&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;root&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; level=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;DEBUG&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;kw&quot;&gt;&amp;lt;appender-ref&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; ref=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;LOGSTASH&amp;quot;&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;/root&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Simple.&lt;/p&gt;
+&lt;p&gt;Or so I though.&lt;/p&gt;
+&lt;p&gt;Running this against my local logstash, I soon realized that it doesn’t seem to work with the current release. It will eventually get updated, but there are a few alternatives you can use.&lt;/p&gt;
+&lt;p&gt;One of them is to take the simple route via syslog. Add it to your &lt;code&gt;logback.xml&lt;/code&gt; (moved to port 11514 for local testing as non-root):&lt;/p&gt;
+&lt;pre class=&quot;sourceCode xml&quot;&gt;&lt;code class=&quot;sourceCode xml&quot;&gt;&lt;span class=&quot;kw&quot;&gt;&amp;lt;configuration&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;appender&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; name=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;SYSLOG&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; class=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;ch.qos.logback.classic.net.SyslogAppender&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;kw&quot;&gt;&amp;lt;syslogHost&amp;gt;&lt;/span&gt;localhost&lt;span class=&quot;kw&quot;&gt;&amp;lt;/syslogHost&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;kw&quot;&gt;&amp;lt;port&amp;gt;&lt;/span&gt;11514&lt;span class=&quot;kw&quot;&gt;&amp;lt;/port&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;kw&quot;&gt;&amp;lt;facility&amp;gt;&lt;/span&gt;AUTH&lt;span class=&quot;kw&quot;&gt;&amp;lt;/facility&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;kw&quot;&gt;&amp;lt;suffixPattern&amp;gt;&lt;/span&gt;[%thread] %logger %msg&lt;span class=&quot;kw&quot;&gt;&amp;lt;/suffixPattern&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;/appender&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;root&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; level=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;DEBUG&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;kw&quot;&gt;&amp;lt;appender-ref&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; ref=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;LOGSTASH&amp;quot;&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;/root&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Start your testing server and see it fly:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bin/logstash&lt;/span&gt; -e &lt;span class=&quot;st&quot;&gt;&amp;#39;input { syslog { port =&amp;gt; 11514 } } output { stdout { codec =&amp;gt; json } }&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let’s add one tricky aspect: You don’t want to run syslog on UDP, but TCP instead. “There must be a parameter for that…” Unfortunately there isn’t. Unless you’re creating your own method or switch to Log4J2 (see below), there is no easy way to get this in logback.&lt;/p&gt;
+&lt;p&gt;But there are a few simple workarounds. One if &lt;a href=&quot;https://github.com/elasticsearch/logstash-forwarder&quot;&gt;logstash-forwarder&lt;/a&gt; which uses lumberjack (which supports and requires SSL key-management). Another simple alternative (but more cost-intensive), is to start a local logstash forwarder yourself:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bin/logstash&lt;/span&gt; -e &lt;span class=&quot;st&quot;&gt;&amp;#39;input { syslog { port =&amp;gt; 11514 } } output { elasticsearch_http { host =&amp;gt; &amp;quot;syslog.domain.com&amp;quot; port =&amp;gt; 514 } }&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&quot;log4j2&quot;&gt;Log4J2&lt;/h2&gt;
+&lt;p&gt;Curiously, logback isn’t the only successor of Log4J. The initial version has now reached a “#2 version stamp”, which has been remodeled and offers a new API. Let’s try that: Add a few dependencies:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;org.apache.logging.log4j&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;log4j-core&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;2.0.1&amp;quot;&lt;/span&gt;
+
+libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;org.apache.logging.log4j&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;log4j-api&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;2.0.1&amp;quot;&lt;/span&gt;
+
+libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;com.fasterxml.jackson.core&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;jackson-core&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;2.4.2&amp;quot;&lt;/span&gt;
+
+libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;com.fasterxml.jackson.core&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;jackson-databind&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;2.4.2&amp;quot;&lt;/span&gt;
+
+libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;com.fasterxml.jackson.core&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;jackson-annotations&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;2.4.2&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Replace the usage lines&lt;/p&gt;
+&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; org.&lt;span class=&quot;fu&quot;&gt;apache&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;logging&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;log4j&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;LogManager&lt;/span&gt;
+
+&lt;span class=&quot;kw&quot;&gt;val&lt;/span&gt; Log = LogManager.&lt;span class=&quot;fu&quot;&gt;getLogger&lt;/span&gt;(&lt;span class=&quot;kw&quot;&gt;this&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;getClass&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;getName&lt;/span&gt;)
+Log.&lt;span class=&quot;fu&quot;&gt;info&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And add a new configuration file to &lt;code&gt;src/main/resources/log4j2.xml&lt;/code&gt;&lt;/p&gt;
+&lt;pre class=&quot;sourceCode xml&quot;&gt;&lt;code class=&quot;sourceCode xml&quot;&gt;&lt;span class=&quot;kw&quot;&gt;&amp;lt;?xml&lt;/span&gt; version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;&lt;span class=&quot;kw&quot;&gt;?&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;&amp;lt;Configuration&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; status=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;DEBUG&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; packages=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;net.logstash.logging.log4j2.core.layout&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;Appenders&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;kw&quot;&gt;&amp;lt;Socket&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; name=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;LogStashSocket&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; host=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;logstash.domain.com&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; port=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;9998&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; protocol=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;tcp&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;kw&quot;&gt;&amp;lt;LogStashJSONLayout&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;kw&quot;&gt;&amp;lt;/LogStashJSONLayout&amp;gt;&lt;/span&gt;       
+        &lt;span class=&quot;kw&quot;&gt;&amp;lt;/Socket&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;/Appenders&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;Loggers&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;kw&quot;&gt;&amp;lt;Root&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; level=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;debug&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;kw&quot;&gt;&amp;lt;AppenderRef&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; ref=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;LogStashSocket&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;kw&quot;&gt;&amp;lt;/Root&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;/Loggers&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;&amp;lt;/Configuration&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That should work. But at the time of this writing, it too showed a few flaws. The same workaround as above applies.&lt;/p&gt;
+&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;I can’t add a summary without a fat disclaimer: Most of the JARs used here are still a bit new and Logstash has experienced a few API updates recently. Older versions may work perfectly, but I unfortunately don’t have the time to find a perfect match. For the time being, a workaround will do.&lt;/p&gt;
+&lt;p&gt;I found both logging frameworks equally enjoyable, although Log4J2 has a slight edge here thanks to its modularity. Performance considerations are not covered yet, but will be added in the future. Until then, enjoy your Scala log-stashing&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>Document management and Git</title>
       <link>http://arlimus.github.io/articles/document.management.and.git/</link>

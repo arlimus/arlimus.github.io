@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <meta name="google-site-verification" content="gRPSZeaTzicrrtM-WwBOvqx_szx4Av0stLFxBjR3QWU">
+    <title>Scala and Logstash - Silversmith
+    </title>
+    <link rel="alternate" href="http://arlimus.github.io/feed.xml" type="application/rss+xml" title="">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto+Slab:700|Source+Code+Pro|Inconsolata" type="text/css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/vendor/highlight/styles/dark.css">
+    <script type="text/javascript">
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-45216258-1', 'arlimus.github.io');
+      ga('send', 'pageview');
+      
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
+    <script src="/vendor/highlight/highlight.pack.js" onload="hljs.initHighlightingOnLoad();"></script>
+    <script>
+      $app = angular.module('app', [])
+      
+    </script>
+  </head>
+  <body ng-app="app" class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Scala and Logstash</h1>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>Getting your application to write log info is easy. Just grab a small logging framework that writes to stdout or a logfile. They are available in all major languages, well-document, and easy to get&nbsp;going.</p>
+<p>During the last years, logstash and friends have taken root in our environments and made our lives much&nbsp;easier.</p>
+<p>With this in mind, I though it must be simple enough to get my scala applications equipped with some nice log-stashing. Here’s where I&nbsp;landed.</p>
+<p><span class="more"></span></p>
+<h2 id="logstash">Logstash</h2>
+<p>First things first. You can run your log-stashing experiments against a central or remote logstash server, <span class="caps">OR</span> you can just quickly spin up a tiny logstash to get going locally. Here’s&nbsp;how:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">curl</span> -O https://download.elasticsearch.org/logstash/logstash/logstash-1.4.2.tar.gz
+<span class="kw">tar</span> xf logstash-1.4.2.tar.gz
+<span class="kw">cd</span> logstash-1.4.2</code></pre>
+<p>Ìf you want to see how it looks like with good&nbsp;input:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bin/logstash</span> -e <span class="st">&#39;input { stdin { } } output { stdout { codec =&gt; json } }&#39;</span></code></pre>
+<p>Now type anything and hit return. It will respond with a <span class="caps">JSON</span> object (which is an easy way to see what logstash expects as valid&nbsp;input).</p>
+<p>Now, let’s say you want to test your application against the default logstash tcp endpoint and see whether it works. Set it up&nbsp;locally:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bin/logstash</span> -e <span class="st">&#39;input { tcp { port =&gt; 9998 } } output { stdout { codec =&gt; json } }&#39;</span></code></pre>
+<p>Once everything is working, you can use it as a forwarder to your upstream elasticsearch like&nbsp;this:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bin/logstash</span> -e <span class="st">&#39;input { tcp { port =&gt; 9998 } } output { stdout { codec =&gt; json } elasticsearch_http { host =&gt; &quot;es.domain.com&quot; port =&gt; 12345 } }&#39;</span></code></pre>
+<h2 id="logback">Logback</h2>
+<p>Searching for Scala logging I came across <a href="https://github.com/typesafehub/scala-logging">scala-logging</a>. It works on top of <a href="http://www.slf4j.org/"><span class="caps">SLF4J</span></a> backends. Knowing <a href="http://logging.apache.org/log4j">Log4J</a>, I headed off to mix <a href="/articles/scala.logging/logback.qos.ch">logback</a> into this framework&nbsp;cocktail.</p>
+<p>It’s simple enough to get going: Add a few dependencies to your <code>build.sbt</code></p>
+<pre class="sourceCode scala"><code class="sourceCode scala">libraryDependencies += <span class="st">&quot;ch.qos.logback&quot;</span> % <span class="st">&quot;logback-classic&quot;</span> % <span class="st">&quot;1.1.2&quot;</span>
+
+libraryDependencies += <span class="st">&quot;com.typesafe.scala-logging&quot;</span> %% <span class="st">&quot;scala-logging&quot;</span> % <span class="st">&quot;3.1.0&quot;</span>
+
+libraryDependencies += <span class="st">&quot;net.logstash.logback&quot;</span> % <span class="st">&quot;logstash-logback-encoder&quot;</span> % <span class="st">&quot;3.0&quot;</span></code></pre>
+<p>Then add a log&nbsp;object:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">import</span> com.<span class="fu">typesafe</span>.<span class="fu">scalalogging</span>.<span class="fu">Logger</span>
+<span class="kw">import</span> org.<span class="fu">slf4j</span>.<span class="fu">LoggerFactory</span>
+
+<span class="kw">val</span> Log = Logger(LoggerFactory.<span class="fu">getLogger</span>(<span class="st">&quot;pdfmangler&quot;</span>))
+Log.<span class="fu">info</span>(<span class="st">&quot;Hello World&quot;</span>)</code></pre>
+<p>Finally, add a configuration file in <code>src/main/resources/logback.xml</code>:</p>
+<pre class="sourceCode xml"><code class="sourceCode xml"><span class="kw">&lt;configuration&gt;</span>
+    <span class="kw">&lt;appender</span><span class="ot"> name=</span><span class="st">&quot;<span class="caps">LOGSTASH</span>&quot;</span><span class="ot"> class=</span><span class="st">&quot;net.logstash.logback.appender.LogstashTcpSocketAppender&quot;</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;remoteHost&gt;</span><span class="caps">HOST</span><span class="kw">&lt;/remoteHost&gt;</span>
+        <span class="kw">&lt;port&gt;</span>9998<span class="kw">&lt;/port&gt;</span>
+    <span class="kw">&lt;/appender&gt;</span>
+
+    <span class="kw">&lt;root</span><span class="ot"> level=</span><span class="st">&quot;<span class="caps">DEBUG</span>&quot;</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;appender-ref</span><span class="ot"> ref=</span><span class="st">&quot;<span class="caps">LOGSTASH</span>&quot;</span> <span class="kw">/&gt;</span>
+    <span class="kw">&lt;/root&gt;</span>
+<span class="kw">&lt;/configuration&gt;</span></code></pre>
+<p>Simple.</p>
+<p>Or so I&nbsp;though.</p>
+<p>Running this against my local logstash, I soon realized that it doesn’t seem to work with the current release. It will eventually get updated, but there are a few alternatives you can&nbsp;use.</p>
+<p>One of them is to take the simple route via syslog. Add it to your <code>logback.xml</code> (moved to port 11514 for local testing as&nbsp;non-root):</p>
+<pre class="sourceCode xml"><code class="sourceCode xml"><span class="kw">&lt;configuration&gt;</span>
+    <span class="kw">&lt;appender</span><span class="ot"> name=</span><span class="st">&quot;<span class="caps">SYSLOG</span>&quot;</span><span class="ot"> class=</span><span class="st">&quot;ch.qos.logback.classic.net.SyslogAppender&quot;</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;syslogHost&gt;</span>localhost<span class="kw">&lt;/syslogHost&gt;</span>
+        <span class="kw">&lt;port&gt;</span>11514<span class="kw">&lt;/port&gt;</span>
+        <span class="kw">&lt;facility&gt;</span><span class="caps">AUTH</span><span class="kw">&lt;/facility&gt;</span>
+        <span class="kw">&lt;suffixPattern&gt;</span>[%thread] %logger %msg<span class="kw">&lt;/suffixPattern&gt;</span>
+    <span class="kw">&lt;/appender&gt;</span>
+
+    <span class="kw">&lt;root</span><span class="ot"> level=</span><span class="st">&quot;<span class="caps">DEBUG</span>&quot;</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;appender-ref</span><span class="ot"> ref=</span><span class="st">&quot;<span class="caps">LOGSTASH</span>&quot;</span> <span class="kw">/&gt;</span>
+    <span class="kw">&lt;/root&gt;</span>
+<span class="kw">&lt;/configuration&gt;</span></code></pre>
+<p>Start your testing server and see it&nbsp;fly:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bin/logstash</span> -e <span class="st">&#39;input { syslog { port =&gt; 11514 } } output { stdout { codec =&gt; json } }&#39;</span></code></pre>
+<p>Let’s add one tricky aspect: You don’t want to run syslog on <span class="caps">UDP</span>, but TCP instead. “There must be a parameter for that…” Unfortunately there isn’t. Unless you’re creating your own method or switch to Log4J2 (see below), there is no easy way to get this in&nbsp;logback.</p>
+<p>But there are a few simple workarounds. One if <a href="https://github.com/elasticsearch/logstash-forwarder">logstash-forwarder</a> which uses lumberjack (which supports and requires <span class="caps">SSL</span> key-management). Another simple alternative (but more cost-intensive), is to start a local logstash forwarder&nbsp;yourself:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bin/logstash</span> -e <span class="st">&#39;input { syslog { port =&gt; 11514 } } output { elasticsearch_http { host =&gt; &quot;syslog.domain.com&quot; port =&gt; 514 } }&#39;</span></code></pre>
+<h2 id="log4j2">Log4J2</h2>
+<p>Curiously, logback isn’t the only successor of Log4J. The initial version has now reached a “#2 version stamp”, which has been remodeled and offers a new <span class="caps">API</span>. Let’s try that: Add a few&nbsp;dependencies:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala">libraryDependencies += <span class="st">&quot;org.apache.logging.log4j&quot;</span> % <span class="st">&quot;log4j-core&quot;</span> % <span class="st">&quot;2.0.1&quot;</span>
+
+libraryDependencies += <span class="st">&quot;org.apache.logging.log4j&quot;</span> % <span class="st">&quot;log4j-api&quot;</span> % <span class="st">&quot;2.0.1&quot;</span>
+
+libraryDependencies += <span class="st">&quot;com.fasterxml.jackson.core&quot;</span> % <span class="st">&quot;jackson-core&quot;</span> % <span class="st">&quot;2.4.2&quot;</span>
+
+libraryDependencies += <span class="st">&quot;com.fasterxml.jackson.core&quot;</span> % <span class="st">&quot;jackson-databind&quot;</span> % <span class="st">&quot;2.4.2&quot;</span>
+
+libraryDependencies += <span class="st">&quot;com.fasterxml.jackson.core&quot;</span> % <span class="st">&quot;jackson-annotations&quot;</span> % <span class="st">&quot;2.4.2&quot;</span></code></pre>
+<p>Replace the usage&nbsp;lines</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">import</span> org.<span class="fu">apache</span>.<span class="fu">logging</span>.<span class="fu">log4j</span>.<span class="fu">LogManager</span>
+
+<span class="kw">val</span> Log = LogManager.<span class="fu">getLogger</span>(<span class="kw">this</span>.<span class="fu">getClass</span>.<span class="fu">getName</span>)
+Log.<span class="fu">info</span>(<span class="st">&quot;Hello World&quot;</span>)</code></pre>
+<p>And add a new configuration file to <code>src/main/resources/log4j2.xml</code></p>
+<pre class="sourceCode xml"><code class="sourceCode xml"><span class="kw">&lt;?xml</span> version=&quot;1.0&quot; encoding=&quot;<span class="caps">UTF</span>-8&quot;<span class="kw">?&gt;</span>
+<span class="kw">&lt;Configuration</span><span class="ot"> status=</span><span class="st">&quot;<span class="caps">DEBUG</span>&quot;</span><span class="ot"> packages=</span><span class="st">&quot;net.logstash.logging.log4j2.core.layout&quot;</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;Appenders&gt;</span>
+        <span class="kw">&lt;Socket</span><span class="ot"> name=</span><span class="st">&quot;LogStashSocket&quot;</span><span class="ot"> host=</span><span class="st">&quot;logstash.domain.com&quot;</span><span class="ot"> port=</span><span class="st">&quot;9998&quot;</span><span class="ot"> protocol=</span><span class="st">&quot;tcp&quot;</span><span class="kw">&gt;</span>
+            <span class="kw">&lt;LogStashJSONLayout&gt;</span>
+            <span class="kw">&lt;/LogStashJSONLayout&gt;</span>       
+        <span class="kw">&lt;/Socket&gt;</span>
+    <span class="kw">&lt;/Appenders&gt;</span>
+    <span class="kw">&lt;Loggers&gt;</span>
+        <span class="kw">&lt;Root</span><span class="ot"> level=</span><span class="st">&quot;debug&quot;</span><span class="kw">&gt;</span>
+            <span class="kw">&lt;AppenderRef</span><span class="ot"> ref=</span><span class="st">&quot;LogStashSocket&quot;</span><span class="kw">/&gt;</span>
+        <span class="kw">&lt;/Root&gt;</span>
+    <span class="kw">&lt;/Loggers&gt;</span>
+<span class="kw">&lt;/Configuration&gt;</span></code></pre>
+<p>That should work. But at the time of this writing, it too showed a few flaws. The same workaround as above&nbsp;applies.</p>
+<h2 id="summary">Summary</h2>
+<p>I can’t add a summary without a fat disclaimer: Most of the JARs used here are still a bit new and Logstash has experienced a few <span class="caps">API</span> updates recently. Older versions may work perfectly, but I unfortunately don’t have the time to find a perfect match. For the time being, a workaround will&nbsp;do.</p>
+<p>I found both logging frameworks equally enjoyable, although Log4J2 has a slight edge here thanks to its modularity. Performance considerations are not covered yet, but will be added in the future. Until then, enjoy your Scala&nbsp;log-stashing</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about">
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Dominik Richter &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>
