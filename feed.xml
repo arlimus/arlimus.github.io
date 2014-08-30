@@ -5,9 +5,97 @@
     <atom:link href="http://arlimus.github.io/feed.xml" rel="self" type="application/rss+xml"></atom:link>
     <link>http://arlimus.github.io</link>
     <description></description>
-    <pubDate>Sun, 24  Aug 2014 02:00:00 +0200</pubDate>
+    <pubDate>Sat, 30  Aug 2014 02:00:00 +0200</pubDate>
     <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
     <language>en</language>
+    <item>
+      <title>Custom Resource Types in Serverspec</title>
+      <link>http://arlimus.github.io/articles/custom.resource.types.in.serverspec/</link>
+      <pubDate>Sat, 30  Aug 2014 02:00:00 +0200</pubDate>
+      <guid isPermaLink="true">http://arlimus.github.io/articles/custom.resource.types.in.serverspec/</guid>
+      <author></author>
+      <description>&lt;p&gt;&lt;a href=&quot;http://serverspec.org&quot;&gt;Serverspec&lt;/a&gt; comes ready to go with many useful &lt;a href=&quot;http://serverspec.org/resource_types.html&quot;&gt;resource types&lt;/a&gt;. Sometimes, however, you may find yourself in a situation, where you need something special. Let’s see how it’s done.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;h2 id=&quot;not-enough&quot;&gt;Not enough&lt;/h2&gt;
+&lt;p&gt;This happened to me while initially writing tests for &lt;a href=&quot;https://github.com/TelekomLabs/tests-nginx-hardening&quot;&gt;Nginx hardening&lt;/a&gt;. For all configuration checks, these tests looked for values inside &lt;code&gt;/etc/nginx/nginx.conf&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;describe file( nginx_conf ) &lt;span class=&quot;kw&quot;&gt;do&lt;/span&gt;
+  its(&lt;span class=&quot;st&quot;&gt;:content&lt;/span&gt;) { should match(&lt;span class=&quot;ot&quot;&gt;/^\s*server_tokens off;$/&lt;/span&gt;) }
+&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
+
+...&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;With that out of the way, I started the implementation in Chef. Since hardening is designed as an overlay on top of existing cookbooks, we chose &lt;code&gt;miketheman/nginx&lt;/code&gt; as the base provider.&lt;/p&gt;
+&lt;p&gt;This led to a crucial discovery: Some values were configured inside &lt;code&gt;nginx.conf&lt;/code&gt;, while others were just not available (as seen in the &lt;a href=&quot;https://github.com/miketheman/nginx/blob/master/templates/default/nginx.conf.erb&quot;&gt;template&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;For Nginx, an easy and clean solution is to create a configuration file inside &lt;code&gt;conf.d&lt;/code&gt; and add all remaining values there. This leads to a split in configuration parameters between both configuration files, which must be reflected serverspec.&lt;/p&gt;
+&lt;p&gt;Some tests now didn’t target &lt;code&gt;nginx.conf&lt;/code&gt; anymore, but the hardening configuration &lt;code&gt;conf.d/90.hardening.conf&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;describe file( hardening_conf ) &lt;span class=&quot;kw&quot;&gt;do&lt;/span&gt;
+  its(&lt;span class=&quot;st&quot;&gt;:content&lt;/span&gt;) { should match(&lt;span class=&quot;ot&quot;&gt;/^\s*more_clear_headers &amp;#39;Server&amp;#39;;$/&lt;/span&gt;) }
+&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The obvious issue with this decision popped up during the implementation in Puppet. Here, a different provider for nginx was used: &lt;code&gt;jfryman/nginx&lt;/code&gt;. Its &lt;code&gt;nginx.conf&lt;/code&gt; had other values configured than the Chef equivalent (as seen in the &lt;a href=&quot;https://github.com/jfryman/puppet-nginx/blob/master/templates/conf.d/nginx.conf.erb&quot;&gt;template&lt;/a&gt;). Unfortunately, the serverspec tests were expecting parameters in &lt;code&gt;nginx.conf&lt;/code&gt;, that had now moved to &lt;code&gt;conf.d&lt;/code&gt;. There was no way to check both with the same set of tests anymore.&lt;/p&gt;
+&lt;p&gt;The ideal solution would have been to move all configuration values to the custom configuration file in &lt;code&gt;conf.d&lt;/code&gt;. However, this would have broken the overlay design. A user may still configure a parameter that ends up in both &lt;code&gt;nginx.conf&lt;/code&gt; and &lt;code&gt;conf.d&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;extending-serverspec&quot;&gt;Extending Serverspec&lt;/h2&gt;
+&lt;p&gt;I needed a resource provider, that could check nginx configuration in multiple files at once:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;conf_paths = [ nginx_conf, hardening_conf ]
+
+describe multi_file( conf_paths )
+  its(&lt;span class=&quot;st&quot;&gt;:content&lt;/span&gt;) { should match(&lt;span class=&quot;ot&quot;&gt;/^\s*more_clear_headers &amp;#39;Server&amp;#39;;$/&lt;/span&gt;) }
+&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;First, add a new file for the provider. Your directory structure may look like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;.
+└── serverspec
+    ├── nginx_spec.rb
+    ├── spec_helper.rb
+    └── type
+        └── multi_file.rb&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The type provider extends &lt;code&gt;Serverspec::Type&lt;/code&gt; by adding a method &lt;code&gt;multi_file&lt;/code&gt;. This is the method you call when writing your tests. Additionally, we create a class that holds the object which is tested. This class includes methods that expose values for matchers (e.g. &lt;code&gt;:content&lt;/code&gt;) and must be extended from &lt;code&gt;Serverspec::Type::Base&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;&lt;span class=&quot;kw&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;dt&quot;&gt;Serverspec&lt;/span&gt;
+  &lt;span class=&quot;kw&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;dt&quot;&gt;Type&lt;/span&gt;
+     
+    &lt;span class=&quot;kw&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;dt&quot;&gt;MultiFile&lt;/span&gt; &amp;lt; &lt;span class=&quot;dt&quot;&gt;Base&lt;/span&gt;
+  
+      &lt;span class=&quot;kw&quot;&gt;def&lt;/span&gt; initialize(paths)
+        &lt;span class=&quot;ot&quot;&gt;@paths&lt;/span&gt; = paths
+      &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
+     
+      &lt;span class=&quot;kw&quot;&gt;def&lt;/span&gt; content
+        &lt;span class=&quot;ot&quot;&gt;@paths&lt;/span&gt;.map{|x| ::&lt;span class=&quot;dt&quot;&gt;File&lt;/span&gt;.read x }.join(&lt;span class=&quot;st&quot;&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;)
+      &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;kw&quot;&gt;def&lt;/span&gt; multi_file(paths)
+      &lt;span class=&quot;dt&quot;&gt;MultiFile&lt;/span&gt;.new(paths)
+    &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
+
+include &lt;span class=&quot;dt&quot;&gt;Serverspec&lt;/span&gt;::&lt;span class=&quot;dt&quot;&gt;Type&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Additionally, you can create endpoints for checks like:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;describe multi_file( conf_paths )
+  it { should be_valid }
+&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Simply add a method &lt;code&gt;valid?&lt;/code&gt; to your object:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;    &lt;span class=&quot;kw&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;dt&quot;&gt;MultiFile&lt;/span&gt; &amp;lt; &lt;span class=&quot;dt&quot;&gt;Base&lt;/span&gt;
+
+      ...
+
+      &lt;span class=&quot;kw&quot;&gt;def&lt;/span&gt; valid?
+        &lt;span class=&quot;co&quot;&gt;# check if the files are valid&lt;/span&gt;
+      &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;A great source of inspiration is serverspec’s own &lt;a href=&quot;https://github.com/serverspec/serverspec/tree/master/lib/serverspec/type&quot;&gt;collection of types&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Finally, don’t forget to include this file, preferably in your &lt;code&gt;spec_helper.rb&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;...
+
+&lt;span class=&quot;co&quot;&gt;# additional requirements&lt;/span&gt;
+require &lt;span class=&quot;st&quot;&gt;&amp;#39;type/multi_file&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, &lt;code&gt;:content&lt;/code&gt; provides the content of all files combined. Using the existing matchers, it’s easy to write the tests.&lt;/p&gt;
+&lt;h1 id=&quot;final-thoughts&quot;&gt;Final thoughts&lt;/h1&gt;
+&lt;p&gt;Our serverspec tests in the hardening project are not limited to just verifying Chef and Puppet runs. We also want them to check if a system has a valid configuration (compliance checks). Without custom resource types, this is not possible, as you sometimes cannot expect a system to be configured in a certain way. This includes configurations for Apache, MySQL, or even Sysctl, which all feature a directory structure where additional configuration files are applied.&lt;/p&gt;
+&lt;p&gt;It’s important to remember what these resource types provide, and what they don’t cover. Stick to rspec and &lt;a href=&quot;https://github.com/serverspec/serverspec/tree/master/lib/serverspec/matchers&quot;&gt;serverspec matchers&lt;/a&gt; for checking values themselves. Use resource types to get your values exposed to these matchers.&lt;/p&gt;
+&lt;p&gt;Happy testing!&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>Scala and Logstash</title>
       <link>http://arlimus.github.io/articles/scala.logging/</link>
