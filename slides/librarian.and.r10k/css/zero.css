@@ -1,0 +1,86 @@
+svg {
+  /*overflow: hidden;*/
+}
+
+svg tspan,
+svg text {
+  font-size: 1.5rem;
+  font-weight: normal;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.DEBUG svg {
+  border: 1px solid #00f;
+}
+
+.error {
+  color: red;
+}
+
+
+path.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+marker#special {
+  fill: green;
+}
+
+path.link.special {
+  stroke: green;
+}
+
+path.link.dashed {
+  stroke-dasharray: 0,2 1;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+text.shadow {
+  stroke: #fff;
+  stroke-width: 3px;
+  stroke-opacity: .8;
+}
+
+.equi > * {
+  margin-bottom: 2rem !important;
+}
+
+.down {
+  display: block !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  border-style: solid !important;
+  border-width: 1rem 1rem 0 1rem !important;
+  border-color: #000 transparent transparent transparent !important;
+}
+
+.reveal pre code {
+  padding: 15px 20px;
+}
+
+.reveal section ul li.long {
+  margin-bottom: 0.5em;
+}
+
+.reveal section img.clean {
+  border: none;
+  box-shadow: none;
+}
+
+.reveal div label {
+  display: block;
+  font-size: 0.3em;
+  color: #aaa;
+}
+.reveal div label a{
+  color: #aaa !important;
+}

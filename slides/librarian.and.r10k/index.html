@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>git, librarian, r10k</title>
+
+		<meta name="description" content="A presentation on current Puppet glue">
+		<meta name="author" content="Dominik Richter">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+		<link rel="stylesheet" href="css/zero.css">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+
+		<script src="js/d3.v3.min.js"></script>
+		<script src="js/graph.js"></script>
+		<script src="js/jquery-1.11.1.min.js"></script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+
+		<link rel="stylesheet" href="css/ico.css">
+
+	</head>
+
+	<body >
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+
+<section>
+	<h1>librarian &amp; r10k</h1>
+	<h3>Check your environment</h3>
+	<p>
+		<small><a href="http://arlimus.github.io">Dominik Richter</a> / <a href="http://twitter.com/arlimus">@arlimus</a></small>
+	</p>
+</section>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: 'sky',
+				transition: 'linear',
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					// { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					// { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					// { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					// { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					// { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+<section>
+	<section class="equi">
+		<p>
+			This is about managing your Puppet
+		</p>
+		<h2>modules</h2>
+		<div class="down"></div>
+	</section>
+	<section>
+		Assuming your puppet is managed via git,<br/>
+		this may look familiar:
+<pre><code>.
+├── .git/
+├── .gitmodules
+└── modules
+    ├── stdlib
+    ├── apache
+    ├── ...
+</code></pre>
+	</section>
+	<section>
+		<p>Most modules these days are on</p>
+		<h3><a href="https://github.com/search?utf8=%E2%9C%93&q=puppet&ref=simplesearch"><i class="icon-github-circled-alt2"></i> git</a> &amp; <a href="https://forge.puppetlabs.com">Forge</a></h3>
+	</section>
+	<section>
+		<h2>Ask yourself</h2>
+		<ul>
+			<li class="fragment">How do I get my modules?<br/>
+				<small>From git or forge? or custom?</small></li>
+			<li class="fragment">How about dependencies?<br/>
+				<small>Who takes care of missing links?</small></li>
+			<li class="fragment">How do I tackle changes?<br/>
+				<small>hotfixes, new featues, adjustments, ...</small></li>
+			<li class="fragment">One repo to rule them all?<br/>
+				<small>having all features/fixes tracked in one giant repo?</small></li>
+		</ul>
+	</section>
+	<section>
+		We'll answer these by looking at git submodules, librarian-puppet, and r10k.
+	</section>
+</section>
+
+<section>
+	<section>
+		<h2>#1 Git Submodules</h2>
+		<div class="down"></div>
+	</section>
+	<section>
+		Having all modules in one giant git repo makes tracking changes and updates difficult
+<pre><code class="haskell">.
+├── .git/
+└── modules
+    ├── a  (where is this module compared to upstream?)
+    ├── b  (changes done here mix with...)
+    └── c  (... changes here, which is difficult to re-use)
+</code></pre>
+		<small>It works as long as your project is fairly small.</small>
+	</section>
+	<section>
+		<h3>Giant-repo issues</h3>
+		<ul>
+			<li>All change history is mixed together
+				<small>More difficult to separate and track what happened.</small>
+			</li>
+			<li class="long">Missing ACLs per folder
+				<small>Either your users get too many permissions or too few.<br/>
+				The first may result in GAUs/catastrophy, the second in a tedious update process.</small>
+			</li>
+			<li class="long">You have to check upstream modules into your repo
+				<small>This may or may not be something you want.<br/>
+				Checking it in offers stability at the cost of flexibility</small>
+			</li>
+			<li>Additional work to publish a module
+				<small>At least if you want to offer the DVCS history to contributors to join.</small>
+			</li>
+		</ul>
+	</section>
+	<section>
+		Create submodules
+<pre><code class="haskell">.
+├── .git/
+├── .gitmodules
+└── modules
+    ├── a (via submodule)
+    ├── b (via submodule)
+    └── c (via submodule)
+</code></pre>
+		<small>New features / fixes are tracked in each module separately.</small>
+	</section>
+	<section>
+		<h3>Great because...</h3>
+		<ul>
+			<li>No extra tools to install; just git
+				<p><small>Though just a minor bonus, as Puppet requires Ruby</small></p>
+			</li>
+			<li>Easy to move pinned commit
+				<p><small>Just change into the folder, look at git tracks, check out what you need</small></p>
+			</li>
+			<li>Simple
+				<p><small>Get all modules with a simple command</small></p>
+			</li>
+		</ul>
+	</section>
+	<section>
+		<h3>Limitations</h3>
+		<ul>
+			<li>Static
+				<p><small>(only commit-pinning; not branch- or ref-based)</small></p>
+			</li>
+			<li>Complex process to create new features
+				<p><small>I.e. create feature at root repo, create feature at submodule, add contents, commit to submodule, commit to root</small></p>
+			</li>
+			<li>Only works with git
+				<p><small>(which is pretty much the default)</small></p>
+			</li>
+			<li>No dependency resolution
+				<p><small>you have to track it manually</small></p>
+			</li>
+		</ul>
+	</section>
+</section>
+
+
+<section>
+	<section>
+		<h2>#2 librarian-puppet</h2>
+		<p><a href="https://github.com/rodjek/librarian-puppet"><i class="icon-github-circled-alt2"></i></a></p>
+		<div class="down" style="margin-top: 2rem"></div>
+	</section>
+	<section>
+		Ruby's <a href="http://bundler.io/">Bundler</a> coming to Puppet
+	</section>
+	<section>
+		A shiny new Puppetfile
+		<pre><code class="ruby">forge "https://forgeapi.puppetlabs.com"
+
+metadata
+
+mod 'puppetlabs-stdlib', '4.3.2'
+mod 'puppetlabs-apache',
+  git: 'git://github.com/puppetlabs/puppetlabs-apache.git'
+		</code></pre>
+		Install via
+		<pre><code class="bash">librarian-puppet install</code></pre>
+	</section>
+	<section>
+	<p>Librarian will take care of pulling all required modules</p>
+  <div id="depsGraph"></div>
+		<script>
+			links = [
+				[
+					{ target: "os_hardening",
+						target_style: "fill: rgb(0, 204, 255)",
+					},
+				],[
+					{
+						source: "stdlib", target: "os_hardening", type: "normal",
+						source_style: "fill: rgb(218, 152, 221)",
+						target_style: "fill: rgb(0, 204, 255)",
+					},
+					{ source: "sysctl", target: "os_hardening", type: "dashed",
+						source_style: "fill: #FF9898",
+					},
+				]
+			];
+
+			showMultiGraph(links, "depsGraph", {
+				width: 600,
+				height: 300,
+				linkDistance: 150,
+				circleRadius: 12,
+			})
+		</script>
+	</section>
+	<section>
+		Configure git branch/tag/commit with ref
+		<pre><code class="ruby">mod 'apache',
+  git: 'https://github.com/puppetlabs/puppetlabs-apache',
+  ref: '1.1.x'
+
+mod 'stdlib',
+  git: 'https://github.com/puppetlabs/puppetlabs-stdlib',
+  ref: '4.3.2'
+
+mod 'mysql',
+  git: 'https://github.com/puppetlabs/puppetlabs-mysql',
+  ref: 'f9dcac055baef105f57fdf63e26a3268a1d77cfd'
+		</code></pre>
+	</section>
+	<section>
+		... which will result in
+		<pre><code class="haskell">.
+├── modules
+│   ├── apache/
+│   ├── concat/
+│   ├── mysql/
+│   └── stdlib/
+├── .librarian        (local librarian config)
+├── .tmp              (local cache)
+├── Puppetfile
+└── Puppetfile.lock   (pinned configuration)
+		</code></pre>
+	</section>
+	<section>
+		This includes dependencies, git history, and a Puppetfile.lock:
+		<pre><code class="ruby">FORGE
+  remote: https://forgeapi.puppetlabs.com
+  specs:
+    puppetlabs-concat (1.1.0)
+      puppetlabs-stdlib (>= 4.0.0)
+    puppetlabs-stdlib (4.3.2)
+
+GIT
+  remote: https://github.com/puppetlabs/puppetlabs-apache
+  ref: 1.1.x
+  sha: 212e09d383c7382aa269e8c00e5c20c1c3808b2d
+  specs:
+    apache (1.1.1)
+      puppetlabs-concat (>= 1.0.0)
+      puppetlabs-stdlib (>= 2.4.0)
+...
+</code></pre>
+	</section>
+	<section>
+		For all your custom modules, add dependencies to your metadata.json
+		<pre><code class="json">{
+  "name": "hardening/ssh_hardening",
+  "version": "1.0.2",
+...
+  "dependencies": [
+    {
+      "name": "saz/ssh",
+      "version_requirement": ">= 2.3.6"
+    },
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 4.2.0"
+    }
+  ]
+}
+</code></pre>
+	</section>
+	<section>
+		Available commands
+		<pre><code class="bash">Commands:
+  librarian-puppet clean           # Cleans out the cache
+  librarian-puppet config          # Show or edit the config.
+  librarian-puppet help [COMMAND]  # Describe commands
+  librarian-puppet init            # Initializes the directory.
+  librarian-puppet install         # Install modules
+  librarian-puppet outdated        # Lists outdated dependencies.
+  librarian-puppet package         # Cache to vendor/puppet/cache.
+  librarian-puppet show            # Shows dependencies
+  librarian-puppet update          # Updates and install
+  librarian-puppet version         # Displays the version.
+</code></pre>
+	</section>
+	<section>
+		<h3>Great because...</h3>
+		<ul>
+			<li>Supports Git and Puppet Forge
+				<p><small>also supports internal Forges like <a href="http://www.pulpproject.org/">Pulp</a></small></p>
+			</li>
+			<li>Track via Commit, Tag, Branch
+				<p><small>gives more flexibility and removes a few error-cases</small></p>
+			</li>
+			<li>Dependency resolution
+				<p><small>so you don't forget new modules and versions</small></p>
+			</li>
+			<li>Version pinning
+				<p><small>Your current installation is written to "Puppetfile.lock"</small></p>
+			</li>
+		</ul>
+	</section>
+	<section>
+		<h3>Limitations</h3>
+		<ul>
+			<li>Caching only once per instance
+				<p><small>Which is tricky if you deploy from git for different environments and commits</small></p>
+			</li>
+			<li>Doesn't handle failures gracefully
+				<p><small>It may remove local modules and doesn't load from cache</small></p>
+			</li>
+		</ul>
+	</section>
+
+</section>
+
+
+<section>
+	<section>
+		<h2>#3 r10k</h2>
+		<a href="https://github.com/adrienthebo/r10k"><i class="icon-github-circled-alt2"></i></a>
+		<div class="down" style="margin-top: 2rem"></div>
+	</section>
+	<section class="equi">
+		<p>Use it to</p>
+		<h3>Manage modules via <a href="https://github.com/adrienthebo/r10k/blob/master/doc/puppetfile.mkd">Puppetfile</a></h3>
+		<div class="fragment equi">
+			<p>and</p>
+			<h3>Dynamic <a href="https://github.com/adrienthebo/r10k/blob/master/doc/dynamic-environments.mkd">environments</a> via Git</h3>
+		</div>
+	</section>
+	<section>
+		<a href="https://github.com/adrienthebo/r10k/blob/master/doc/puppetfile.mkd#git">Puppetfile</a> extended with git branch, tag, and commit
+		<pre><code class="ruby">mod 'apache',
+  git: 'https://github.com/puppetlabs/puppetlabs-apache',
+  branch: '1.1.x'
+
+mod 'stdlib',
+  git: 'https://github.com/puppetlabs/puppetlabs-stdlib',
+  tag: '4.3.2'
+
+mod 'mysql',
+  git: 'https://github.com/puppetlabs/puppetlabs-mysql',
+  commit: '4890ddb2f0c65c40101683c5577f943a7594b509'
+		</code></pre>
+	</section>
+	<section>
+		<p>Puppet originally introduced <a href="https://docs.puppetlabs.com/puppet/latest/reference/environments.html">static environments</a></p>
+		<pre><code class="ini">[master]
+# Environment independent settings
+vardir = '/var/lib/puppet'
+
+[production]
+modulepath = '/etc/puppet/environments/production/modules'
+
+[testing]
+modulepath = '/etc/puppet/environments/testing/modules'
+</code></pre>
+	</section>
+	<section>
+		<p>This was troublesome for development
+			<small>Imagine 2+ features being developed at the same time<br/>
+				=> code pollution in development environment</small></p>
+	</section>
+	<section>
+		<p>Use <a href="http://puppetlabs.com/blog/git-workflow-and-puppet-environments">dynamic environments</a></p>
+		<pre><code class="ini">[master]
+vardir = '/var/lib/puppet'
+modulepath = '/etc/puppet/environments/$environment/modules'</code></pre>
+		<p>$environment will get resolved once you run</p>
+		<pre><code class="bash">puppet agent -t --environment myenv</code></pre>
+	</section>
+	<section>
+		<p>r10k creates environments from branch names<br/>
+			<small>E.g. a production branch will result in an environment by that name.</small>
+		<p>Configure r10k<br/>
+			<small>Point it to your repository (and included branches) and environment folder:</small></p>
+		<pre><code class="yaml">---
+sources:
+  operations:
+    remote: 'git://git-server.site/my-org/org-modules'
+    basedir: '/etc/puppet/environments'
+</code></pre>
+	</section>
+	<section>
+		<p>To deploy<br/>
+			<small>To run the deployment with Puppetfile synchronized and verbose output</small></p>
+		<pre><code class="bash">r10k deploy environment -pv</code></pre>
+		<p>Which will create</p>
+		<pre><code class="haskell">/etc/puppetlabs/puppet/environments/production/modules
+├── puppetlabs-apache (v1.1.1)
+├── zack-r10k (v2.2.8)
+/opt/puppet/share/puppet/modules
+├── puppetlabs-apt (v1.1.0)
+├── puppetlabs-stdlib (v4.3.2)
+└── ...
+</code></pre>
+	</section>
+	<section>
+		<h3>Great because...</h3>
+		<ul>
+			<li>Optimized caching of Git checkouts
+				<p><small>With cache reuse when possible</small></p>
+			</li>
+			<li>Supports <a href="https://github.com/adrienthebo/r10k/blob/master/doc/puppetfile.mkd">Puppetfile</a>-Syntax
+				<p><small>with some adjustments</small></p>
+			</li>
+			<li>Graceful with failures
+				<p><small>Uses cache whenever possible</small></p>
+			</li>
+			<li>Conceived for changing environments
+				<p><small>Especially well fit for large projects and quick development cycles</small></p>
+			</li>
+		</ul>
+	</section>
+	<section>
+		<h3>Limitations</h3>
+		<ul>
+			<li>No dependency resolution
+				<p><small>At the moment you have to do it manually</small></p>
+			</li>
+			<li>Some hidden failures
+				<p><small>This is rare but may happen with some Puppetfile configurations</small></p>
+			</li>
+		</ul>
+	</section>
+
+</section>
+
+<section>
+	<section>
+		<h2>Traps</h2>
+		<div>
+			<img class="clean" src="images/trap.1.png">
+			<label><a href="https://karabos.files.wordpress.com/2010/09/trap1.jpg">karabos.files.wordpress.com</a></label>
+		</div>
+	</section>
+	<section>
+		<h3>Hidden failures</h3>
+		<p>Modules may not get installed.
+			<small>In most cases you will get an error or at least warning when something went wrong. In some rare cases this also happens without any errors due to to internal inconsistencies.</small></p>
+		<p>Check your <code>modules/</code> folder to verify.</p>
+	</section>
+	<section>
+		<h3>Flexibility at a price</h3>
+		<p>With git branch dependencies, commits may vary
+			<small>New commits to the branch will move it along. Two deployments may not be on the same commit-ID.</small></p>
+		<p>Librarian-puppet provides <code>Puppetfile.lock</code>
+			<small>In this file commit-IDs are pinned for all references. Use it to gain consistency. Alternatively pin to tags or IDs.</small></p>
+	</section>
+	<section>
+		<h3>Missing commit</h3>
+		<p>When pinning commits, they may be missing
+			<small>e.g. if they haven't been pushed yet<br/>git history rewrites may alltogether wreck your debugging history.</small></p>
+	</section>
+</section>
+
+<section>
+	<h2>References</h2>
+
+	<p>
+		Finch's musings on Puppet/r10k motivation <a href="http://somethingsinistral.net/blog/how-dynamic-environments-came-to-be/">[1]</a><a href="http://somethingsinistral.net/blog/scaling-puppet-environment-deployment/">[2]</a><a href="http://somethingsinistral.net/blog/rethinking-puppet-deployment/">[3]</a>
+	</p>
+	<p>
+		Gary's Puppet R10K environment workflow <a href="http://garylarizza.com/blog/2014/02/18/puppet-workflow-part-3/">[1]</a>
+</section>
+
+			</div>
+
+		</div>
+
+	</body>
+</html>

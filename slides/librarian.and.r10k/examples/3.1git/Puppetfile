@@ -1,0 +1,12 @@
+
+mod 'apache',
+  git: 'https://github.com/puppetlabs/puppetlabs-apache',
+  branch: '1.1.x'
+
+mod 'stdlib',
+  git: 'https://github.com/puppetlabs/puppetlabs-stdlib',
+  tag: '4.3.2'
+
+mod 'mysql',
+  git: 'https://github.com/puppetlabs/puppetlabs-mysql',
+  commit: '4890ddb2f0c65c40101683c5577f943a7594b509'
