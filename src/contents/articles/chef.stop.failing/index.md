@@ -120,7 +120,7 @@ You have the option to either clone and modify the code directly, thus preservin
 
 ## One more thing
 
-There is some cases, where resources are dynamically created during the Chef run, after you have long issued your `ignore_failure` call. This usually happens inside a `ruby_block`, which is interpreted during resource execution. Your `ignore_failure` call happens too early in the run, for the resource to exist, and thus won't have any effect.
+There are some cases, where resources are dynamically created during the Chef run, after you have long issued your `ignore_failure` call. This usually happens inside a `ruby_block`, which is interpreted during resource execution. Your `ignore_failure` call happens too early in the run, for the resource to exist, and thus won't have any effect.
 
 This is also true for my `service[sensu-client]` example. In this special case, the resource is created by a LWRP and later triggered by a ruby block, which you can easily hijack to alter its behavior.
 
