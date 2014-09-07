@@ -87,6 +87,14 @@ resources(&lt;span class=&quot;st&quot;&gt;&amp;quot;ruby_block[sensu_service_tr
 </description>
     </item>
     <item>
+      <title>Librarian and R10K</title>
+      <link>http://arlimus.github.iohttp://arlimus.github.io/slides/librarian.and.r10k/#/</link>
+      <pubDate></pubDate>
+      <guid isPermaLink="true">http://arlimus.github.iohttp://arlimus.github.io/slides/librarian.and.r10k/#/</guid>
+      <author></author>
+      <description></description>
+    </item>
+    <item>
       <title>Custom Resource Types in Serverspec</title>
       <link>http://arlimus.github.io/articles/custom.resource.types.in.serverspec/</link>
       <pubDate>Sat, 30  Aug 2014 02:00:00 +0200</pubDate>

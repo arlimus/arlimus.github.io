@@ -1,0 +1,4 @@
+- title: Librarian and R10K
+  url: http://arlimus.github.io/slides/librarian.and.r10k/#/
+  date: 2014-09-04
+  abstract: Slides on git submodules, librarian-puppet, and r10k for managing your Puppet environments.
