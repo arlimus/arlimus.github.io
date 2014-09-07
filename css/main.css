@@ -625,3 +625,11 @@ input {
 .clearfix:after {
   clear: both;
 }
+
+.getback {
+  text-align: center;
+}
+
+.getback a {
+  text-decoration: none;
+}

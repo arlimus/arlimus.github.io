@@ -98,7 +98,7 @@ include_recipe <span class="st">&quot;monitor::default&quot;</span></code></pre>
 <p>Chef isolated your components into wonderful cookbooks and recipes. In some rare border cases, you may find yourself wishing to break this idyllic system and to alter some small&nbsp;behavior.</p>
 <p>You have the option to either clone and modify the code directly, thus preserving each compartment, or change its behavior with a few calls from the outside. Both methods have their merits and much depends on the style you and and your team prefer to&nbsp;use.</p>
 <h2 id="one-more-thing">One more&nbsp;thing</h2>
-<p>There is some cases, where resources are dynamically created during the Chef run, after you have long issued your <code>ignore_failure</code> call. This usually happens inside a <code>ruby_block</code>, which is interpreted during resource execution. Your <code>ignore_failure</code> call happens too early in the run, for the resource to exist, and thus won’t have any&nbsp;effect.</p>
+<p>There are some cases, where resources are dynamically created during the Chef run, after you have long issued your <code>ignore_failure</code> call. This usually happens inside a <code>ruby_block</code>, which is interpreted during resource execution. Your <code>ignore_failure</code> call happens too early in the run, for the resource to exist, and thus won’t have any&nbsp;effect.</p>
 <p>This is also true for my <code>service[sensu-client]</code> example. In this special case, the resource is created by a <span class="caps">LWRP</span> and later triggered by a ruby block, which you can easily hijack to alter its&nbsp;behavior.</p>
 <p>The complete code block to stop both failures&nbsp;is:</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">ignore_failure <span class="st">&#39;sensu_service[sensu-client]&#39;</span>
@@ -108,11 +108,21 @@ resources(<span class="st">&quot;ruby_block[sensu_service_trigger]&quot;</span>)
 <span class="kw">end</span></code></pre>
 </section>
         </article>
+        <div class="nav getback"><a href="/">« Full blog</a></div>
+        <div id="disqus_thread"></div><script type="text/javascript">
+        var disqus_shortname = 'silversmith';
+        (function() {
+           var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+           dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+           (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
       </div>
     </div>
     <footer>
       <div class="content-wrap">
-        <div class="nav"><a href="/">« Full blog</a></div>
         <section class="about">
 
         </section>
