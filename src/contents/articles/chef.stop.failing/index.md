@@ -9,6 +9,8 @@ Sometimes your Chef run fails. Even though you're greeted with bold red letters,
 
 <span class="more"></span>
 
+<img src="error.png">
+
 ## Full control
 
 In case this happens to a resource you control, you have the wonderful `ignore_failure` attribute to modify this behavior. Adding it to e.g. a service, will enable Chef to continue a run, even if this resource is failing.

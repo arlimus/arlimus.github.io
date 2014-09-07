@@ -38,6 +38,7 @@
         <article class="article">
           <section class="content"><p>Sometimes your Chef run fails. Even though you’re greeted with bold red letters, you may still want the run to continue. Imagine, for example, bootstrapping nodes for the first time when no monitoring system is up yet. Or later on if monitoring fails. Your Chef run will break down due to missing components, even though you actually want it to complete, instead of failing halfway&nbsp;through.</p>
 <p><span class="more"></span></p>
+<p><img src="/articles/chef.stop.failing/error.png"></p>
 <h2 id="full-control">Full&nbsp;control</h2>
 <p>In case this happens to a resource you control, you have the wonderful <code>ignore_failure</code> attribute to modify this behavior. Adding it to e.g. a service, will enable Chef to continue a run, even if this resource is&nbsp;failing.</p>
 <pre class="sourceCode ruby"><code class="sourceCode ruby">service <span class="st">&quot;apache&quot;</span> <span class="kw">do</span>
