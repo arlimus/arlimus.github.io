@@ -1,8 +1,9 @@
 {
   "dependencies": {
+    "js-yaml": "^3.2.2",
     "moment": "2.x",
-    "underscore": "1.4.x",
-    "typogr": "0.5.x"
+    "typogr": "0.5.x",
+    "underscore": "1.4.x"
   },
   "repository": "none"
 }

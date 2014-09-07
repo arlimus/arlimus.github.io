@@ -1,3 +1,5 @@
+fs = require 'fs'
+yaml = require 'js-yaml'
 
 module.exports = (env, callback) ->
   ### Paginator plugin. Defaults can be overridden in config.json
@@ -19,6 +21,20 @@ module.exports = (env, callback) ->
     # helper that returns a list of articles found in *contents*
     # note that each article is assumed to have its own directory in the articles directory
     articles = contents[options.articles]._.directories.map (item) -> item.index
+
+    ydata = []
+    if fs.existsSync('links.yaml')
+      data = fs.readFileSync 'links.yaml'
+      ydata = yaml.load data.toString()
+    if not ydata?
+      ydata = []
+    ydata.map (x)->
+      x.article = {intro: x.abstract}
+      x.intro = x.abstract
+      x.getHtml = ->
+        ""
+    articles = articles.concat(ydata)
+
     articles.sort (a, b) -> b.date - a.date
     return articles
 
