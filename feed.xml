@@ -5,9 +5,95 @@
     <atom:link href="http://arlimus.github.io/feed.xml" rel="self" type="application/rss+xml"></atom:link>
     <link>http://arlimus.github.io</link>
     <description></description>
-    <pubDate>Sat, 06 Sep 2014 02:00:00 +0200</pubDate>
+    <pubDate>Sat, 13 Sep 2014 02:00:00 +0200</pubDate>
     <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
     <language>en</language>
+    <item>
+      <title>Sane Git Backups</title>
+      <link>http://arlimus.github.io/articles/git.backup/</link>
+      <pubDate>Sat, 13 Sep 2014 02:00:00 +0200</pubDate>
+      <guid isPermaLink="true">http://arlimus.github.io/articles/git.backup/</guid>
+      <author></author>
+      <description>&lt;p&gt;Most people don’t worry about this. But when it comes to safety and compliance, or even the occasional force-push or delete, you will be happy to still have a working backup of your repository. This is how to do it easily.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;In order to get all your repositories, you are faced with two challenges: (1) get a list of repos and (2) actually download or update everything.&lt;/p&gt;
+&lt;h2 id=&quot;go-get-my-git&quot;&gt;Go get my git&lt;/h2&gt;
+&lt;p&gt;Let’s start with the latter: Getting all your git.&lt;/p&gt;
+&lt;p&gt;My first thought was something along these lines:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;test&lt;/span&gt; ! -d repo &lt;span class=&quot;kw&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; clone https://github.com/user/repo.git
+&lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; repo
+&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; fetch --all --prune
+&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; pull&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It’s simple to start, but will quickly open questions like: What folder structure to keep? Will these git commands work in every situation? And finally: Shouldn’t I create a wrapper for this in &amp;lt;insert favorite scripting language&amp;gt;?&lt;/p&gt;
+&lt;p&gt;A great solution to all these questions is to use a project like &lt;a href=&quot;https://github.com/motemen/ghq&quot;&gt;ghq&lt;/a&gt; instead.&lt;/p&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;ghq&lt;/span&gt; get -u -p https://github.com/user/repo.git&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Which will create a folder structure with your repo:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;.
+└── github.com
+    └── user
+        └── repo
+            ├── ...
+            ...&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The destination folder for your backup can be configured this way:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; config --global ghq.root &lt;span class=&quot;kw&quot;&gt;&amp;lt;&lt;/span&gt;DESTINATION&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;ghq&lt;/span&gt; get -u -p https://github.com/user/repo.git&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is especially important if you plan to use ghq for other purposes and change the destination. Otherwise just rely on your git-configured &lt;code&gt;ghq.root&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;A great improvement for backups is to remove your local workspace. To restore your data and any future work with the repository you only need the &lt;code&gt;.git&lt;/code&gt; folder. Local files can quickly be removed with:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;rm&lt;/span&gt; -rf github.com/*/*/*&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This command will leave all your “hidden” files intact, i.e. it won’t remove the &lt;code&gt;.git&lt;/code&gt; folder. When you want to restore your workspace, it’s as simple as:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; github.com/user/repo
+&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; reset --hard HEAD&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This practice may easily cut your total size in half.&lt;/p&gt;
+&lt;p&gt;From here you can continue with whatever method you like: Keep your repos on a backup node, copy them to FTP or even opt for a nice S3 backup (see &lt;a href=&quot;http://lollyrock.com/articles/s3cmd-with-radosgw/&quot;&gt;this guide&lt;/a&gt;)&lt;/p&gt;
+&lt;h2 id=&quot;find-my-repos&quot;&gt;Find my repos&lt;/h2&gt;
+&lt;p&gt;When you want to automate this for multiple repositories, you could always opt for a fixed list with all needed entries inside (example in ruby):&lt;/p&gt;
+&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;repos =&lt;span class=&quot;ot&quot;&gt; %w{&lt;/span&gt;
+&lt;span class=&quot;st&quot;&gt;  https://github.com/user/repo1.git&lt;/span&gt;
+&lt;span class=&quot;st&quot;&gt;  https://github.com/user/repo2.git&lt;/span&gt;
+&lt;span class=&quot;st&quot;&gt;  ...&lt;/span&gt;
+&lt;span class=&quot;ot&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It’s alright if you don’t have too many repositories or don’t mind the overhead of managing this list.&lt;/p&gt;
+&lt;p&gt;A more advanced solution, however, is to back up all repositories of a user or group. This approach depends on whichever provider you use for serving your git, i.e. Github, Bitbucket, Gitlab, or friends. All of them have different APIs for querying users and their repositories.&lt;/p&gt;
+&lt;p&gt;Let’s show two examples written in Ruby, one for Github and one Bitbucket.&lt;/p&gt;
+&lt;h3 id=&quot;github&quot;&gt;Github&lt;/h3&gt;
+&lt;ol style=&quot;list-style-type: decimal&quot;&gt;
+&lt;li&gt;&lt;p&gt;Get the &lt;code&gt;octokit&lt;/code&gt; gem&lt;/p&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;gem&lt;/span&gt; install octokit&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Configure an access token in your Github profile.&lt;/p&gt;
+&lt;p&gt;At the time of writing: Go to your User Settings, “Applications”, under “Personal access tokens” click on “Generate new token”. This token will be used in the next step.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://arlimus.github.io/articles/git.backup/github.accesstoken.png&quot; style=&quot;max-width: 585px; margin-left: auto; margin-right: auto;&quot;&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Get all repositories for ghq&lt;/p&gt;
+&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;require &lt;span class=&quot;st&quot;&gt;&amp;#39;octokit&amp;#39;&lt;/span&gt;
+github = &lt;span class=&quot;dt&quot;&gt;Octokit&lt;/span&gt;::&lt;span class=&quot;dt&quot;&gt;Client&lt;/span&gt;.new access_token: &lt;span class=&quot;st&quot;&gt;&amp;quot;...&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;co&quot;&gt;# list all repositories of a user/group&lt;/span&gt;
+repos = github.repositories(user=&lt;span class=&quot;st&quot;&gt;&amp;quot;...&amp;quot;&lt;/span&gt;)
+
+&lt;span class=&quot;co&quot;&gt;# get a list of clone urls for ghq&lt;/span&gt;
+urls = repos.map{|x| x[&lt;span class=&quot;st&quot;&gt;:clone_url&lt;/span&gt;] }&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&quot;bitbucket&quot;&gt;Bitbucket&lt;/h3&gt;
+&lt;ol style=&quot;list-style-type: decimal&quot;&gt;
+&lt;li&gt;&lt;p&gt;Get the &lt;code&gt;bitbucket_rest_api&lt;/code&gt; gem&lt;/p&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;gem&lt;/span&gt; install bitbucket_rest_api&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Configure an OAuth consumer.&lt;/p&gt;
+&lt;p&gt;At the time of writing: Go to “Manage Account”, “OAuth”, and “Add consumer”. Each consumer comes with a key and secret which you need in the next step.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://arlimus.github.io/articles/git.backup/bitbucket.oauth.png&quot; style=&quot;max-width: 723px; margin-left: auto; margin-right: auto;&quot;&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Get all repositories for ghq&lt;/p&gt;
+&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;require &lt;span class=&quot;st&quot;&gt;&amp;#39;bitbucket_rest_api&amp;#39;&lt;/span&gt;
+bitbucket = &lt;span class=&quot;dt&quot;&gt;BitBucket&lt;/span&gt;.new client_id: &lt;span class=&quot;st&quot;&gt;&amp;quot;&amp;lt;key&amp;gt;&amp;quot;&lt;/span&gt;, client_secret: &lt;span class=&quot;st&quot;&gt;&amp;quot;&amp;lt;secret&amp;gt;&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;co&quot;&gt;# list all repositories of a user/group&lt;/span&gt;
+repos = bitbucket.repos.list
+
+&lt;span class=&quot;co&quot;&gt;# get a list of clone urls for ghq&lt;/span&gt;
+repos.map{|x| &lt;span class=&quot;st&quot;&gt;&amp;quot;git@bitbucket.org:&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt;#{&lt;/span&gt;x[&lt;span class=&quot;st&quot;&gt;&amp;#39;owner&amp;#39;&lt;/span&gt;]&lt;span class=&quot;ot&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt;#{&lt;/span&gt;x[&lt;span class=&quot;st&quot;&gt;&amp;#39;slug&amp;#39;&lt;/span&gt;]&lt;span class=&quot;ot&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt; }&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&quot;final-thoughts&quot;&gt;Final thoughts&lt;/h2&gt;
+&lt;p&gt;It’s quick and simple to create a full backup of all repositories as this article has shown. The next step is to attach it to your backup system and get it running regularly. We have also opted for an encryption layer on top for data privacy which is highly recommended for all data that is not open source.&lt;/p&gt;
+&lt;p&gt;Enjoy!&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>Chef, Stop Failing</title>
       <link>http://arlimus.github.io/articles/chef.stop.failing/</link>
@@ -448,7 +534,6 @@ $app.directive('flow', function() {
   }
 })
 &lt;/script&gt;
-
 &lt;h2 id=&quot;read&quot;&gt;Read&lt;/h2&gt;
 &lt;p&gt;Get a list of items. If successful, it responds with an array of IDs or objects.&lt;/p&gt;
 &lt;div flow=&quot;&quot; request=&quot;GET /items&quot; response=&quot;200 OK&quot; response-body=&quot;[&amp;quot;1&amp;quot;,&amp;quot;2&amp;quot;,&amp;quot;3&amp;quot;]&quot;&gt;
