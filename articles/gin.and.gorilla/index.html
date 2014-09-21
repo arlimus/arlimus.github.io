@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <meta name="google-site-verification" content="gRPSZeaTzicrrtM-WwBOvqx_szx4Av0stLFxBjR3QWU">
+    <title>Go Websockets (Gin-gonic + Gorilla) - Silversmith
+    </title>
+    <link rel="alternate" href="http://arlimus.github.io/feed.xml" type="application/rss+xml" title="">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto+Slab:700|Source+Code+Pro|Inconsolata" type="text/css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/vendor/highlight/styles/dark.css">
+    <script type="text/javascript">
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-45216258-1', 'arlimus.github.io');
+      ga('send', 'pageview');
+      
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
+    <script src="/vendor/highlight/highlight.pack.js" onload="hljs.initHighlightingOnLoad();"></script>
+    <script>
+      $app = angular.module('app', [])
+      
+    </script>
+  </head>
+  <body ng-app="app" class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Go Websockets (Gin-gonic + Gorilla)</h1>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>Using websockets in Go is straightforward and simple. We’ll use <a href="http://gin-gonic.github.io/gin/">gin-gonic</a> as our web framework and the <a href="http://www.gorillatoolkit.org/">Gorilla web toolkit</a> to add websockets to&nbsp;it.</p>
+<p><span class="more"></span></p>
+<h2 id="gin-gonic">Gin-Gonic</h2>
+<p>Let’s start with a simple server. First, get&nbsp;Gin:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">go</span> get github.com/gin-gonic/gin</code></pre>
+<p>Then create a small&nbsp;server:</p>
+<pre class="sourceCode go"><code class="sourceCode go"><span class="kw">package</span> main
+
+<span class="kw">import</span> (
+    <span class="st">&quot;github.com/gin-gonic/gin&quot;</span>
+)
+
+<span class="kw">func</span> main() {
+
+    r := gin.Default()
+
+    r.<span class="caps">GET</span>(<span class="st">&quot;/&quot;</span>, <span class="kw">func</span>(c *gin.Context) {
+        c.String(<span class="dv">200</span>, <span class="st">&quot;Welcome to Gin&quot;</span>)
+    })
+
+    r.Run(<span class="st">&quot;localhost:12312&quot;</span>)
+}</code></pre>
+<p>You can open it in your browser on <a href="http://localhost:12312">localhost:12312</a> and should be greeted with “Welcome to&nbsp;Gin”.</p>
+<h2 id="gorilla">Gorilla</h2>
+<p>Time to add websockets via Gorilla web toolkit. First run <code>go get github.com/gorilla/websocket</code> and import&nbsp;it.</p>
+<p>Next, create a websocket handler, which will act as a simple echo server. It will read messages and echo them&nbsp;back.</p>
+<pre class="sourceCode go"><code class="sourceCode go"><span class="kw">var</span> wsupgrader = websocket.Upgrader{
+    ReadBufferSize:  <span class="dv">1024</span>,
+    WriteBufferSize: <span class="dv">1024</span>,
+}
+
+<span class="kw">func</span> wshandler(w http.ResponseWriter, r *http.Request) {
+    conn, err := wsupgrader.Upgrade(w, r, <span class="ot">nil</span>)
+    <span class="kw">if</span> err != <span class="ot">nil</span> {
+        fmt.Println(<span class="st">&quot;Failed to set websocket upgrade: %+v&quot;</span>, err)
+        <span class="kw">return</span>
+    }
+
+    <span class="kw">for</span> {
+        t, msg, err := conn.ReadMessage()
+        <span class="kw">if</span> err != <span class="ot">nil</span> {
+            <span class="kw">break</span>
+        }
+        conn.WriteMessage(t, msg)
+    }
+}</code></pre>
+<p>As you can see in the <code>wshandler</code> function, the <code>for</code>-loop will run until the connection ends and write back whatever the client sends. Once an error is encoutered or the connection breaks, the loop is finished and the handler&nbsp;ends.</p>
+<p>Finally we add it to our Gin&nbsp;context:</p>
+<pre class="sourceCode go"><code class="sourceCode go">r.GET(<span class="st">&quot;/ws&quot;</span>, <span class="kw">func</span>(c *gin.Context) {
+    wshandler(c.Writer, c.Request)
+})</code></pre>
+<p>Let’s see it in&nbsp;action.</p>
+<h2 id="client">Client</h2>
+<p>We will create a small html file which communicates with our websocket server. It sends and receives a message via javascript every second and displays it on the&nbsp;site.</p>
+<pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;html&gt;</span>
+  <span class="kw">&lt;head&gt;</span>
+    <span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;https://code.jquery.com/jquery-2.1.1.min.js&quot;</span><span class="kw">&gt;&lt;/script&gt;</span>
+  <span class="kw">&lt;/head&gt;</span>
+
+  <span class="kw">&lt;body&gt;</span>
+    <span class="kw">&lt;h3&gt;</span>WebSocket Go<span class="kw">&lt;/h3&gt;</span>
+    <span class="kw">&lt;pre</span><span class="ot"> id=</span><span class="st">&quot;output&quot;</span><span class="kw">&gt;&lt;/pre&gt;</span>
+
+    <span class="kw">&lt;script&gt;</span>
+      url = <span class="st">&#39;ws://localhost:12312/ws&#39;</span>;
+      c = <span class="kw">new</span> <span class="fu">WebSocket</span>(url);
+      
+      send = <span class="kw">function</span>(data){
+        <span class="fu">$</span>(<span class="st">&quot;#output&quot;</span>).<span class="fu">append</span>((<span class="kw">new</span> <span class="fu">Date</span>())+ <span class="st">&quot; ==&gt; &quot;</span>+data+<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
+        <span class="ot">c</span>.<span class="fu">send</span>(data)
+      }
+
+      <span class="ot">c</span>.<span class="fu">onmessage</span> = <span class="kw">function</span>(msg){
+        <span class="fu">$</span>(<span class="st">&quot;#output&quot;</span>).<span class="fu">append</span>((<span class="kw">new</span> <span class="fu">Date</span>())+ <span class="st">&quot; &lt;== &quot;</span>+<span class="ot">msg</span>.<span class="fu">data</span>+<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
+        <span class="ot">console</span>.<span class="fu">log</span>(msg)
+      }
+
+      <span class="ot">c</span>.<span class="fu">onopen</span> = <span class="kw">function</span>(){
+        <span class="fu">setInterval</span>( 
+          <span class="kw">function</span>(){ <span class="fu">send</span>(<span class="st">&quot;ping&quot;</span>) }
+        , <span class="dv">1000</span> )
+      }
+    &lt;<span class="ot">/script&gt;</span>
+
+<span class="ot">  &lt;/body</span>&gt;
+&lt;<span class="ot">/html&gt;</span></code></pre>
+<p>Let’s include this file in our go&nbsp;server:</p>
+<pre class="sourceCode go"><code class="sourceCode go">r.LoadHTMLFiles(<span class="st">&quot;index.html&quot;</span>)
+
+r.<span class="caps">GET</span>(<span class="st">&quot;/&quot;</span>, <span class="kw">func</span>(c *gin.Context) {
+    c.<span class="caps">HTML</span>(<span class="dv">200</span>, <span class="st">&quot;index.html&quot;</span>, <span class="ot">nil</span>)
+})</code></pre>
+<p>The complete go code should now look like&nbsp;this:</p>
+<pre class="sourceCode go"><code class="sourceCode go"><span class="kw">package</span> main
+
+<span class="kw">import</span> (
+    <span class="st">&quot;fmt&quot;</span>
+    <span class="st">&quot;github.com/gin-gonic/gin&quot;</span>
+    <span class="st">&quot;github.com/gorilla/websocket&quot;</span>
+    <span class="st">&quot;net/http&quot;</span>
+)
+
+<span class="kw">func</span> main() {
+
+    r := gin.Default()
+    r.LoadHTMLFiles(<span class="st">&quot;index.html&quot;</span>)
+
+    r.<span class="caps">GET</span>(<span class="st">&quot;/&quot;</span>, <span class="kw">func</span>(c *gin.Context) {
+        c.<span class="caps">HTML</span>(<span class="dv">200</span>, <span class="st">&quot;index.html&quot;</span>, <span class="ot">nil</span>)
+    })
+
+    r.<span class="caps">GET</span>(<span class="st">&quot;/ws&quot;</span>, <span class="kw">func</span>(c *gin.Context) {
+        wshandler(c.Writer, c.Request)
+    })
+
+    r.Run(<span class="st">&quot;localhost:12312&quot;</span>)
+}
+
+<span class="kw">var</span> wsupgrader = websocket.Upgrader{
+    ReadBufferSize:  <span class="dv">1024</span>,
+    WriteBufferSize: <span class="dv">1024</span>,
+}
+
+<span class="kw">func</span> wshandler(w http.ResponseWriter, r *http.Request) {
+    conn, err := wsupgrader.Upgrade(w, r, <span class="ot">nil</span>)
+    <span class="kw">if</span> err != <span class="ot">nil</span> {
+        fmt.Println(<span class="st">&quot;Failed to set websocket upgrade: %+v&quot;</span>, err)
+        <span class="kw">return</span>
+    }
+
+    <span class="kw">for</span> {
+        t, msg, err := conn.ReadMessage()
+        <span class="kw">if</span> err != <span class="ot">nil</span> {
+            <span class="kw">break</span>
+        }
+        conn.WriteMessage(t, msg)
+    }
+}</code></pre>
+<p>Run it and open your browser on <a href="http://localhost:12312">localhost:12312</a>. You should now see the ping messages and&nbsp;responses:</p>
+<p><img title="Ping pong with websockets" src="/articles/gin.and.gorilla/pingpong.png" style="max-width:512px; margin-left: auto; margin-right: auto"></p>
+</section>
+        </article>
+        <div class="nav getback"><a href="/">« Full blog</a></div>
+        <div id="disqus_thread"></div><script type="text/javascript">
+        var disqus_shortname = 'silversmith';
+        (function() {
+           var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+           dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+           (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <section class="about">
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Dominik Richter &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -5,9 +5,157 @@
     <atom:link href="http://arlimus.github.io/feed.xml" rel="self" type="application/rss+xml"></atom:link>
     <link>http://arlimus.github.io</link>
     <description></description>
-    <pubDate>Sat, 13 Sep 2014 02:00:00 +0200</pubDate>
+    <pubDate>Sun, 21 Sep 2014 02:00:00 +0200</pubDate>
     <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
     <language>en</language>
+    <item>
+      <title>Go Websockets (Gin-gonic + Gorilla)</title>
+      <link>http://arlimus.github.io/articles/gin.and.gorilla/</link>
+      <pubDate>Sun, 21 Sep 2014 02:00:00 +0200</pubDate>
+      <guid isPermaLink="true">http://arlimus.github.io/articles/gin.and.gorilla/</guid>
+      <author></author>
+      <description>&lt;p&gt;Using websockets in Go is straightforward and simple. We’ll use &lt;a href=&quot;http://gin-gonic.github.io/gin/&quot;&gt;gin-gonic&lt;/a&gt; as our web framework and the &lt;a href=&quot;http://www.gorillatoolkit.org/&quot;&gt;Gorilla web toolkit&lt;/a&gt; to add websockets to it.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;h2 id=&quot;gin-gonic&quot;&gt;Gin-Gonic&lt;/h2&gt;
+&lt;p&gt;Let’s start with a simple server. First, get Gin:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;go&lt;/span&gt; get github.com/gin-gonic/gin&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then create a small server:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;package&lt;/span&gt; main
+
+&lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; (
+    &lt;span class=&quot;st&quot;&gt;&amp;quot;github.com/gin-gonic/gin&amp;quot;&lt;/span&gt;
+)
+
+&lt;span class=&quot;kw&quot;&gt;func&lt;/span&gt; main() {
+
+    r := gin.Default()
+
+    r.GET(&lt;span class=&quot;st&quot;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;, &lt;span class=&quot;kw&quot;&gt;func&lt;/span&gt;(c *gin.Context) {
+        c.String(&lt;span class=&quot;dv&quot;&gt;200&lt;/span&gt;, &lt;span class=&quot;st&quot;&gt;&amp;quot;Welcome to Gin&amp;quot;&lt;/span&gt;)
+    })
+
+    r.Run(&lt;span class=&quot;st&quot;&gt;&amp;quot;localhost:12312&amp;quot;&lt;/span&gt;)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You can open it in your browser on &lt;a href=&quot;http://localhost:12312&quot;&gt;localhost:12312&lt;/a&gt; and should be greeted with “Welcome to Gin”.&lt;/p&gt;
+&lt;h2 id=&quot;gorilla&quot;&gt;Gorilla&lt;/h2&gt;
+&lt;p&gt;Time to add websockets via Gorilla web toolkit. First run &lt;code&gt;go get github.com/gorilla/websocket&lt;/code&gt; and import it.&lt;/p&gt;
+&lt;p&gt;Next, create a websocket handler, which will act as a simple echo server. It will read messages and echo them back.&lt;/p&gt;
+&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; wsupgrader = websocket.Upgrader{
+    ReadBufferSize:  &lt;span class=&quot;dv&quot;&gt;1024&lt;/span&gt;,
+    WriteBufferSize: &lt;span class=&quot;dv&quot;&gt;1024&lt;/span&gt;,
+}
+
+&lt;span class=&quot;kw&quot;&gt;func&lt;/span&gt; wshandler(w http.ResponseWriter, r *http.Request) {
+    conn, err := wsupgrader.Upgrade(w, r, &lt;span class=&quot;ot&quot;&gt;nil&lt;/span&gt;)
+    &lt;span class=&quot;kw&quot;&gt;if&lt;/span&gt; err != &lt;span class=&quot;ot&quot;&gt;nil&lt;/span&gt; {
+        fmt.Println(&lt;span class=&quot;st&quot;&gt;&amp;quot;Failed to set websocket upgrade: %+v&amp;quot;&lt;/span&gt;, err)
+        &lt;span class=&quot;kw&quot;&gt;return&lt;/span&gt;
+    }
+
+    &lt;span class=&quot;kw&quot;&gt;for&lt;/span&gt; {
+        t, msg, err := conn.ReadMessage()
+        &lt;span class=&quot;kw&quot;&gt;if&lt;/span&gt; err != &lt;span class=&quot;ot&quot;&gt;nil&lt;/span&gt; {
+            &lt;span class=&quot;kw&quot;&gt;break&lt;/span&gt;
+        }
+        conn.WriteMessage(t, msg)
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see in the &lt;code&gt;wshandler&lt;/code&gt; function, the &lt;code&gt;for&lt;/code&gt;-loop will run until the connection ends and write back whatever the client sends. Once an error is encoutered or the connection breaks, the loop is finished and the handler ends.&lt;/p&gt;
+&lt;p&gt;Finally we add it to our Gin context:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;r.GET(&lt;span class=&quot;st&quot;&gt;&amp;quot;/ws&amp;quot;&lt;/span&gt;, &lt;span class=&quot;kw&quot;&gt;func&lt;/span&gt;(c *gin.Context) {
+    wshandler(c.Writer, c.Request)
+})&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let’s see it in action.&lt;/p&gt;
+&lt;h2 id=&quot;client&quot;&gt;Client&lt;/h2&gt;
+&lt;p&gt;We will create a small html file which communicates with our websocket server. It sends and receives a message via javascript every second and displays it on the site.&lt;/p&gt;
+&lt;pre class=&quot;sourceCode html&quot;&gt;&lt;code class=&quot;sourceCode html&quot;&gt;&lt;span class=&quot;kw&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;kw&quot;&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;script&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; src=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;https://code.jquery.com/jquery-2.1.1.min.js&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;kw&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+
+  &lt;span class=&quot;kw&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;h3&amp;gt;&lt;/span&gt;WebSocket Go&lt;span class=&quot;kw&quot;&gt;&amp;lt;/h3&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;pre&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; id=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;output&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&amp;lt;/pre&amp;gt;&lt;/span&gt;
+
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;script&amp;gt;&lt;/span&gt;
+      url = &lt;span class=&quot;st&quot;&gt;&amp;#39;ws://localhost:12312/ws&amp;#39;&lt;/span&gt;;
+      c = &lt;span class=&quot;kw&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;fu&quot;&gt;WebSocket&lt;/span&gt;(url);
+      
+      send = &lt;span class=&quot;kw&quot;&gt;function&lt;/span&gt;(data){
+        &lt;span class=&quot;fu&quot;&gt;$&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;#output&amp;quot;&lt;/span&gt;).&lt;span class=&quot;fu&quot;&gt;append&lt;/span&gt;((&lt;span class=&quot;kw&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;fu&quot;&gt;Date&lt;/span&gt;())+ &lt;span class=&quot;st&quot;&gt;&amp;quot; ==&amp;gt; &amp;quot;&lt;/span&gt;+data+&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;ch&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;)
+        &lt;span class=&quot;ot&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;send&lt;/span&gt;(data)
+      }
+
+      &lt;span class=&quot;ot&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;onmessage&lt;/span&gt; = &lt;span class=&quot;kw&quot;&gt;function&lt;/span&gt;(msg){
+        &lt;span class=&quot;fu&quot;&gt;$&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;#output&amp;quot;&lt;/span&gt;).&lt;span class=&quot;fu&quot;&gt;append&lt;/span&gt;((&lt;span class=&quot;kw&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;fu&quot;&gt;Date&lt;/span&gt;())+ &lt;span class=&quot;st&quot;&gt;&amp;quot; &amp;lt;== &amp;quot;&lt;/span&gt;+&lt;span class=&quot;ot&quot;&gt;msg&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;data&lt;/span&gt;+&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;ch&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;)
+        &lt;span class=&quot;ot&quot;&gt;console&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;log&lt;/span&gt;(msg)
+      }
+
+      &lt;span class=&quot;ot&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;onopen&lt;/span&gt; = &lt;span class=&quot;kw&quot;&gt;function&lt;/span&gt;(){
+        &lt;span class=&quot;fu&quot;&gt;setInterval&lt;/span&gt;( 
+          &lt;span class=&quot;kw&quot;&gt;function&lt;/span&gt;(){ &lt;span class=&quot;fu&quot;&gt;send&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;ping&amp;quot;&lt;/span&gt;) }
+        , &lt;span class=&quot;dv&quot;&gt;1000&lt;/span&gt; )
+      }
+    &amp;lt;&lt;span class=&quot;ot&quot;&gt;/script&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;ot&quot;&gt;  &amp;lt;/body&lt;/span&gt;&amp;gt;
+&amp;lt;&lt;span class=&quot;ot&quot;&gt;/html&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let’s include this file in our go server:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;r.LoadHTMLFiles(&lt;span class=&quot;st&quot;&gt;&amp;quot;index.html&amp;quot;&lt;/span&gt;)
+
+r.GET(&lt;span class=&quot;st&quot;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;, &lt;span class=&quot;kw&quot;&gt;func&lt;/span&gt;(c *gin.Context) {
+    c.HTML(&lt;span class=&quot;dv&quot;&gt;200&lt;/span&gt;, &lt;span class=&quot;st&quot;&gt;&amp;quot;index.html&amp;quot;&lt;/span&gt;, &lt;span class=&quot;ot&quot;&gt;nil&lt;/span&gt;)
+})&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The complete go code should now look like this:&lt;/p&gt;
+&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;package&lt;/span&gt; main
+
+&lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; (
+    &lt;span class=&quot;st&quot;&gt;&amp;quot;fmt&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;st&quot;&gt;&amp;quot;github.com/gin-gonic/gin&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;st&quot;&gt;&amp;quot;github.com/gorilla/websocket&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;st&quot;&gt;&amp;quot;net/http&amp;quot;&lt;/span&gt;
+)
+
+&lt;span class=&quot;kw&quot;&gt;func&lt;/span&gt; main() {
+
+    r := gin.Default()
+    r.LoadHTMLFiles(&lt;span class=&quot;st&quot;&gt;&amp;quot;index.html&amp;quot;&lt;/span&gt;)
+
+    r.GET(&lt;span class=&quot;st&quot;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;, &lt;span class=&quot;kw&quot;&gt;func&lt;/span&gt;(c *gin.Context) {
+        c.HTML(&lt;span class=&quot;dv&quot;&gt;200&lt;/span&gt;, &lt;span class=&quot;st&quot;&gt;&amp;quot;index.html&amp;quot;&lt;/span&gt;, &lt;span class=&quot;ot&quot;&gt;nil&lt;/span&gt;)
+    })
+
+    r.GET(&lt;span class=&quot;st&quot;&gt;&amp;quot;/ws&amp;quot;&lt;/span&gt;, &lt;span class=&quot;kw&quot;&gt;func&lt;/span&gt;(c *gin.Context) {
+        wshandler(c.Writer, c.Request)
+    })
+
+    r.Run(&lt;span class=&quot;st&quot;&gt;&amp;quot;localhost:12312&amp;quot;&lt;/span&gt;)
+}
+
+&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; wsupgrader = websocket.Upgrader{
+    ReadBufferSize:  &lt;span class=&quot;dv&quot;&gt;1024&lt;/span&gt;,
+    WriteBufferSize: &lt;span class=&quot;dv&quot;&gt;1024&lt;/span&gt;,
+}
+
+&lt;span class=&quot;kw&quot;&gt;func&lt;/span&gt; wshandler(w http.ResponseWriter, r *http.Request) {
+    conn, err := wsupgrader.Upgrade(w, r, &lt;span class=&quot;ot&quot;&gt;nil&lt;/span&gt;)
+    &lt;span class=&quot;kw&quot;&gt;if&lt;/span&gt; err != &lt;span class=&quot;ot&quot;&gt;nil&lt;/span&gt; {
+        fmt.Println(&lt;span class=&quot;st&quot;&gt;&amp;quot;Failed to set websocket upgrade: %+v&amp;quot;&lt;/span&gt;, err)
+        &lt;span class=&quot;kw&quot;&gt;return&lt;/span&gt;
+    }
+
+    &lt;span class=&quot;kw&quot;&gt;for&lt;/span&gt; {
+        t, msg, err := conn.ReadMessage()
+        &lt;span class=&quot;kw&quot;&gt;if&lt;/span&gt; err != &lt;span class=&quot;ot&quot;&gt;nil&lt;/span&gt; {
+            &lt;span class=&quot;kw&quot;&gt;break&lt;/span&gt;
+        }
+        conn.WriteMessage(t, msg)
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Run it and open your browser on &lt;a href=&quot;http://localhost:12312&quot;&gt;localhost:12312&lt;/a&gt;. You should now see the ping messages and responses:&lt;/p&gt;
+&lt;p&gt;&lt;img title=&quot;Ping pong with websockets&quot; src=&quot;http://arlimus.github.io/articles/gin.and.gorilla/pingpong.png&quot; style=&quot;max-width:512px; margin-left: auto; margin-right: auto&quot;&gt;&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>Sane Git Backups</title>
       <link>http://arlimus.github.io/articles/git.backup/</link>
