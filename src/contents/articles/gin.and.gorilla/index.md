@@ -7,17 +7,19 @@ template: article.jade
 
 Using websockets in Go is straightforward and simple. We'll use [gin-gonic](http://gin-gonic.github.io/gin/) as our web framework and the [Gorilla web toolkit](http://www.gorillatoolkit.org/) to add websockets to it.
 
+Gin + Gorilla = ...
+
 <span class="more"></span>
 
 ## Gin-Gonic
 
-Let's start with a simple server. First, get Gin:
+Let's start with a simple server. First, go get Gin:
 
 ```bash
 go get github.com/gin-gonic/gin
 ```
 
-Then create a small server:
+Now create your server:
 
 ```go
 package main
@@ -31,20 +33,20 @@ func main() {
     r := gin.Default()
 
     r.GET("/", func(c *gin.Context) {
-        c.String(200, "Welcome to Gin")
+        c.String(200, "We got Gin")
     })
 
     r.Run("localhost:12312")
 }
 ```
 
-You can open it in your browser on [localhost:12312](http://localhost:12312) and should be greeted with "Welcome to Gin".
+Run it and open your browser on [localhost:12312](http://localhost:12312). You should be greeted with "We got Gin".
 
 ## Gorilla
 
 Time to add websockets via Gorilla web toolkit. First run `go get github.com/gorilla/websocket` and import it.
 
-Next, create a websocket handler, which will act as a simple echo server. It will read messages and echo them back.
+Next, create a websocket handler. Let's have it act as a simple echo server: It will read messages and echo them back.
 
 ```go
 var wsupgrader = websocket.Upgrader{
@@ -83,7 +85,7 @@ Let's see it in action.
 
 ## Client
 
-We will create a small html file which communicates with our websocket server. It sends and receives a message via javascript every second and displays it on the site.
+We will create a small html file which communicates with our websocket server. This client sends and receives a message via javascript every second and displays it on the site.
 
 ```html
 <html>
@@ -180,6 +182,8 @@ func wshandler(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-Run it and open your browser on [localhost:12312](http://localhost:12312). You should now see the ping messages and responses:
+Run it and point your browser to [localhost:12312](http://localhost:12312). You should now see the ping messages and responses:
 
 <img title="Ping pong with websockets" src="pingpong.png" style="max-width:512px; margin-left: auto; margin-right: auto">
+
+Happy hacking. No animals were harmed in making this blog.

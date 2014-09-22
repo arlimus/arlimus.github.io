@@ -37,11 +37,12 @@
       <div class="content-wrap">
         <article class="article">
           <section class="content"><p>Using websockets in Go is straightforward and simple. We’ll use <a href="http://gin-gonic.github.io/gin/">gin-gonic</a> as our web framework and the <a href="http://www.gorillatoolkit.org/">Gorilla web toolkit</a> to add websockets to&nbsp;it.</p>
+<p>Gin + Gorilla =&nbsp;…</p>
 <p><span class="more"></span></p>
 <h2 id="gin-gonic">Gin-Gonic</h2>
-<p>Let’s start with a simple server. First, get&nbsp;Gin:</p>
+<p>Let’s start with a simple server. First, go get&nbsp;Gin:</p>
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">go</span> get github.com/gin-gonic/gin</code></pre>
-<p>Then create a small&nbsp;server:</p>
+<p>Now create your&nbsp;server:</p>
 <pre class="sourceCode go"><code class="sourceCode go"><span class="kw">package</span> main
 
 <span class="kw">import</span> (
@@ -53,15 +54,15 @@
     r := gin.Default()
 
     r.<span class="caps">GET</span>(<span class="st">&quot;/&quot;</span>, <span class="kw">func</span>(c *gin.Context) {
-        c.String(<span class="dv">200</span>, <span class="st">&quot;Welcome to Gin&quot;</span>)
+        c.String(<span class="dv">200</span>, <span class="st">&quot;We got Gin&quot;</span>)
     })
 
     r.Run(<span class="st">&quot;localhost:12312&quot;</span>)
 }</code></pre>
-<p>You can open it in your browser on <a href="http://localhost:12312">localhost:12312</a> and should be greeted with “Welcome to&nbsp;Gin”.</p>
+<p>Run it and open your browser on <a href="http://localhost:12312">localhost:12312</a>. You should be greeted with “We got&nbsp;Gin”.</p>
 <h2 id="gorilla">Gorilla</h2>
 <p>Time to add websockets via Gorilla web toolkit. First run <code>go get github.com/gorilla/websocket</code> and import&nbsp;it.</p>
-<p>Next, create a websocket handler, which will act as a simple echo server. It will read messages and echo them&nbsp;back.</p>
+<p>Next, create a websocket handler. Let’s have it act as a simple echo server: It will read messages and echo them&nbsp;back.</p>
 <pre class="sourceCode go"><code class="sourceCode go"><span class="kw">var</span> wsupgrader = websocket.Upgrader{
     ReadBufferSize:  <span class="dv">1024</span>,
     WriteBufferSize: <span class="dv">1024</span>,
@@ -89,7 +90,7 @@
 })</code></pre>
 <p>Let’s see it in&nbsp;action.</p>
 <h2 id="client">Client</h2>
-<p>We will create a small html file which communicates with our websocket server. It sends and receives a message via javascript every second and displays it on the&nbsp;site.</p>
+<p>We will create a small html file which communicates with our websocket server. This client sends and receives a message via javascript every second and displays it on the&nbsp;site.</p>
 <pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;html&gt;</span>
   <span class="kw">&lt;head&gt;</span>
     <span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;https://code.jquery.com/jquery-2.1.1.min.js&quot;</span><span class="kw">&gt;&lt;/script&gt;</span>
@@ -174,8 +175,9 @@ r.<span class="caps">GET</span>(<span class="st">&quot;/&quot;</span>, <span cla
         conn.WriteMessage(t, msg)
     }
 }</code></pre>
-<p>Run it and open your browser on <a href="http://localhost:12312">localhost:12312</a>. You should now see the ping messages and&nbsp;responses:</p>
+<p>Run it and point your browser to <a href="http://localhost:12312">localhost:12312</a>. You should now see the ping messages and&nbsp;responses:</p>
 <p><img title="Ping pong with websockets" src="/articles/gin.and.gorilla/pingpong.png" style="max-width:512px; margin-left: auto; margin-right: auto"></p>
+<p>Happy hacking. No animals were harmed in making this&nbsp;blog.</p>
 </section>
         </article>
         <div class="nav getback"><a href="/">« Full blog</a></div>
