@@ -100,7 +100,40 @@ Log.<span class="fu">info</span>(<span class="st">&quot;Hello World&quot;</span>
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bin/logstash</span> -e <span class="st">&#39;input { syslog { port =&gt; 11514 } } output { elasticsearch_http { host =&gt; &quot;syslog.domain.com&quot; port =&gt; 514 } }&#39;</span></code></pre>
 <h2 id="log4j2">Log4J2</h2>
 <p>Curiously, logback isn’t the only successor of Log4J. The initial version has now reached a “#2 version stamp”, which has been remodeled and offers a new <span class="caps">API</span>. Let’s try that: Add a few&nbsp;dependencies:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala">libraryDependencies += <span class="st">&quot;org.apache.logging.log4j&quot;</span> % <span class="st">&quot;log4j-core&quot;</span> % <s</section>
+<pre class="sourceCode scala"><code class="sourceCode scala">libraryDependencies += <span class="st">&quot;org.apache.logging.log4j&quot;</span> % <span class="st">&quot;log4j-core&quot;</span> % <span class="st">&quot;2.0.1&quot;</span>
+
+libraryDependencies += <span class="st">&quot;org.apache.logging.log4j&quot;</span> % <span class="st">&quot;log4j-api&quot;</span> % <span class="st">&quot;2.0.1&quot;</span>
+
+libraryDependencies += <span class="st">&quot;com.fasterxml.jackson.core&quot;</span> % <span class="st">&quot;jackson-core&quot;</span> % <span class="st">&quot;2.4.2&quot;</span>
+
+libraryDependencies += <span class="st">&quot;com.fasterxml.jackson.core&quot;</span> % <span class="st">&quot;jackson-databind&quot;</span> % <span class="st">&quot;2.4.2&quot;</span>
+
+libraryDependencies += <span class="st">&quot;com.fasterxml.jackson.core&quot;</span> % <span class="st">&quot;jackson-annotations&quot;</span> % <span class="st">&quot;2.4.2&quot;</span></code></pre>
+<p>Replace the usage&nbsp;lines</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">import</span> org.<span class="fu">apache</span>.<span class="fu">logging</span>.<span class="fu">log4j</span>.<span class="fu">LogManager</span>
+
+<span class="kw">val</span> Log = LogManager.<span class="fu">getLogger</span>(<span class="kw">this</span>.<span class="fu">getClass</span>.<span class="fu">getName</span>)
+Log.<span class="fu">info</span>(<span class="st">&quot;Hello World&quot;</span>)</code></pre>
+<p>And add a new configuration file to <code>src/main/resources/log4j2.xml</code></p>
+<pre class="sourceCode xml"><code class="sourceCode xml"><span class="kw">&lt;?xml</span> version=&quot;1.0&quot; encoding=&quot;<span class="caps">UTF</span>-8&quot;<span class="kw">?&gt;</span>
+<span class="kw">&lt;Configuration</span><span class="ot"> status=</span><span class="st">&quot;<span class="caps">DEBUG</span>&quot;</span><span class="ot"> packages=</span><span class="st">&quot;net.logstash.logging.log4j2.core.layout&quot;</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;Appenders&gt;</span>
+        <span class="kw">&lt;Socket</span><span class="ot"> name=</span><span class="st">&quot;LogStashSocket&quot;</span><span class="ot"> host=</span><span class="st">&quot;logstash.domain.com&quot;</span><span class="ot"> port=</span><span class="st">&quot;9998&quot;</span><span class="ot"> protocol=</span><span class="st">&quot;tcp&quot;</span><span class="kw">&gt;</span>
+            <span class="kw">&lt;LogStashJSONLayout&gt;</span>
+            <span class="kw">&lt;/LogStashJSONLayout&gt;</span>       
+        <span class="kw">&lt;/Socket&gt;</span>
+    <span class="kw">&lt;/Appenders&gt;</span>
+    <span class="kw">&lt;Loggers&gt;</span>
+        <span class="kw">&lt;Root</span><span class="ot"> level=</span><span class="st">&quot;debug&quot;</span><span class="kw">&gt;</span>
+            <span class="kw">&lt;AppenderRef</span><span class="ot"> ref=</span><span class="st">&quot;LogStashSocket&quot;</span><span class="kw">/&gt;</span>
+        <span class="kw">&lt;/Root&gt;</span>
+    <span class="kw">&lt;/Loggers&gt;</span>
+<span class="kw">&lt;/Configuration&gt;</span></code></pre>
+<p>That should work. But at the time of this writing, it too showed a few flaws. The same workaround as above&nbsp;applies.</p>
+<h2 id="summary">Summary</h2>
+<p>I can’t add a summary without a fat disclaimer: Most of the JARs used here are still a bit new and Logstash has experienced a few <span class="caps">API</span> updates recently. Older versions may work perfectly, but I unfortunately don’t have the time to find a perfect match. For the time being, a workaround will&nbsp;do.</p>
+<p>I found both logging frameworks equally enjoyable, although Log4J2 has a slight edge here thanks to its modularity. Performance considerations are not covered yet, but will be added in the future. Until then, enjoy your Scala&nbsp;log-stashing</p>
+</section>
         </article>
         <div class="nav getback"><a href="/">« Full blog</a></div>
         <div id="disqus_thread"></div><script type="text/javascript">

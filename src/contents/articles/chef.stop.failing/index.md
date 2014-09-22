@@ -22,7 +22,7 @@ service "apache" do
 end
 ```
 
-Sometimes, however, a failure may happen to a resource you don't control yourself. To me, this happened with the `sensu-chef` cookbook. This opens up 2 options for you to choose.
+Sometimes, however, a failure may happen to a resource you don't control yourself. To us at [Sessionbird](http://sessionbird.com), this happened with the `sensu-chef` cookbook. This opens up 2 options for you to choose.
 
 
 ## #1 Modify a foreign cookbook

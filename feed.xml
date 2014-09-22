@@ -259,7 +259,7 @@ repos.map{|x| &lt;span class=&quot;st&quot;&gt;&amp;quot;git@bitbucket.org:&lt;/
   action &lt;span class=&quot;st&quot;&gt;:enable&lt;/span&gt;
   ignore_failure &lt;span class=&quot;dv&quot;&gt;true&lt;/span&gt;
 &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Sometimes, however, a failure may happen to a resource you don’t control yourself. To me, this happened with the &lt;code&gt;sensu-chef&lt;/code&gt; cookbook. This opens up 2 options for you to choose.&lt;/p&gt;
+&lt;p&gt;Sometimes, however, a failure may happen to a resource you don’t control yourself. To us at &lt;a href=&quot;http://sessionbird.com&quot;&gt;Sessionbird&lt;/a&gt;, this happened with the &lt;code&gt;sensu-chef&lt;/code&gt; cookbook. This opens up 2 options for you to choose.&lt;/p&gt;
 &lt;h2 id=&quot;modify-a-foreign-cookbook&quot;&gt;#1 Modify a foreign cookbook&lt;/h2&gt;
 &lt;p&gt;This is as simple as it gets: Clone/fork the repository of whatever cookbook you want to modify, alter the resource, and enjoy.&lt;/p&gt;
 &lt;p&gt;For the &lt;code&gt;sensu-chef&lt;/code&gt; example, you can modify the &lt;code&gt;client_service&lt;/code&gt; recipe to look something like this:&lt;/p&gt;
@@ -488,7 +488,40 @@ Log.&lt;span class=&quot;fu&quot;&gt;info&lt;/span&gt;(&lt;span class=&quot;st&q
 &lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bin/logstash&lt;/span&gt; -e &lt;span class=&quot;st&quot;&gt;&amp;#39;input { syslog { port =&amp;gt; 11514 } } output { elasticsearch_http { host =&amp;gt; &amp;quot;syslog.domain.com&amp;quot; port =&amp;gt; 514 } }&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&quot;log4j2&quot;&gt;Log4J2&lt;/h2&gt;
 &lt;p&gt;Curiously, logback isn’t the only successor of Log4J. The initial version has now reached a “#2 version stamp”, which has been remodeled and offers a new API. Let’s try that: Add a few dependencies:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;org.apache.logging.log4j&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;log4j-core&amp;quot;&lt;/span&gt; % &lt;s</description>
+&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;org.apache.logging.log4j&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;log4j-core&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;2.0.1&amp;quot;&lt;/span&gt;
+
+libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;org.apache.logging.log4j&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;log4j-api&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;2.0.1&amp;quot;&lt;/span&gt;
+
+libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;com.fasterxml.jackson.core&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;jackson-core&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;2.4.2&amp;quot;&lt;/span&gt;
+
+libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;com.fasterxml.jackson.core&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;jackson-databind&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;2.4.2&amp;quot;&lt;/span&gt;
+
+libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;com.fasterxml.jackson.core&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;jackson-annotations&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;2.4.2&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Replace the usage lines&lt;/p&gt;
+&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; org.&lt;span class=&quot;fu&quot;&gt;apache&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;logging&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;log4j&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;LogManager&lt;/span&gt;
+
+&lt;span class=&quot;kw&quot;&gt;val&lt;/span&gt; Log = LogManager.&lt;span class=&quot;fu&quot;&gt;getLogger&lt;/span&gt;(&lt;span class=&quot;kw&quot;&gt;this&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;getClass&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;getName&lt;/span&gt;)
+Log.&lt;span class=&quot;fu&quot;&gt;info&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And add a new configuration file to &lt;code&gt;src/main/resources/log4j2.xml&lt;/code&gt;&lt;/p&gt;
+&lt;pre class=&quot;sourceCode xml&quot;&gt;&lt;code class=&quot;sourceCode xml&quot;&gt;&lt;span class=&quot;kw&quot;&gt;&amp;lt;?xml&lt;/span&gt; version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;&lt;span class=&quot;kw&quot;&gt;?&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;&amp;lt;Configuration&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; status=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;DEBUG&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; packages=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;net.logstash.logging.log4j2.core.layout&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;Appenders&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;kw&quot;&gt;&amp;lt;Socket&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; name=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;LogStashSocket&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; host=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;logstash.domain.com&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; port=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;9998&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; protocol=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;tcp&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;kw&quot;&gt;&amp;lt;LogStashJSONLayout&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;kw&quot;&gt;&amp;lt;/LogStashJSONLayout&amp;gt;&lt;/span&gt;       
+        &lt;span class=&quot;kw&quot;&gt;&amp;lt;/Socket&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;/Appenders&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;Loggers&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;kw&quot;&gt;&amp;lt;Root&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; level=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;debug&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;kw&quot;&gt;&amp;lt;AppenderRef&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; ref=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;LogStashSocket&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;kw&quot;&gt;&amp;lt;/Root&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;kw&quot;&gt;&amp;lt;/Loggers&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;&amp;lt;/Configuration&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That should work. But at the time of this writing, it too showed a few flaws. The same workaround as above applies.&lt;/p&gt;
+&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;I can’t add a summary without a fat disclaimer: Most of the JARs used here are still a bit new and Logstash has experienced a few API updates recently. Older versions may work perfectly, but I unfortunately don’t have the time to find a perfect match. For the time being, a workaround will do.&lt;/p&gt;
+&lt;p&gt;I found both logging frameworks equally enjoyable, although Log4J2 has a slight edge here thanks to its modularity. Performance considerations are not covered yet, but will be added in the future. Until then, enjoy your Scala log-stashing&lt;/p&gt;
+</description>
     </item>
     <item>
       <title>Document management and Git</title>
