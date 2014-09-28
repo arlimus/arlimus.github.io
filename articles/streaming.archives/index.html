@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <meta name="google-site-verification" content="gRPSZeaTzicrrtM-WwBOvqx_szx4Av0stLFxBjR3QWU">
+    <title>Streaming archives - Silversmith
+    </title>
+    <link rel="alternate" href="http://arlimus.github.io/feed.xml" type="application/rss+xml" title="">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto+Slab:700|Source+Code+Pro|Inconsolata" type="text/css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/vendor/highlight/styles/zenburn.css">
+    <script type="text/javascript">
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-45216258-1', 'arlimus.github.io');
+      ga('send', 'pageview');
+      
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
+    <script src="/vendor/highlight/highlight.pack.js" onload="hljs.initHighlightingOnLoad();"></script>
+    <script>
+      $app = angular.module('app', [])
+      
+    </script>
+  </head>
+  <body ng-app="app" class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Streaming archives</h1>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>You have files on a system which you want to offer as an archive to download. Easy: There’s great libraries in virtually all languages to create archives like <code>zip</code> or <code>tar</code> on the fly and stream back the&nbsp;files.</p>
+<p>But how about adding files to an archive on the fly? Or combining archive streams? This greatly depends on the type you&nbsp;use.</p>
+<p><span class="more"></span></p>
+<h2 id="archive-types">Archive&nbsp;types</h2>
+<p>Theory time: There’s a great difference between compression and archive formats. Archives are file types, that allow you to combine a number of separate files into just one file. A user can then choose to extract the embedded files from this archive. Great examples for archives without embedded compression are <code>tar</code>, <code>iso</code>, and <code>cpio</code>.</p>
+<p>Standalone compression types are used turn a large file or stream into a smaller one. Notice that I didn’t use the plural: It only works for one file or stream at a time. Clear compression formats without archive functionality are e.g. <code>gzip</code>, <code>bzip2</code>, and <code>lzma</code>.</p>
+<p>So if you see something like a <code>file.tar.gz</code>, you get a <code>gzip</code>-compressed <code>tar</code>-archive. The compression is applied to just one file: the <code>tar</code>-archive, which in turn contains all other&nbsp;files.</p>
+<p>Some formats combine both archive and compression functionality. A great example is <code>zip</code>, which you can use with or without&nbsp;compression.</p>
+<h2 id="stream-manipulation">Stream&nbsp;manipulation</h2>
+<p>Basically we are left with two archive formats which have streamlined support in all major languages: <code>zip</code> and <code>tar</code>. Here’s where the fun&nbsp;starts.</p>
+<p>Imagine you want to offer an <span class="caps">API</span> endpoint, which forwards a large file stream to a client and adds one additional file. Let’s say you have an endpoint which receives and large binary file from somewhere else and forwards it to a client with some added added files in a large archive. You could of course always save the binary blob first and then create an archive on the fly. But if 100 clients request this simultaneously, you will have to optimize this process or suffer from too little hard disk space to serve all&nbsp;clients.</p>
+<p>A better way is to forward the binary stream and embed it inside an archive which you stream back to the client. You can add your files to this archive first and then stream everything without ever having to save it to&nbsp;disk.</p>
+<h2 id="tar">Tar</h2>
+<p>Let’s take a look at using <code>tar</code> first (example in&nbsp;Go):</p>
+<pre class="sourceCode go"><code class="sourceCode go">writer := tar.NewWriter(f)
+
+header := &amp;tar.Header{
+  Name: <span class="st">&quot;test.bin&quot;</span>,
+  Size: <span class="dt">int64</span>(<span class="fu">len</span>(data)),
+}
+<span class="kw">if</span> err := writer.WriteHeader(header); err != <span class="ot">nil</span> {
+  log.Fatalln(err)
+}
+<span class="kw">if</span> _, err := writer.Write([]<span class="dt">byte</span>(data)); err != <span class="ot">nil</span> {
+  log.Fatalln(err)
+}</code></pre>
+<p>If we wanted to use <code>tar</code> archives for this, we quickly run into a major issue: In order to add files to such an archive, you first have to know the exact size of the data you want to add. This is required in every <code>tar</code> <a href="http://en.wikipedia.org/wiki/Tar_%28computing%29">file header</a>. When streaming binary data from an endpoint, you often don’t get this information beforehand. You would have to wait for the full file to download and save it to disk before adding it. Not ideal at&nbsp;all.</p>
+<h2 id="zip">Zip</h2>
+<p>Using <code>zip</code> is just as simple (example in&nbsp;Go):</p>
+<pre class="sourceCode go"><code class="sourceCode go">writer := zip.NewWriter(f)
+
+meta, err := zw.CreateHeader(&amp;zip.FileHeader{
+  Name:   <span class="st">&quot;test.bin&quot;</span>
+})
+<span class="kw">if</span> err != <span class="ot">nil</span> {
+  log.Fatalln(err)
+}
+
+<span class="kw">if</span> err := zw.Close(); err != <span class="ot">nil</span> {
+  log.Fatalln(err)
+}</code></pre>
+<p>Unlike <code>tar</code>, <code>zip</code> works well with streaming data due to its structure. You can add binary blobs or streams to the archive without knowing its accurate size, as seen in the example. In case of <code>zip</code>, the <a href="http://en.wikipedia.org/wiki/File:ZIP-64_Internal_Layout.svg">central directory</a> is written at the end of the file. This way you can add files via streams without saving them&nbsp;first.</p>
+<h2 id="considerations">Considerations</h2>
+<p>In case of streaming archives for export, <code>zip</code> has a nice advantage over <code>tar</code>. This turns around when considering import. Here, you have to save a complete <code>zip</code> file first, before being able to extract its data, because the central directory is located at the very end of the&nbsp;archive.</p>
+<p>Here, <code>tar</code> has a nice advantage since you can receive a stream and extract files directly from the stream. For example, you could save a small file at your endpoint and forward/stream a large binary blob to a different receiver. All of this is possible without ever having to save the file on your&nbsp;system.</p>
+<p>As you can see, there is no optimal solution which solves both problems. It all comes down to the use-case you want to support: If you offer an endpoint which may be used by many clients simultaneously for export but only ever supports one connection for import, you might be better off with <code>zip</code>. For the other use-case (simultaneous large uploads), <code>tar</code> might be a better solution. Don’t worry too much about compression, as you can add <code>gzip</code> or <code>lzma</code> on top of both&nbsp;formats.</p>
+<p>In the end, all of this is only relevant when manipulating archive streams on the&nbsp;fly.</p>
+</section>
+        </article>
+        <div class="nav getback"><a href="/">« Full blog</a></div>
+        <div id="disqus_thread"></div><script type="text/javascript">
+        var disqus_shortname = 'silversmith';
+        (function() {
+           var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+           dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+           (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <section class="about">
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Dominik Richter &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>
