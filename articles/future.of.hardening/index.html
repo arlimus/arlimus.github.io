@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <meta name="google-site-verification" content="gRPSZeaTzicrrtM-WwBOvqx_szx4Av0stLFxBjR3QWU">
+    <title>Future of Hardening Framework - Silversmith
+    </title>
+    <link rel="alternate" href="http://arlimus.github.io/feed.xml" type="application/rss+xml" title="">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto+Slab:700|Source+Code+Pro|Inconsolata" type="text/css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/vendor/highlight/styles/zenburn.css">
+    <script type="text/javascript">
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-45216258-1', 'arlimus.github.io');
+      ga('send', 'pageview');
+      
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
+    <script src="/vendor/highlight/highlight.pack.js" onload="hljs.initHighlightingOnLoad();"></script>
+    <script>
+      $app = angular.module('app', [])
+      
+    </script>
+  </head>
+  <body ng-app="app" class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Future of Hardening Framework</h1>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>Over the past year, we have had a great time developing and establishing the <a href="http://telekomlabs.github.io/">open source hardening framework</a> within our company and outside. It has been a fantastic start and we are grateful to everyone who helped us get this off the&nbsp;ground.</p>
+<p>However, to me, it is even more exciting to look forward at the potential this project holds. It is something we were so far only able to hint&nbsp;at.</p>
+<p>Specifically, there are two key features missing, which could help this project tremendously: An user-interface and&nbsp;customization.</p>
+<h2 id="ui"><span class="caps">UI</span></h2>
+<p>The user-experience so far has been limited to developers and operators who are familiar with automation software like Chef and Puppet and wanted to integrate the framework into their deployments. During day-to-day operations work we noticed, that we were missing feedback on our environment. Sure, we were routinely running the hardening automation on our systems, making sure everything was in a predetermined state. But without manually extracting information from our automation logs or running the framework’s compliance check on nodes explicitly, we usually didn’t get much&nbsp;insights.</p>
+<p>It is these insights, that are incredibly interesting to both DevOps and management alike. Imagine a continuous list of compliance checks run on all your systems before each hardening run. Now add the possibility of analytics with custom metrics and reports. It is easy to see, how this helps you illustrate the present and past state of your environment’s hardening and compliance&nbsp;levels.</p>
+<p>Once you start considering this combination, it quickly becomes clear, that you need a place to cover all these points. To combine both configuration and tests, the obvious solution is to have a nice web-interface, which contains everything from analytics to&nbsp;settings.</p>
+<h2 id="customization">Customization</h2>
+<p>The current design of tha hardening framework is a rather old one with the focus to solve a set of problems for just one company (essentially). It is important to take the next step and extend its configuration options&nbsp;considerably.</p>
+<p>To me, Puppet has been more difficult in this regard than Chef, since our approach supports an older way of configuring your puppet modules. We have found a better way of handling this, which we will hopefully be able to introduce to this&nbsp;framework.</p>
+<p>Additionally, there is more documentation needed on how each configuration option behaves and how best to approach them. Moreover, we also require some simplifications, since not all options are well-understood and shouldn’t be overwritten manually with only limited&nbsp;background</p>
+<h2 id="next-steps">Next&nbsp;steps</h2>
+<p>This project has been a breeze to work at and we are heading in the great direction with it. With some internals still before us, we are looking forward to 2015 and the potential it&nbsp;holds.</p>
+</section>
+        </article>
+        <div class="nav getback"><a href="/">« Full blog</a></div>
+        <div id="disqus_thread"></div><script type="text/javascript">
+        var disqus_shortname = 'silversmith';
+        (function() {
+           var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+           dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+           (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <section class="about">
+
+        </section>
+        <section class="copy">
+          <p>&copy; 2015 Dominik Richter &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>
