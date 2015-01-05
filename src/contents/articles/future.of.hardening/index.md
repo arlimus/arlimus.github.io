@@ -13,15 +13,15 @@ Specifically, there are two key features missing, which could help this project 
 
 ## UI
 
-The user-experience so far has been limited to developers and operators who are familiar with automation software like Chef and Puppet and wanted to integrate the framework into their deployments. During day-to-day operations work we noticed, that we were missing feedback on our environment. Sure, we were routinely running the hardening automation on our systems, making sure everything was in a predetermined state. But without manually extracting information from our automation logs or running the framework's compliance check on nodes explicitly, we usually didn't get much insights.
+The user-experience so far has been limited to developers and operators who are familiar with automation software like Chef and Puppet. During day-to-day operations work we noticed, that we wanted more feedback on the state of our environment. Sure, we are routinely running the hardening automation on our systems, making sure everything is in a predetermined state. But without manually extracting information from automation logs or running the framework's compliance check on nodes explicitly, we usually didn't get much insights.
 
-It is these insights, that are incredibly interesting to both DevOps and management alike. Imagine a continuous list of compliance checks run on all your systems before each hardening run. Now add the possibility of analytics with custom metrics and reports. It is easy to see, how this helps you illustrate the present and past state of your environment's hardening and compliance levels. 
+These insights are incredibly interesting to both DevOps and management alike. Imagine a continuous list of compliance checks which verify your server hardening before each update. Now add the possibility of analytics with custom metrics and reports. It is easy to see, how this helps you illustrate the present and past state of your environment's hardening and compliance levels.
 
 Once you start considering this combination, it quickly becomes clear, that you need a place to cover all these points. To combine both configuration and tests, the obvious solution is to have a nice web-interface, which contains everything from analytics to settings. 
 
 ## Customization
 
-The current design of tha hardening framework is a rather old one with the focus to solve a set of problems for just one company (essentially). It is important to take the next step and extend its configuration options considerably.
+The current design of the hardening framework is a rather old one with the focus to solve a set of problems for just one company (essentially). It is important to take the next step and extend its configuration options considerably.
 
 To me, Puppet has been more difficult in this regard than Chef, since our approach supports an older way of configuring your puppet modules. We have found a better way of handling this, which we will hopefully be able to introduce to this framework.
 
