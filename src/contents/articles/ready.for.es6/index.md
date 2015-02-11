@@ -51,18 +51,24 @@ It already works reasonably well, but you will have to create your own Grunt tas
 
 After a few hours of experimentation, I was seriously asking myself, if I should switch right now, or wait a bit longer. On the list of downsides I added the preview eslint support and adding custom build tasks, which I don't want to maintain. As for the list of advantages: Is there any killer feature that would push me towards ES6 right now?
 
+Let's take a look at list again. 
+
+There is [arrows](https://6to5.org/docs/learn-es6/#arrows), which looks similar to CoffeeScript function definitions. 
+
 ```javascript
 var odds = evens.map(v => v + 1);
 ```
 
-Let's take a look at list again. There is [arrows](https://6to5.org/docs/learn-es6/#arrows), which looks similar to CoffeeScript function definitions. I have always like this clear style of function definition, but with ES6 it comes with and interesting twist. Since the meaning of `this` is changed in the function body, it quickly broke a few code pieces I tried to refactor, leaving me with the lesson, that these "arrows" are not simply a style change.
+I have always like this clear style of function definition, but with ES6 it comes with and interesting twist. Since the meaning of `this` is changed in the function body, it quickly broke a few code pieces I tried to refactor, leaving me with the lesson, that these "arrows" are not simply a style change.
+
+[Classes](https://6to5.org/docs/learn-es6/#classes) are another feature I remember well from CoffeeScript, but not one I'd miss terribly. I have gotten used to the way JavaScript handles object creation and have never felt like I was missing classes. 
 
 ```javascript
 class Dog extends Cat {
   constructor(strangeness) { ... }
 ```
 
-[Classes](https://6to5.org/docs/learn-es6/#classes) are another feature I remember well from CoffeeScript, but not one I'd miss terribly. I have gotten used to the way JavaScript handles object creation and have never felt like I was missing classes. 
+[Template strings](https://6to5.org/docs/learn-es6/#template-strings) is indeed high up on my list, as string interpolation is something I've been used to in both CoffeeScript and Ruby. 
 
 ```javascript
 var s = `Dog eats ${insertBone}
@@ -70,7 +76,9 @@ var s = `Dog eats ${insertBone}
          lines`
 ```
 
-[Template strings](https://6to5.org/docs/learn-es6/#template-strings) is indeed high up on my list, as string interpolation is something I've been used to in both CoffeeScript and Ruby. On the other hand, Go and Scala have taught me to stop whining and just write it explicitly. The bigger advantage here is support of multi-line strings, which is a potential big plus. Then again, the problem doesn't come up too often to warrant the argument.
+On the other hand, Go and Scala have taught me to stop whining and just write it explicitly. The bigger advantage here is support of multi-line strings, which is a potential big plus. Then again, the problem doesn't come up too often to warrant the argument.
+
+[Let and const](https://6to5.org/docs/learn-es6/#let-const) are two constructs which I'm truly excited about. However, their scoping enhancement is [not yet supported by 6to5](http://es6rocks.com/2015/01/temporal-dead-zone-tdz-demystified/), which crosses it off my list for now.
 
 ```javascript
 // Declare in outside scope
@@ -85,22 +93,24 @@ let x;
 let x = "not again";
 ```
 
-[Let and const](https://6to5.org/docs/learn-es6/#let-const) are two constructs which I'm truly excited about. However, their scoping enhancement is [not yet supported by 6to5](http://es6rocks.com/2015/01/temporal-dead-zone-tdz-demystified/), which crosses it off my list for now.
-
 [Comprehensions](https://6to5.org/docs/learn-es6/#comprehensions) are great, as seen in the example:
 
-    var results = [
-      for(c of customers)
-        if (c.city == "Seattle")
-          { name: c.name, age: c.age }
-    ]
+```javascript
+var results = [
+  for(c of customers)
+    if (c.city == "Seattle")
+      { name: c.name, age: c.age }
+]
+```
 
-But can be reached similarly with lodash:
+But can be reached just a well with lodash:
 
-    var results = _.filter(customers, {city: "Seattle"})
-      .map(function(c){
-        return { name: c.name, age: c.age }
-      })
+```javascript
+var results = _.filter(customers, {city: "Seattle"})
+  .map(function(c){
+    return { name: c.name, age: c.age }
+  })
+```
 
 Admittedly, the comprehension is a bit more readable.
 
@@ -110,13 +120,15 @@ The updated [object, string, number and math APIs](https://6to5.org/docs/learn-e
 
 Then there is the list of "nice to have"s: [Enhanced object literals](https://6to5.org/docs/learn-es6/#enhanced-object-literals), [destructing](https://6to5.org/docs/learn-es6/#destructuring), [defaults, rest and spread](https://6to5.org/docs/learn-es6/#default-rest-spread), [unicode](https://6to5.org/docs/learn-es6/#unicode), [maps and sets](https://6to5.org/docs/learn-es6/#map-set-weak-map-weak-set).
 
+Finally, we have native [promises](https://6to5.org/docs/learn-es6/#promises).
+
 ```javascript
 return getDog().then( (dog) => {
   return dog.goFetch()
 })
 ```
 
-Finally, we have native [promises](https://6to5.org/docs/learn-es6/#promises). I was actually most excited about this feature when I initially heard about ES6. Since the rise of [bluebird](https://6to5.org/docs/learn-es6/#promises), however, it's not something I miss anymore; It is always there, in almost every project I write.
+I was actually most excited about this feature when I initially heard about ES6. Since the rise of [bluebird](https://6to5.org/docs/learn-es6/#promises), however, it's not something I miss anymore; It is always there, in almost every project I write.
 
 ## Summary
 
