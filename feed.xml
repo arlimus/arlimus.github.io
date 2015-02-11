@@ -18,10 +18,10 @@
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;h2 id=&quot;transpilers&quot;&gt;Transpilers&lt;/h2&gt;
 &lt;p&gt;Taking any mainstream browser in its most current release, we get about half of the features ES6 specifies (as seen &lt;a href=&quot;http://kangax.github.io/compat-table/es6/&quot;&gt;here&lt;/a&gt;). This is only true for desktop browsers (not counting IE). Mobile browsers are lacking behind further.&lt;/p&gt;
-&lt;p&gt;All of this is no surprise. ES6, or ES2015 as it is sometimes called, has not been released yet. It should be ready by the middle of this year. Even then, there will be a transitional phase, where users are upgrading their browsers to releases that support ES6. We have seen this before and will be ready with ES6-shims to bridge the period.&lt;/p&gt;
-&lt;p&gt;But can we start switching our code-base today? Transpilers like 6to5 and traceur are great ways to give us the power of ES6 right now, with great coverage and translation to ES5 code.&lt;/p&gt;
+&lt;p&gt;All of this is no surprise. ES6, or ES2015 as it is sometimes called, has not been released yet. It should be ready by the middle of this year. Even then, there will be a transitional phase, where users are upgrading their browsers to support ES6. We have seen this before and we’ll be ready with ES6-shims to bridge this period.&lt;/p&gt;
+&lt;p&gt;But can we start switching our code-base today? Transpilers like &lt;a href=&quot;https://6to5.org&quot;&gt;6to5&lt;/a&gt; and &lt;a href=&quot;https://github.com/google/traceur-compiler&quot;&gt;traceur&lt;/a&gt; are great ways to give us the power of ES6 right now, with great coverage and translation to ES5 code.&lt;/p&gt;
 &lt;h2 id=&quot;ready-for-es6&quot;&gt;Ready for ES6&lt;/h2&gt;
-&lt;p&gt;I was curious to give ES6 a try for a few smaller projects and see if we can introduce it at &lt;a href=&quot;https://sessionbird.com&quot;&gt;Sessionbird&lt;/a&gt;. I choose 6to5 for translation and added it to my Grunt workflow:&lt;/p&gt;
+&lt;p&gt;I was curious to give ES6 a try for a few smaller projects and see if we can introduce it at &lt;a href=&quot;https://sessionbird.com&quot;&gt;Sessionbird&lt;/a&gt;. I choose &lt;a href=&quot;https://6to5.org&quot;&gt;6to5&lt;/a&gt; for translation and added it to my Grunt workflow:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;npm install --save-dev grunt-6to5&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;With a little configuration in &lt;code&gt;Gruntfile.js&lt;/code&gt;:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;&amp;#39;6to5&amp;#39;: {
@@ -37,15 +37,31 @@
         }]
     }
 },&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;I was ready to start refactoring some code for ES6. A great resource of available features is &lt;a href=&quot;https://6to5.org/docs/learn-es6/&quot;&gt;here&lt;/a&gt;. I was exciting about arrows, template strings, iterators, promises and modules. It all worked as expected.&lt;/p&gt;
-&lt;p&gt;However, to wrap up my typical workflow, a wanted a helper for quality control on code style. This is where it gets complicated. We have been using &lt;code&gt;jshint&lt;/code&gt; for this task, but the current lack in support for ES6 made me switch to &lt;code&gt;eslint&lt;/code&gt; instead. If you use their current development branch, you can get a preview for ES6:&lt;/p&gt;
+&lt;p&gt;I was ready to start refactoring some code for ES6. A great resource of available features is &lt;a href=&quot;https://6to5.org/docs/learn-es6/&quot;&gt;here&lt;/a&gt;. I was excited about arrows, template strings, iterators, promises and modules. It all worked as expected.&lt;/p&gt;
+&lt;p&gt;However, to wrap up my typical workflow, I wanted a helper for quality control on my code style. This is where it gets complicated. We have been using &lt;code&gt;jshint&lt;/code&gt; for this task, but the current lack in support for ES6 made me switch to &lt;code&gt;eslint&lt;/code&gt; instead. If you use their current development branch, you can get a preview for ES6:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;npm install -g eslint@es6jsx&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;It already works reasonably well, but you will have to create your own Grunt task to make it work with this release. Also, it’s still a moving target, so expect some bugs and strange errors.&lt;/p&gt;
 &lt;h2 id=&quot;should-i-switch&quot;&gt;Should I switch?&lt;/h2&gt;
 &lt;p&gt;After a few hours of experimentation, I was seriously asking myself, if I should switch right now, or wait a bit longer. On the list of downsides I added the preview eslint support and adding custom build tasks, which I don’t want to maintain. As for the list of advantages: Is there any killer feature that would push me towards ES6 right now?&lt;/p&gt;
+&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; odds = &lt;span class=&quot;ot&quot;&gt;evens&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;map&lt;/span&gt;(v =&amp;gt; v + &lt;span class=&quot;dv&quot;&gt;1&lt;/span&gt;);&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Let’s take a look at list again. There is &lt;a href=&quot;https://6to5.org/docs/learn-es6/#arrows&quot;&gt;arrows&lt;/a&gt;, which looks similar to CoffeeScript function definitions. I have always like this clear style of function definition, but with ES6 it comes with and interesting twist. Since the meaning of &lt;code&gt;this&lt;/code&gt; is changed in the function body, it quickly broke a few code pieces I tried to refactor, leaving me with the lesson, that these “arrows” are not simply a style change.&lt;/p&gt;
+&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;kw&quot;&gt;class&lt;/span&gt; Dog &lt;span class=&quot;kw&quot;&gt;extends&lt;/span&gt; Cat {
+  &lt;span class=&quot;fu&quot;&gt;constructor&lt;/span&gt;(strangeness) { ... }&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;a href=&quot;https://6to5.org/docs/learn-es6/#classes&quot;&gt;Classes&lt;/a&gt; are another feature I remember well from CoffeeScript, but not one I’d miss terribly. I have gotten used to the way JavaScript handles object creation and have never felt like I was missing classes.&lt;/p&gt;
+&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; s = `Dog eats ${insertBone}
+         &lt;span class=&quot;kw&quot;&gt;in&lt;/span&gt; multiple
+         lines`&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;a href=&quot;https://6to5.org/docs/learn-es6/#template-strings&quot;&gt;Template strings&lt;/a&gt; is indeed high up on my list, as string interpolation is something I’ve been used to in both CoffeeScript and Ruby. On the other hand, Go and Scala have taught me to stop whining and just write it explicitly. The bigger advantage here is support of multi-line strings, which is a potential big plus. Then again, the problem doesn’t come up too often to warrant the argument.&lt;/p&gt;
+&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;co&quot;&gt;// Declare in outside scope&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;let&lt;/span&gt; x;
+{
+  &lt;span class=&quot;co&quot;&gt;// OK, new in block scope&lt;/span&gt;
+  &lt;span class=&quot;kw&quot;&gt;const&lt;/span&gt; x = &lt;span class=&quot;st&quot;&gt;&amp;quot;sneaky&amp;quot;&lt;/span&gt;;
+  &lt;span class=&quot;co&quot;&gt;// Not possible:&lt;/span&gt;
+  x = &lt;span class=&quot;st&quot;&gt;&amp;quot;can&amp;#39;t do this&amp;quot;&lt;/span&gt;;
+}
+&lt;span class=&quot;co&quot;&gt;// Already declared x, error&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;let&lt;/span&gt; x = &lt;span class=&quot;st&quot;&gt;&amp;quot;not again&amp;quot;&lt;/span&gt;;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;a href=&quot;https://6to5.org/docs/learn-es6/#let-const&quot;&gt;Let and const&lt;/a&gt; are two constructs which I’m truly excited about. However, their scoping enhancement is &lt;a href=&quot;http://es6rocks.com/2015/01/temporal-dead-zone-tdz-demystified/&quot;&gt;not yet supported by 6to5&lt;/a&gt;, which crosses it off my list for now.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://6to5.org/docs/learn-es6/#comprehensions&quot;&gt;Comprehensions&lt;/a&gt; are great, as seen in the example:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;var results = [
@@ -62,10 +78,13 @@
 &lt;p&gt;&lt;a href=&quot;https://6to5.org/docs/learn-es6/#modules&quot;&gt;Modules&lt;/a&gt; are great to finally make it into the core, but we have built our ways around it successfully (AMD, CommonJS).&lt;/p&gt;
 &lt;p&gt;The updated &lt;a href=&quot;https://6to5.org/docs/learn-es6/#math-number-string-object-apis&quot;&gt;object, string, number and math APIs&lt;/a&gt; are also welcome additions. So are &lt;a href=&quot;https://6to5.org/docs/learn-es6/#tail-calls&quot;&gt;tail calls&lt;/a&gt; and the &lt;a href=&quot;https://6to5.org/docs/learn-es6/#reflect-api&quot;&gt;reflect API&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Then there is the list of “nice to have”s: &lt;a href=&quot;https://6to5.org/docs/learn-es6/#enhanced-object-literals&quot;&gt;Enhanced object literals&lt;/a&gt;, &lt;a href=&quot;https://6to5.org/docs/learn-es6/#destructuring&quot;&gt;destructing&lt;/a&gt;, &lt;a href=&quot;https://6to5.org/docs/learn-es6/#default-rest-spread&quot;&gt;defaults, rest and spread&lt;/a&gt;, &lt;a href=&quot;https://6to5.org/docs/learn-es6/#unicode&quot;&gt;unicode&lt;/a&gt;, &lt;a href=&quot;https://6to5.org/docs/learn-es6/#map-set-weak-map-weak-set&quot;&gt;maps and sets&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;kw&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;fu&quot;&gt;getDog&lt;/span&gt;().&lt;span class=&quot;fu&quot;&gt;then&lt;/span&gt;( (dog) =&amp;gt; {
+  &lt;span class=&quot;kw&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;ot&quot;&gt;dog&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;goFetch&lt;/span&gt;()
+})&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Finally, we have native &lt;a href=&quot;https://6to5.org/docs/learn-es6/#promises&quot;&gt;promises&lt;/a&gt;. I was actually most excited about this feature when I initially heard about ES6. Since the rise of &lt;a href=&quot;https://6to5.org/docs/learn-es6/#promises&quot;&gt;bluebird&lt;/a&gt;, however, it’s not something I miss anymore; It is always there, in almost every project I write.&lt;/p&gt;
 &lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
 &lt;p&gt;ES6 now or later?&lt;/p&gt;
-&lt;p&gt;Transpilation with 6to5 invites you with wide open arms, and it’s certainly easy to get started. Once linters and Grunt/&amp;lt;insert-task-runner&amp;gt; catch up, there is almost no downside to making the switch. For the time being, however, I don’t see my production code moving yet. There is no single feature on the list, that can’t wait another few months.&lt;/p&gt;
+&lt;p&gt;Transpilation with &lt;a href=&quot;https://6to5.org&quot;&gt;6to5&lt;/a&gt; invites you with wide open arms, and it’s certainly easy to get started. Once linters and Grunt/&amp;lt;insert-task-runner&amp;gt; catch up, there is almost no downside to making the switch. For the time being, however, I don’t see my production code moving yet. There is no single feature on the list, that can’t wait another few months.&lt;/p&gt;
 &lt;p&gt;On the other hand, some of my smaller projects have now moved to ES6. More importantly: I have refactored some CoffeeScript code into ‘vanilla’ JavaScript under ES6. I still prefer many parts of CoffeeScript in terms of style and clarity by a long stretch (long-term Haskell fan). But moving to ES6 will help me take the step towards type-based JavaScript later on (TypeScript, AtScript).&lt;/p&gt;
 &lt;p&gt;What do you think? Have you switched to ES6 already?&lt;/p&gt;
 </description>

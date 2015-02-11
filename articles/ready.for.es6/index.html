@@ -40,10 +40,10 @@
 <p><span class="more"></span></p>
 <h2 id="transpilers">Transpilers</h2>
 <p>Taking any mainstream browser in its most current release, we get about half of the features <span class="caps">ES6</span> specifies (as seen <a href="http://kangax.github.io/compat-table/es6/">here</a>). This is only true for desktop browsers (not counting <span class="caps">IE</span>). Mobile browsers are lacking behind&nbsp;further.</p>
-<p>All of this is no surprise. <span class="caps">ES6</span>, or ES2015 as it is sometimes called, has not been released yet. It should be ready by the middle of this year. Even then, there will be a transitional phase, where users are upgrading their browsers to releases that support ES6. We have seen this before and will be ready with ES6-shims to bridge the&nbsp;period.</p>
-<p>But can we start switching our code-base today? Transpilers like 6to5 and traceur are great ways to give us the power of <span class="caps">ES6</span> right now, with great coverage and translation to ES5&nbsp;code.</p>
+<p>All of this is no surprise. <span class="caps">ES6</span>, or ES2015 as it is sometimes called, has not been released yet. It should be ready by the middle of this year. Even then, there will be a transitional phase, where users are upgrading their browsers to support ES6. We have seen this before and we’ll be ready with ES6-shims to bridge this&nbsp;period.</p>
+<p>But can we start switching our code-base today? Transpilers like <a href="https://6to5.org">6to5</a> and <a href="https://github.com/google/traceur-compiler">traceur</a> are great ways to give us the power of <span class="caps">ES6</span> right now, with great coverage and translation to ES5&nbsp;code.</p>
 <h2 id="ready-for-es6">Ready for&nbsp;<span class="caps">ES6</span></h2>
-<p>I was curious to give <span class="caps">ES6</span> a try for a few smaller projects and see if we can introduce it at <a href="https://sessionbird.com">Sessionbird</a>. I choose 6to5 for translation and added it to my Grunt&nbsp;workflow:</p>
+<p>I was curious to give <span class="caps">ES6</span> a try for a few smaller projects and see if we can introduce it at <a href="https://sessionbird.com">Sessionbird</a>. I choose <a href="https://6to5.org">6to5</a> for translation and added it to my Grunt&nbsp;workflow:</p>
 <pre><code>npm install --save-dev grunt-6to5</code></pre>
 <p>With a little configuration in <code>Gruntfile.js</code>:</p>
 <pre><code>&#39;6to5&#39;: {
@@ -59,15 +59,31 @@
         }]
     }
 },</code></pre>
-<p>I was ready to start refactoring some code for <span class="caps">ES6</span>. A great resource of available features is <a href="https://6to5.org/docs/learn-es6/">here</a>. I was exciting about arrows, template strings, iterators, promises and modules. It all worked as&nbsp;expected.</p>
-<p>However, to wrap up my typical workflow, a wanted a helper for quality control on code style. This is where it gets complicated. We have been using <code>jshint</code> for this task, but the current lack in support for <span class="caps">ES6</span> made me switch to <code>eslint</code> instead. If you use their current development branch, you can get a preview for&nbsp;<span class="caps">ES6</span>:</p>
+<p>I was ready to start refactoring some code for <span class="caps">ES6</span>. A great resource of available features is <a href="https://6to5.org/docs/learn-es6/">here</a>. I was excited about arrows, template strings, iterators, promises and modules. It all worked as&nbsp;expected.</p>
+<p>However, to wrap up my typical workflow, I wanted a helper for quality control on my code style. This is where it gets complicated. We have been using <code>jshint</code> for this task, but the current lack in support for <span class="caps">ES6</span> made me switch to <code>eslint</code> instead. If you use their current development branch, you can get a preview for&nbsp;<span class="caps">ES6</span>:</p>
 <pre><code>npm install -g eslint@es6jsx</code></pre>
 <p>It already works reasonably well, but you will have to create your own Grunt task to make it work with this release. Also, it’s still a moving target, so expect some bugs and strange&nbsp;errors.</p>
 <h2 id="should-i-switch">Should I&nbsp;switch?</h2>
 <p>After a few hours of experimentation, I was seriously asking myself, if I should switch right now, or wait a bit longer. On the list of downsides I added the preview eslint support and adding custom build tasks, which I don’t want to maintain. As for the list of advantages: Is there any killer feature that would push me towards <span class="caps">ES6</span> right&nbsp;now?</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> odds = <span class="ot">evens</span>.<span class="fu">map</span>(v =&gt; v + <span class="dv">1</span>);</code></pre>
 <p>Let’s take a look at list again. There is <a href="https://6to5.org/docs/learn-es6/#arrows">arrows</a>, which looks similar to CoffeeScript function definitions. I have always like this clear style of function definition, but with <span class="caps">ES6</span> it comes with and interesting twist. Since the meaning of <code>this</code> is changed in the function body, it quickly broke a few code pieces I tried to refactor, leaving me with the lesson, that these “arrows” are not simply a style&nbsp;change.</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">class</span> Dog <span class="kw">extends</span> Cat {
+  <span class="fu">constructor</span>(strangeness) { ... }</code></pre>
 <p><a href="https://6to5.org/docs/learn-es6/#classes">Classes</a> are another feature I remember well from CoffeeScript, but not one I’d miss terribly. I have gotten used to the way JavaScript handles object creation and have never felt like I was missing&nbsp;classes.</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> s = `Dog eats ${insertBone}
+         <span class="kw">in</span> multiple
+         lines`</code></pre>
 <p><a href="https://6to5.org/docs/learn-es6/#template-strings">Template strings</a> is indeed high up on my list, as string interpolation is something I’ve been used to in both CoffeeScript and Ruby. On the other hand, Go and Scala have taught me to stop whining and just write it explicitly. The bigger advantage here is support of multi-line strings, which is a potential big plus. Then again, the problem doesn’t come up too often to warrant the&nbsp;argument.</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// Declare in outside scope</span>
+<span class="kw">let</span> x;
+{
+  <span class="co">// <span class="caps">OK</span>, new in block scope</span>
+  <span class="kw">const</span> x = <span class="st">&quot;sneaky&quot;</span>;
+  <span class="co">// Not possible:</span>
+  x = <span class="st">&quot;can&#39;t do this&quot;</span>;
+}
+<span class="co">// Already declared x, error</span>
+<span class="kw">let</span> x = <span class="st">&quot;not again&quot;</span>;</code></pre>
 <p><a href="https://6to5.org/docs/learn-es6/#let-const">Let and const</a> are two constructs which I’m truly excited about. However, their scoping enhancement is <a href="http://es6rocks.com/2015/01/temporal-dead-zone-tdz-demystified/">not yet supported by 6to5</a>, which crosses it off my list for&nbsp;now.</p>
 <p><a href="https://6to5.org/docs/learn-es6/#comprehensions">Comprehensions</a> are great, as seen in the&nbsp;example:</p>
 <pre><code>var results = [
@@ -84,10 +100,13 @@
 <p><a href="https://6to5.org/docs/learn-es6/#modules">Modules</a> are great to finally make it into the core, but we have built our ways around it successfully (<span class="caps">AMD</span>,&nbsp;CommonJS).</p>
 <p>The updated <a href="https://6to5.org/docs/learn-es6/#math-number-string-object-apis">object, string, number and math APIs</a> are also welcome additions. So are <a href="https://6to5.org/docs/learn-es6/#tail-calls">tail calls</a> and the <a href="https://6to5.org/docs/learn-es6/#reflect-api">reflect <span class="caps">API</span></a>.</p>
 <p>Then there is the list of “nice to have”s: <a href="https://6to5.org/docs/learn-es6/#enhanced-object-literals">Enhanced object literals</a>, <a href="https://6to5.org/docs/learn-es6/#destructuring">destructing</a>, <a href="https://6to5.org/docs/learn-es6/#default-rest-spread">defaults, rest and spread</a>, <a href="https://6to5.org/docs/learn-es6/#unicode">unicode</a>, <a href="https://6to5.org/docs/learn-es6/#map-set-weak-map-weak-set">maps and sets</a>.</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">return</span> <span class="fu">getDog</span>().<span class="fu">then</span>( (dog) =&gt; {
+  <span class="kw">return</span> <span class="ot">dog</span>.<span class="fu">goFetch</span>()
+})</code></pre>
 <p>Finally, we have native <a href="https://6to5.org/docs/learn-es6/#promises">promises</a>. I was actually most excited about this feature when I initially heard about <span class="caps">ES6</span>. Since the rise of <a href="https://6to5.org/docs/learn-es6/#promises">bluebird</a>, however, it’s not something I miss anymore; It is always there, in almost every project I&nbsp;write.</p>
 <h2 id="summary">Summary</h2>
 <p><span class="caps">ES6</span> now or&nbsp;later?</p>
-<p>Transpilation with 6to5 invites you with wide open arms, and it’s certainly easy to get started. Once linters and Grunt/&lt;insert-task-runner&gt; catch up, there is almost no downside to making the switch. For the time being, however, I don’t see my production code moving yet. There is no single feature on the list, that can’t wait another few&nbsp;months.</p>
+<p>Transpilation with <a href="https://6to5.org">6to5</a> invites you with wide open arms, and it’s certainly easy to get started. Once linters and Grunt/&lt;insert-task-runner&gt; catch up, there is almost no downside to making the switch. For the time being, however, I don’t see my production code moving yet. There is no single feature on the list, that can’t wait another few&nbsp;months.</p>
 <p>On the other hand, some of my smaller projects have now moved to <span class="caps">ES6</span>. More importantly: I have refactored some CoffeeScript code into ‘vanilla’ JavaScript under ES6. I still prefer many parts of CoffeeScript in terms of style and clarity by a long stretch (long-term Haskell fan). But moving to ES6 will help me take the step towards type-based JavaScript later on (TypeScript,&nbsp;AtScript).</p>
 <p>What do you think? Have you switched to <span class="caps">ES6</span>&nbsp;already?</p>
 </section>
