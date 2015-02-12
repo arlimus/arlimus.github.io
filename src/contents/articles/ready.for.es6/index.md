@@ -59,7 +59,7 @@ There is [arrows](https://6to5.org/docs/learn-es6/#arrows), which looks similar 
 var odds = evens.map(v => v + 1);
 ```
 
-I have always like this clear style of function definition, but with ES6 it comes with and interesting twist. Since the meaning of `this` is changed in the function body, it quickly broke a few code pieces I tried to refactor, leaving me with the lesson, that these "arrows" are not simply a style change.
+I have always liked this clear style of function definition, but with ES6 it comes with and interesting twist. Since the meaning of `this` is changed in the function body, it quickly broke a few code pieces I tried to refactor, leaving me with the lesson, that these "arrows" are not simply a style change.
 
 [Classes](https://6to5.org/docs/learn-es6/#classes) are another feature I remember well from CoffeeScript, but not one I'd miss terribly. I have gotten used to the way JavaScript handles object creation and have never felt like I was missing classes. 
 
