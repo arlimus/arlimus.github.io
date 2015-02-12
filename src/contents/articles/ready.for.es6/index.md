@@ -134,7 +134,7 @@ I was actually most excited about this feature when I initially heard about ES6.
 
 ES6 now or later?
 
-Transpilation with [6to5](https://6to5.org) invites you with wide open arms, and it's certainly easy to get started. Once linters and Grunt/&lt;insert-task-runner&gt; catch up, there is almost no downside to making the switch. For the time being, however, I don't see my production code moving yet. There is no single feature on the list, that can't wait another few months.
+Transpilation with [6to5](https://6to5.org) invites you with wide open arms, and it's certainly easy to get started. Once linters and Grunt/&lt;insert-task-runner&gt; catch up, there is almost no downside to making the switch. For the time being, however, I don't see my production code moving yet. There is no single feature on the list, that can't wait another few months. Using lodash and bluebird (despite some overhead) works very well.
 
 On the other hand, some of my smaller projects have now moved to ES6. More importantly: I have refactored some CoffeeScript code into 'vanilla' JavaScript under ES6. I still prefer many parts of CoffeeScript in terms of style and clarity by a long stretch (long-term Haskell fan). But moving to ES6 will help me take the step towards type-based JavaScript later on (TypeScript, AtScript).
 
