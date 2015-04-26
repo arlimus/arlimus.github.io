@@ -5,7 +5,7 @@ date: 2015-01-04
 template: article.jade
 ---
 
-Over the past year, we have had a great time developing and establishing the [open source hardening framework](http://telekomlabs.github.io/) within our company and outside. It has been a fantastic start and we are grateful to everyone who helped us get this off the ground.
+Over the past year, we have had a great time developing and establishing the [open source hardening framework](http://hardening.io/) within our company and outside. It has been a fantastic start and we are grateful to everyone who helped us get this off the ground.
 
 However, to me, it is even more exciting to look forward at the potential this project holds. It is something we were so far only able to hint at.
 
