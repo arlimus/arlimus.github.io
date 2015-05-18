@@ -10,6 +10,7 @@ block prepend title
 block header
   include author
   h1= page.title
+  span.date= moment.utc(page.date).format('DD. MMMM YYYY')
 
 block content
   article.article
