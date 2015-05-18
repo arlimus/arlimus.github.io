@@ -3,7 +3,8 @@
     "js-yaml": "^3.2.2",
     "moment": "2.x",
     "typogr": "0.5.x",
-    "underscore": "1.4.x"
+    "underscore": "1.4.x",
+    "wintersmith-pandoc": "^0.2.3"
   },
   "repository": "none"
 }
