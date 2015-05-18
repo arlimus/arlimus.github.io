@@ -30,7 +30,7 @@
   <body ng-app="app" class="article-detail">
     <header class="header">
       <div class="content-wrap">
-        <h1>Wintersmith setup</h1>
+        <h1>Wintersmith setup</h1><span class="date">28. October 2013</span>
       </div>
     </header>
     <div id="content">
@@ -45,7 +45,7 @@
 <ol style="list-style-type: decimal">
 <li><p>Create a GitHub repo for your user. As the name, type in: <code>{{username || 'username'}}.github.io</code>.</p></li>
 <li><p>Clone this repo to your local&nbsp;folder</p>
-<pre><code>git clone git@github.com:{{username || 'username'}}/{{username || 'username'}}.github.io.git ~/blog
+<pre><code>git clone git@github.com:{{username || &#39;username&#39;}}/{{username || &#39;username&#39;}}.github.io.git ~/blog
 cd ~/blog</code></pre></li>
 <li><p>Install&nbsp;wintersmith</p>
 <pre><code>npm install wintersmith -g</code></pre></li>
@@ -59,10 +59,10 @@ cd src/</code></pre></li>
 <pre><code>{
   &quot;output&quot;: &quot;./../&quot;,
   &quot;locals&quot;: {
-    &quot;url&quot;: &quot;http://{{username || 'username'}}.github.io&quot;,
-    &quot;name&quot;: &quot;Wintersmith meets {{username || 'username'}}&quot;
-    &quot;owner&quot;: &quot;{{username || 'username'}}&quot;
-    &quot;description&quot;: &quot;This is the blog of {{username || 'username'}}&quot;
+    &quot;url&quot;: &quot;http://{{username || &#39;username&#39;}}.github.io&quot;,
+    &quot;name&quot;: &quot;Wintersmith meets {{username || &#39;username&#39;}}&quot;
+    &quot;owner&quot;: &quot;{{username || &#39;username&#39;}}&quot;
+    &quot;description&quot;: &quot;This is the blog of {{username || &#39;username&#39;}}&quot;
     //..</code></pre></li>
 <li><p>Write articles, change templates, do whatever you like to it. To preview in <a href="http://localhost:8080">localhost:8080</a>:</p>
 <pre><code>wintersmith preview</code></pre></li>
@@ -73,7 +73,7 @@ git add ../.
 git commit -m &quot;finished setup for first blog release&quot;
 git push -u origin master</code></pre></li>
 </ol>
-<p>It may take GitHub a bit to update your page, but once it’s done you can visit it at <a href="http://{{username || 'username'}}.github.io"><code>http://{{username || 'username'}}.github.io</code></a></p>
+<p>It may take GitHub a bit to update your page, but once it’s done you can visit it at <a href="http://{{username || 'username'}}.github.io"><code>http://{{username || ‘username’}}.github.io</code></a></p>
 </section>
         </article>
         <div class="nav getback"><a href="/">« Full blog</a></div>

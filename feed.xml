@@ -1106,7 +1106,7 @@ AllowTcpForwarding remote&lt;/code&gt;&lt;/pre&gt;
 &lt;ol style=&quot;list-style-type: decimal&quot;&gt;
 &lt;li&gt;&lt;p&gt;Create a GitHub repo for your user. As the name, type in: &lt;code&gt;{{username || 'username'}}.github.io&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Clone this repo to your local folder&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;git clone git@github.com:{{username || 'username'}}/{{username || 'username'}}.github.io.git ~/blog
+&lt;pre&gt;&lt;code&gt;git clone git@github.com:{{username || &amp;#39;username&amp;#39;}}/{{username || &amp;#39;username&amp;#39;}}.github.io.git ~/blog
 cd ~/blog&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Install wintersmith&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;npm install wintersmith -g&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
@@ -1120,10 +1120,10 @@ cd src/&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;pre&gt;&lt;code&gt;{
   &amp;quot;output&amp;quot;: &amp;quot;./../&amp;quot;,
   &amp;quot;locals&amp;quot;: {
-    &amp;quot;url&amp;quot;: &amp;quot;http://{{username || 'username'}}.github.io&amp;quot;,
-    &amp;quot;name&amp;quot;: &amp;quot;Wintersmith meets {{username || 'username'}}&amp;quot;
-    &amp;quot;owner&amp;quot;: &amp;quot;{{username || 'username'}}&amp;quot;
-    &amp;quot;description&amp;quot;: &amp;quot;This is the blog of {{username || 'username'}}&amp;quot;
+    &amp;quot;url&amp;quot;: &amp;quot;http://{{username || &amp;#39;username&amp;#39;}}.github.io&amp;quot;,
+    &amp;quot;name&amp;quot;: &amp;quot;Wintersmith meets {{username || &amp;#39;username&amp;#39;}}&amp;quot;
+    &amp;quot;owner&amp;quot;: &amp;quot;{{username || &amp;#39;username&amp;#39;}}&amp;quot;
+    &amp;quot;description&amp;quot;: &amp;quot;This is the blog of {{username || &amp;#39;username&amp;#39;}}&amp;quot;
     //..&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Write articles, change templates, do whatever you like to it. To preview in &lt;a href=&quot;http://localhost:8080&quot;&gt;localhost:8080&lt;/a&gt;:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;wintersmith preview&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
@@ -1134,7 +1134,7 @@ git add ../.
 git commit -m &amp;quot;finished setup for first blog release&amp;quot;
 git push -u origin master&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;It may take GitHub a bit to update your page, but once it’s done you can visit it at &lt;a href=&quot;http://{{username || 'username'}}.github.io&quot;&gt;&lt;code&gt;http://{{username || 'username'}}.github.io&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;It may take GitHub a bit to update your page, but once it’s done you can visit it at &lt;a href=&quot;http://{{username || 'username'}}.github.io&quot;&gt;&lt;code&gt;http://{{username || ‘username’}}.github.io&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     <item>
