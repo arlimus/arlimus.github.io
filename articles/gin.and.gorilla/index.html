@@ -41,9 +41,9 @@
 <p><span class="more"></span></p>
 <h2 id="gin-gonic">Gin-Gonic</h2>
 <p>Let’s start with a simple server. First, go get&nbsp;Gin:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">go</span> get github.com/gin-gonic/gin</code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">go</span> get github.com/gin-gonic/gin</code></pre></div>
 <p>Now create your&nbsp;server:</p>
-<pre class="sourceCode go"><code class="sourceCode go"><span class="kw">package</span> main
+<div class="sourceCode"><pre class="sourceCode go"><code class="sourceCode go"><span class="kw">package</span> main
 
 <span class="kw">import</span> (
     <span class="st">&quot;github.com/gin-gonic/gin&quot;</span>
@@ -58,12 +58,12 @@
     })
 
     r.Run(<span class="st">&quot;localhost:12312&quot;</span>)
-}</code></pre>
+}</code></pre></div>
 <p>Run it and open your browser on <a href="http://localhost:12312">localhost:12312</a>. You should be greeted with “We got&nbsp;Gin”.</p>
 <h2 id="gorilla">Gorilla</h2>
 <p>Time to add websockets via Gorilla web toolkit. First run <code>go get github.com/gorilla/websocket</code> and import&nbsp;it.</p>
 <p>Next, create a websocket handler. Let’s have it act as a simple echo server: It will read messages and echo them&nbsp;back.</p>
-<pre class="sourceCode go"><code class="sourceCode go"><span class="kw">var</span> wsupgrader = websocket.Upgrader{
+<div class="sourceCode"><pre class="sourceCode go"><code class="sourceCode go"><span class="kw">var</span> wsupgrader = websocket.Upgrader{
     ReadBufferSize:  <span class="dv">1024</span>,
     WriteBufferSize: <span class="dv">1024</span>,
 }
@@ -82,16 +82,16 @@
         }
         conn.WriteMessage(t, msg)
     }
-}</code></pre>
+}</code></pre></div>
 <p>As you can see in the <code>wshandler</code> function, the <code>for</code>-loop will run until the connection ends and write back whatever the client sends. Once an error is encoutered or the connection breaks, the loop is finished and the handler&nbsp;ends.</p>
 <p>Finally we add it to our Gin&nbsp;context:</p>
-<pre class="sourceCode go"><code class="sourceCode go">r.GET(<span class="st">&quot;/ws&quot;</span>, <span class="kw">func</span>(c *gin.Context) {
+<div class="sourceCode"><pre class="sourceCode go"><code class="sourceCode go">r.GET(<span class="st">&quot;/ws&quot;</span>, <span class="kw">func</span>(c *gin.Context) {
     wshandler(c.Writer, c.Request)
-})</code></pre>
+})</code></pre></div>
 <p>Let’s see it in&nbsp;action.</p>
 <h2 id="client">Client</h2>
 <p>We will create a small html file which communicates with our websocket server. This client sends and receives a message via javascript every second and displays it on the&nbsp;site.</p>
-<pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;html&gt;</span>
+<div class="sourceCode"><pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;html&gt;</span>
   <span class="kw">&lt;head&gt;</span>
     <span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;https://code.jquery.com/jquery-2.1.1.min.js&quot;</span><span class="kw">&gt;&lt;/script&gt;</span>
   <span class="kw">&lt;/head&gt;</span>
@@ -101,36 +101,36 @@
     <span class="kw">&lt;pre</span><span class="ot"> id=</span><span class="st">&quot;output&quot;</span><span class="kw">&gt;&lt;/pre&gt;</span>
 
     <span class="kw">&lt;script&gt;</span>
-      url = <span class="st">&#39;ws://localhost:12312/ws&#39;</span>;
-      c = <span class="kw">new</span> <span class="fu">WebSocket</span>(url);
+      url <span class="op">=</span> <span class="st">&#39;ws://localhost:12312/ws&#39;</span><span class="op">;</span>
+      c <span class="op">=</span> <span class="kw">new</span> <span class="at">WebSocket</span>(url)<span class="op">;</span>
       
-      send = <span class="kw">function</span>(data){
-        <span class="fu">$</span>(<span class="st">&quot;#output&quot;</span>).<span class="fu">append</span>((<span class="kw">new</span> <span class="fu">Date</span>())+ <span class="st">&quot; ==&gt; &quot;</span>+data+<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
-        <span class="ot">c</span>.<span class="fu">send</span>(data)
-      }
+      send <span class="op">=</span> <span class="kw">function</span>(data)<span class="op">{</span>
+        <span class="at">$</span>(<span class="st">&quot;#output&quot;</span>).<span class="at">append</span>((<span class="kw">new</span> <span class="at">Date</span>())<span class="op">+</span> <span class="st">&quot; ==&gt; &quot;</span><span class="op">+</span>data<span class="op">+</span><span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)
+        <span class="va">c</span>.<span class="at">send</span>(data)
+      <span class="op">}</span>
 
-      <span class="ot">c</span>.<span class="fu">onmessage</span> = <span class="kw">function</span>(msg){
-        <span class="fu">$</span>(<span class="st">&quot;#output&quot;</span>).<span class="fu">append</span>((<span class="kw">new</span> <span class="fu">Date</span>())+ <span class="st">&quot; &lt;== &quot;</span>+<span class="ot">msg</span>.<span class="fu">data</span>+<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
-        <span class="ot">console</span>.<span class="fu">log</span>(msg)
-      }
+      <span class="va">c</span>.<span class="at">onmessage</span> <span class="op">=</span> <span class="kw">function</span>(msg)<span class="op">{</span>
+        <span class="at">$</span>(<span class="st">&quot;#output&quot;</span>).<span class="at">append</span>((<span class="kw">new</span> <span class="at">Date</span>())<span class="op">+</span> <span class="st">&quot; &lt;== &quot;</span><span class="op">+</span><span class="va">msg</span>.<span class="at">data</span><span class="op">+</span><span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)
+        <span class="va">console</span>.<span class="at">log</span>(msg)
+      <span class="op">}</span>
 
-      <span class="ot">c</span>.<span class="fu">onopen</span> = <span class="kw">function</span>(){
-        <span class="fu">setInterval</span>( 
-          <span class="kw">function</span>(){ <span class="fu">send</span>(<span class="st">&quot;ping&quot;</span>) }
-        , <span class="dv">1000</span> )
-      }
-    &lt;<span class="ot">/script&gt;</span>
+      <span class="va">c</span>.<span class="at">onopen</span> <span class="op">=</span> <span class="kw">function</span>()<span class="op">{</span>
+        <span class="at">setInterval</span>( 
+          <span class="kw">function</span>()<span class="op">{</span> <span class="at">send</span>(<span class="st">&quot;ping&quot;</span>) <span class="op">}</span>
+        <span class="op">,</span> <span class="dv">1000</span> )
+      <span class="op">}</span>
+    <span class="op">&lt;</span><span class="ss">/script&gt;</span>
 
-<span class="ot">  &lt;/body</span>&gt;
-&lt;<span class="ot">/html&gt;</span></code></pre>
+<span class="ss">  &lt;/body</span><span class="op">&gt;</span>
+<span class="op">&lt;</span><span class="ss">/html&gt;</span></code></pre></div>
 <p>Let’s include this file in our go&nbsp;server:</p>
-<pre class="sourceCode go"><code class="sourceCode go">r.LoadHTMLFiles(<span class="st">&quot;index.html&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode go"><code class="sourceCode go">r.LoadHTMLFiles(<span class="st">&quot;index.html&quot;</span>)
 
 r.<span class="caps">GET</span>(<span class="st">&quot;/&quot;</span>, <span class="kw">func</span>(c *gin.Context) {
     c.<span class="caps">HTML</span>(<span class="dv">200</span>, <span class="st">&quot;index.html&quot;</span>, <span class="ot">nil</span>)
-})</code></pre>
+})</code></pre></div>
 <p>The complete go code should now look like&nbsp;this:</p>
-<pre class="sourceCode go"><code class="sourceCode go"><span class="kw">package</span> main
+<div class="sourceCode"><pre class="sourceCode go"><code class="sourceCode go"><span class="kw">package</span> main
 
 <span class="kw">import</span> (
     <span class="st">&quot;fmt&quot;</span>
@@ -174,7 +174,7 @@ r.<span class="caps">GET</span>(<span class="st">&quot;/&quot;</span>, <span cla
         }
         conn.WriteMessage(t, msg)
     }
-}</code></pre>
+}</code></pre></div>
 <p>Run it and point your browser to <a href="http://localhost:12312">localhost:12312</a>. You should now see the ping messages and&nbsp;responses:</p>
 <p><img title="Ping pong with websockets" src="/articles/gin.and.gorilla/pingpong.png" style="max-width:512px; margin-left: auto; margin-right: auto"></p>
 <p>Happy hacking. No animals were harmed in making this&nbsp;blog.</p>

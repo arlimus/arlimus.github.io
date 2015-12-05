@@ -39,18 +39,18 @@
           <section class="content"><p>I have a few bare servers lying around, pre-installed with Ubuntu, not integrated in any chef/puppte/saltstack workflow, with a lot of power ready to go. They are a perfect place for some labour-intensive vagrant boxes, which have recently been eating up my <span class="caps">SSD</span>. Due to the lack of bootstrap, I have found myself installing and configuring the same components one too many&nbsp;times.</p>
 <p>At this point I decided to revisit <a href="https://github.com/matschaffer/knife-solo">knife solo</a> and take it out for a spin.<span class="more"></span> The result is <a href="https://github.com/arlimus/kitchen-server">kitchen-server</a>, an easy way to configure a server and make it your second home away from&nbsp;home.</p>
 <p>The only requirement to get started is <a href="https://github.com/matschaffer/knife-solo">knife-solo</a>.</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">gem</span> install knife-solo</code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">gem</span> install knife-solo</code></pre></div>
 <p>Let’s say my server is running at <code>192.168.200.204</code>. I have the user <code>ubuntu</code> preconfigured and ready to go (with ssh key on server). The basic setup is as easy&nbsp;as:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">git</span> clone https://github.com/arlimus/kitchen-server
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">git</span> clone https://github.com/arlimus/kitchen-server
 <span class="kw">cd</span> kitchen-server
 
 <span class="kw">./setup.sh</span> ubuntu@192.168.200.204
 
-<span class="kw">ssh</span> knife@192.168.200.204</code></pre>
+<span class="kw">ssh</span> knife@192.168.200.204</code></pre></div>
 <p>I tend to use the extended version, to have zsh and git&nbsp;configured:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">./setup.sh</span> ubuntu@192.168.200.204 ext
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">./setup.sh</span> ubuntu@192.168.200.204 ext
 
-<span class="kw">ssh</span> katana@192.168.200.204</code></pre>
+<span class="kw">ssh</span> katana@192.168.200.204</code></pre></div>
 <p>The kitchen itself is simply a configuration stack on top of many great cookbooks out there. The default configuration will get you started with vagrant quickly and easily. Feel free to fork and edit it as you&nbsp;like.</p>
 <p><a href="https://github.com/arlimus/kitchen-server"><img id="fork-me-ribbon" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a></p>
 </section>

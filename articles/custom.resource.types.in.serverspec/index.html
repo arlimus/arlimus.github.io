@@ -40,27 +40,27 @@
 <p><span class="more"></span></p>
 <h2 id="not-enough">Not&nbsp;enough</h2>
 <p>This happened to me while initially writing tests for <a href="https://github.com/TelekomLabs/tests-nginx-hardening">Nginx hardening</a>. For all configuration checks, these tests looked for values inside <code>/etc/nginx/nginx.conf</code>:</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">describe file( nginx_conf ) <span class="kw">do</span>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">describe file( nginx_conf ) <span class="kw">do</span>
   its(<span class="st">:content</span>) { should match(<span class="ot">/^\s*server_tokens off;$/</span>) }
 <span class="kw">end</span>
 
-...</code></pre>
+...</code></pre></div>
 <p>With that out of the way, I started the implementation in Chef. Since hardening is designed as an overlay on top of existing cookbooks, we chose <code>miketheman/nginx</code> as the base&nbsp;provider.</p>
 <p>This led to a crucial discovery: Some values were configured inside <code>nginx.conf</code>, while others were just not available (as seen in the <a href="https://github.com/miketheman/nginx/blob/master/templates/default/nginx.conf.erb">template</a>).</p>
 <p>For Nginx, an easy and clean solution is to create a configuration file inside <code>conf.d</code> and add all remaining values there. This leads to a split in configuration parameters between both configuration files, which must be reflected&nbsp;serverspec.</p>
 <p>Some tests now didn’t target <code>nginx.conf</code> anymore, but the hardening configuration <code>conf.d/90.hardening.conf</code>:</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">describe file( hardening_conf ) <span class="kw">do</span>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">describe file( hardening_conf ) <span class="kw">do</span>
   its(<span class="st">:content</span>) { should match(<span class="ot">/^\s*more_clear_headers &#39;Server&#39;;$/</span>) }
-<span class="kw">end</span></code></pre>
+<span class="kw">end</span></code></pre></div>
 <p>The obvious issue with this decision popped up during the implementation in Puppet. Here, a different provider for nginx was used: <code>jfryman/nginx</code>. Its <code>nginx.conf</code> had other values configured than the Chef equivalent (as seen in the <a href="https://github.com/jfryman/puppet-nginx/blob/master/templates/conf.d/nginx.conf.erb">template</a>). Unfortunately, the serverspec tests were expecting parameters in <code>nginx.conf</code>, that had now moved to <code>conf.d</code>. There was no way to check both with the same set of tests&nbsp;anymore.</p>
 <p>The ideal solution would have been to move all configuration values to the custom configuration file in <code>conf.d</code>. However, this would have broken the overlay design. A user may still configure a parameter that ends up in both <code>nginx.conf</code> and <code>conf.d</code>.</p>
 <h2 id="extending-serverspec">Extending&nbsp;Serverspec</h2>
 <p>I needed a resource provider, that could check nginx configuration in multiple files at&nbsp;once:</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">conf_paths = [ nginx_conf, hardening_conf ]
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">conf_paths = [ nginx_conf, hardening_conf ]
 
 describe multi_file( conf_paths )
   its(<span class="st">:content</span>) { should match(<span class="ot">/^\s*more_clear_headers &#39;Server&#39;;$/</span>) }
-<span class="kw">end</span></code></pre>
+<span class="kw">end</span></code></pre></div>
 <p>First, add a new file for the provider. Your directory structure may look like&nbsp;this:</p>
 <pre><code>.
 └── serverspec
@@ -69,7 +69,7 @@ describe multi_file( conf_paths )
     └── type
         └── multi_file.rb</code></pre>
 <p>The type provider extends <code>Serverspec::Type</code> by adding a method <code>multi_file</code>. This is the method you call when writing your tests. Additionally, we create a class that holds the object which is tested. This class includes methods that expose values for matchers (e.g. <code>:content</code>) and must be extended from <code>Serverspec::Type::Base</code>.</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">module</span> <span class="dt">Serverspec</span>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">module</span> <span class="dt">Serverspec</span>
   <span class="kw">module</span> <span class="dt">Type</span>
      
     <span class="kw">class</span> <span class="dt">MultiFile</span> &lt; <span class="dt">Base</span>
@@ -79,7 +79,7 @@ describe multi_file( conf_paths )
       <span class="kw">end</span>
      
       <span class="kw">def</span> content
-        <span class="ot">@paths</span>.map{|x| ::<span class="dt">File</span>.read x }.join(<span class="st">&quot;\n&quot;</span>)
+        <span class="ot">@paths</span>.map{|x| <span class="ot">@runner</span>.get_file_content(x) }.join(<span class="st">&quot;\n&quot;</span>)
       <span class="kw">end</span>
 
     <span class="kw">end</span>
@@ -90,13 +90,13 @@ describe multi_file( conf_paths )
   <span class="kw">end</span>
 <span class="kw">end</span>
 
-include <span class="dt">Serverspec</span>::<span class="dt">Type</span></code></pre>
+include <span class="dt">Serverspec</span>::<span class="dt">Type</span></code></pre></div>
 <p>Additionally, you can create endpoints for checks&nbsp;like:</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">describe multi_file( conf_paths )
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">describe multi_file( conf_paths )
   it { should be_valid }
-<span class="kw">end</span></code></pre>
+<span class="kw">end</span></code></pre></div>
 <p>Simply add a method <code>valid?</code> to your&nbsp;object:</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">    <span class="kw">class</span> <span class="dt">MultiFile</span> &lt; <span class="dt">Base</span>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">    <span class="kw">class</span> <span class="dt">MultiFile</span> &lt; <span class="dt">Base</span>
 
       ...
 
@@ -104,13 +104,13 @@ include <span class="dt">Serverspec</span>::<span class="dt">Type</span></code><
         <span class="co"># check if the files are valid</span>
       <span class="kw">end</span>
 
-    <span class="kw">end</span></code></pre>
+    <span class="kw">end</span></code></pre></div>
 <p>A great source of inspiration is serverspec’s own <a href="https://github.com/serverspec/serverspec/tree/master/lib/serverspec/type">collection of types</a>.</p>
 <p>Finally, don’t forget to include this file, preferably in your <code>spec_helper.rb</code>:</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">...
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">...
 
 <span class="co"># additional requirements</span>
-require <span class="st">&#39;type/multi_file&#39;</span></code></pre>
+require <span class="st">&#39;type/multi_file&#39;</span></code></pre></div>
 <p>Now, <code>:content</code> provides the content of all files combined. Using the existing matchers, it’s easy to write the&nbsp;tests.</p>
 <h1 id="final-thoughts">Final&nbsp;thoughts</h1>
 <p>Our serverspec tests in the hardening project are not limited to just verifying Chef and Puppet runs. We also want them to check if a system has a valid configuration (compliance checks). Without custom resource types, this is not possible, as you sometimes cannot expect a system to be configured in a certain way. This includes configurations for Apache, MySQL, or even Sysctl, which all feature a directory structure where additional configuration files are&nbsp;applied.</p>

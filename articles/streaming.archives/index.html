@@ -50,7 +50,7 @@
 <p>A better way is to forward the binary stream and embed it inside an archive which you stream back to the client. You can add your files to this archive first and then stream everything without ever having to save it to&nbsp;disk.</p>
 <h2 id="tar">Tar</h2>
 <p>Let’s take a look at using <code>tar</code> first (example in&nbsp;Go):</p>
-<pre class="sourceCode go"><code class="sourceCode go">writer := tar.NewWriter(f)
+<div class="sourceCode"><pre class="sourceCode go"><code class="sourceCode go">writer := tar.NewWriter(f)
 
 header := &amp;tar.Header{
   Name: <span class="st">&quot;test.bin&quot;</span>,
@@ -61,11 +61,11 @@ header := &amp;tar.Header{
 }
 <span class="kw">if</span> _, err := writer.Write([]<span class="dt">byte</span>(data)); err != <span class="ot">nil</span> {
   log.Fatalln(err)
-}</code></pre>
+}</code></pre></div>
 <p>If we wanted to use <code>tar</code> archives for this, we quickly run into a major issue: In order to add files to such an archive, you first have to know the exact size of the data you want to add. This is required in every <code>tar</code> <a href="http://en.wikipedia.org/wiki/Tar_%28computing%29">file header</a>. When streaming binary data from an endpoint, you often don’t get this information beforehand. You would have to wait for the full file to download and save it to disk before adding it. Not ideal at&nbsp;all.</p>
 <h2 id="zip">Zip</h2>
 <p>Using <code>zip</code> is just as simple (example in&nbsp;Go):</p>
-<pre class="sourceCode go"><code class="sourceCode go">writer := zip.NewWriter(f)
+<div class="sourceCode"><pre class="sourceCode go"><code class="sourceCode go">writer := zip.NewWriter(f)
 
 meta, err := zw.CreateHeader(&amp;zip.FileHeader{
   Name:   <span class="st">&quot;test.bin&quot;</span>
@@ -76,7 +76,7 @@ meta, err := zw.CreateHeader(&amp;zip.FileHeader{
 
 <span class="kw">if</span> err := zw.Close(); err != <span class="ot">nil</span> {
   log.Fatalln(err)
-}</code></pre>
+}</code></pre></div>
 <p>Unlike <code>tar</code>, <code>zip</code> works well with streaming data due to its structure. You can add binary blobs or streams to the archive without knowing its accurate size, as seen in the example. In case of <code>zip</code>, the <a href="http://en.wikipedia.org/wiki/File:ZIP-64_Internal_Layout.svg">central directory</a> is written at the end of the file. This way you can add files via streams without saving them&nbsp;first.</p>
 <h2 id="considerations">Considerations</h2>
 <p>In case of streaming archives for export, <code>zip</code> has a nice advantage over <code>tar</code>. This turns around when considering import. Here, you have to save a complete <code>zip</code> file first, before being able to extract its data, because the central directory is located at the very end of the&nbsp;archive.</p>

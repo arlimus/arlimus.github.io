@@ -41,19 +41,19 @@
 <p><img src="/articles/chef.stop.failing/error.png"></p>
 <h2 id="full-control">Full&nbsp;control</h2>
 <p>In case this happens to a resource you control, you have the wonderful <code>ignore_failure</code> attribute to modify this behavior. Adding it to e.g. a service, will enable Chef to continue a run, even if this resource is&nbsp;failing.</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">service <span class="st">&quot;apache&quot;</span> <span class="kw">do</span>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">service <span class="st">&quot;apache&quot;</span> <span class="kw">do</span>
   action <span class="st">:enable</span>
   ignore_failure <span class="dv">true</span>
-<span class="kw">end</span></code></pre>
+<span class="kw">end</span></code></pre></div>
 <p>Sometimes, however, a failure may happen to a resource you don’t control yourself. To us at <a href="http://sessionbird.com">Sessionbird</a>, this happened with the <code>sensu-chef</code> cookbook. This opens up 2 options for you to&nbsp;choose.</p>
 <h2 id="modify-a-foreign-cookbook">#1 Modify a foreign&nbsp;cookbook</h2>
 <p>This is as simple as it gets: Clone/fork the repository of whatever cookbook you want to modify, alter the resource, and&nbsp;enjoy.</p>
 <p>For the <code>sensu-chef</code> example, you can modify the <code>client_service</code> recipe to look something like&nbsp;this:</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">sensu_service <span class="st">&quot;sensu-client&quot;</span> <span class="kw">do</span>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">sensu_service <span class="st">&quot;sensu-client&quot;</span> <span class="kw">do</span>
   init_style node.sensu.init_style
   action [<span class="st">:enable</span>, <span class="st">:start</span>]
   ignore_failure <span class="dv">true</span>
-<span class="kw">end</span></code></pre>
+<span class="kw">end</span></code></pre></div>
 <p>(One more component is missing for sensu, which we will see at the end of&nbsp;article)</p>
 <p>This approach is very legible and clear. Instead of forking the repository you could have also added a modified “vendor” copy to your repo. Whichever suits you&nbsp;best.</p>
 <p>However, this approach also comes at a price. You now have to actively manage the repository and updates. This means monitoring upstream changes and merging them with your modification. Your patch also sits right inside these source&nbsp;files.</p>
@@ -61,27 +61,27 @@
 <h2 id="another-way">#2 Another&nbsp;way</h2>
 <p>In our case, we took a slightly different approach. We have chosen a test-based approach, where we pull in update regularly and verify them, instead of reviewing every modified line of code all the time. Once approved, updates are pushed to the production environment and&nbsp;deployed.</p>
 <p>This approach works without altering the original source files or creating a clone. As you probably guessed, adding <code>ignore_failure</code> wasn’t an option anymore. When you pull in a cookbook via <code>include_recipe</code> or your run list, you have no field to add this attribute&nbsp;to.</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="co"># this will eventually include sensu::client_service</span>
-include_recipe <span class="st">&quot;monitor::default&quot;</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="co"># this will eventually include sensu::client_service</span>
+include_recipe <span class="st">&quot;monitor::default&quot;</span></code></pre></div>
 <p>So how can we prevent the following from&nbsp;happening?</p>
-<pre class="sourceCode bash"><code class="sourceCode bash">  <span class="kw">*</span> sensu_service[sensu-client] action start
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">  <span class="kw">*</span> sensu_service[sensu-client] action start
     <span class="kw">*</span> service[sensu-client] action start
       
       ================================================================================
       <span class="kw">Error</span> executing action <span class="kw">`start`</span> on resource <span class="st">&#39;service[sensu-client]&#39;</span>
       ================================================================================
       
-      <span class="kw">Mixlib</span>::ShellOut::ShellCommandFailed</code></pre>
+      <span class="kw">Mixlib</span>::ShellOut::ShellCommandFailed</code></pre></div>
 <p>The solution is surprisingly simple: Just add the following line to the&nbsp;recipe</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">resources(<span class="st">&#39;sensu_service[sensu-client]&#39;</span>).ignore_failure(<span class="dv">true</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">resources(<span class="st">&#39;sensu_service[sensu-client]&#39;</span>).ignore_failure(<span class="dv">true</span>)</code></pre></div>
 <p>The <code>resources</code> call is a shortcut to search for a resource within the run&nbsp;context:</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="co"># http://rubydoc.info/gems/chef/11.4.4/Chef/Recipe#resources-instance_method</span>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="co"># http://rubydoc.info/gems/chef/11.4.4/Chef/Recipe#resources-instance_method</span>
 <span class="kw">def</span> resources(*args)
   run_context.resource_collection.find(*args)
-<span class="kw">end</span></code></pre>
+<span class="kw">end</span></code></pre></div>
 <p>As the argument, you can add the resource string you see in the error message. Here, I have chosen the parent resource <code>sensu_service[sensu-client]</code>.</p>
 <p>As a small downside, this call will fail if the resource can’t be found. Since we want to prevent failures, a better option is to add a library function&nbsp;instead:</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">class</span> <span class="dt">Chef</span>::<span class="dt">Recipe</span>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">class</span> <span class="dt">Chef</span>::<span class="dt">Recipe</span>
   <span class="kw">def</span> ignore_failure lookup
     res = resources(lookup)
     <span class="kw">if</span> res.nil?
@@ -91,9 +91,9 @@ include_recipe <span class="st">&quot;monitor::default&quot;</span></code></pre>
       res.ignore_failure(<span class="dv">true</span>)  
     <span class="kw">end</span>
   <span class="kw">end</span>
-<span class="kw">end</span></code></pre>
+<span class="kw">end</span></code></pre></div>
 <p>Which you can now use in your&nbsp;recipe:</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">ignore_failure <span class="st">&#39;sensu_service[sensu-client]&#39;</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">ignore_failure <span class="st">&#39;sensu_service[sensu-client]&#39;</span></code></pre></div>
 <h2 id="summary">Summary</h2>
 <p>Chef isolated your components into wonderful cookbooks and recipes. In some rare border cases, you may find yourself wishing to break this idyllic system and to alter some small&nbsp;behavior.</p>
 <p>You have the option to either clone and modify the code directly, thus preserving each compartment, or change its behavior with a few calls from the outside. Both methods have their merits and much depends on the style you and and your team prefer to&nbsp;use.</p>
@@ -101,11 +101,11 @@ include_recipe <span class="st">&quot;monitor::default&quot;</span></code></pre>
 <p>There are some cases, where resources are dynamically created during the Chef run, after you have long issued your <code>ignore_failure</code> call. This usually happens inside a <code>ruby_block</code>, which is interpreted during resource execution. Your <code>ignore_failure</code> call happens too early in the run, for the resource to exist, and thus won’t have any&nbsp;effect.</p>
 <p>This is also true for my <code>service[sensu-client]</code> example. In this special case, the resource is created by a <span class="caps">LWRP</span> and later triggered by a ruby block, which you can easily hijack to alter its&nbsp;behavior.</p>
 <p>The complete code block to stop both failures&nbsp;is:</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">ignore_failure <span class="st">&#39;sensu_service[sensu-client]&#39;</span>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">ignore_failure <span class="st">&#39;sensu_service[sensu-client]&#39;</span>
 
 resources(<span class="st">&quot;ruby_block[sensu_service_trigger]&quot;</span>).block <span class="kw">do</span>
   ignore_failure <span class="st">&#39;service[sensu-client]&#39;</span>
-<span class="kw">end</span></code></pre>
+<span class="kw">end</span></code></pre></div>
 </section>
         </article>
         <div class="nav getback"><a href="/">« Full blog</a></div>

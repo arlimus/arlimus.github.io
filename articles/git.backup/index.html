@@ -42,13 +42,13 @@
 <h2 id="go-get-my-git">Go get my&nbsp;git</h2>
 <p>Let’s start with the latter: Getting all your&nbsp;git.</p>
 <p>My first thought was something along these&nbsp;lines:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">test</span> ! -d repo <span class="kw">&amp;&amp;</span> <span class="kw">git</span> clone https://github.com/user/repo.git
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">test</span> ! -d repo <span class="kw">&amp;&amp;</span> <span class="kw">git</span> clone https://github.com/user/repo.git
 <span class="kw">cd</span> repo
 <span class="kw">git</span> fetch --all --prune
-<span class="kw">git</span> pull</code></pre>
+<span class="kw">git</span> pull</code></pre></div>
 <p>It’s simple to start, but will quickly open questions like: What folder structure to keep? Will these git commands work in every situation? And finally: Shouldn’t I create a wrapper for this in &lt;insert favorite scripting&nbsp;language&gt;?</p>
 <p>A great solution to all these questions is to use a project like <a href="https://github.com/motemen/ghq">ghq</a>&nbsp;instead.</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">ghq</span> get -u -p https://github.com/user/repo.git</code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">ghq</span> get -u -p https://github.com/user/repo.git</code></pre></div>
 <p>Which will create a folder structure with your&nbsp;repo:</p>
 <pre><code>.
 └── github.com
@@ -57,59 +57,59 @@
             ├── ...
             ...</code></pre>
 <p>The destination folder for your backup can be configured this&nbsp;way:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">git</span> config --global ghq.root <span class="kw">&lt;</span><span class="caps">DESTINATION</span><span class="kw">&gt;</span>
-<span class="kw">ghq</span> get -u -p https://github.com/user/repo.git</code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">git</span> config --global ghq.root <span class="kw">&lt;</span><span class="caps">DESTINATION</span><span class="kw">&gt;</span>
+<span class="kw">ghq</span> get -u -p https://github.com/user/repo.git</code></pre></div>
 <p>This is especially important if you plan to use ghq for other purposes and change the destination. Otherwise just rely on your git-configured <code>ghq.root</code>.</p>
 <p>A great improvement for backups is to remove your local workspace. To restore your data and any future work with the repository you only need the <code>.git</code> folder. Local files can quickly be removed&nbsp;with:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">rm</span> -rf github.com/*/*/*</code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">rm</span> -rf github.com/*/*/*</code></pre></div>
 <p>This command will leave all your “hidden” files intact, i.e. it won’t remove the <code>.git</code> folder. When you want to restore your workspace, it’s as simple&nbsp;as:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">cd</span> github.com/user/repo
-<span class="kw">git</span> reset --hard <span class="caps">HEAD</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">cd</span> github.com/user/repo
+<span class="kw">git</span> reset --hard <span class="caps">HEAD</span></code></pre></div>
 <p>This practice may easily cut your total size in&nbsp;half.</p>
 <p>From here you can continue with whatever method you like: Keep your repos on a backup node, copy them to <span class="caps">FTP</span> or even opt for a nice S3 backup (see <a href="http://lollyrock.com/articles/s3cmd-with-radosgw/">this guide</a>)</p>
 <h2 id="find-my-repos">Find my&nbsp;repos</h2>
 <p>When you want to automate this for multiple repositories, you could always opt for a fixed list with all needed entries inside (example in&nbsp;ruby):</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">repos =<span class="ot"> %w{</span>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">repos =<span class="ot"> %w{</span>
 <span class="st">  https://github.com/user/repo1.git</span>
 <span class="st">  https://github.com/user/repo2.git</span>
 <span class="st">  ...</span>
-<span class="ot">}</span></code></pre>
+<span class="ot">}</span></code></pre></div>
 <p>It’s alright if you don’t have too many repositories or don’t mind the overhead of managing this&nbsp;list.</p>
 <p>A more advanced solution, however, is to back up all repositories of a user or group. This approach depends on whichever provider you use for serving your git, i.e. Github, Bitbucket, Gitlab, or friends. All of them have different APIs for querying users and their&nbsp;repositories.</p>
 <p>Let’s show two examples written in Ruby, one for Github and one&nbsp;Bitbucket.</p>
 <h3 id="github">Github</h3>
 <ol style="list-style-type: decimal">
 <li><p>Get the <code>octokit</code> gem</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">gem</span> install octokit</code></pre></li>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">gem</span> install octokit</code></pre></div></li>
 <li><p>Configure an access token in your Github&nbsp;profile.</p>
 <p>At the time of writing: Go to your User Settings, “Applications”, under “Personal access tokens” click on “Generate new token”. This token will be used in the next&nbsp;step.</p>
 <p><img src="/articles/git.backup/github.accesstoken.png" style="max-width: 585px; margin-left: auto; margin-right: auto;"></p></li>
 <li><p>Get all repositories for&nbsp;ghq</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">require <span class="st">&#39;octokit&#39;</span>
-github = <span class="dt">Octokit</span>::<span class="dt">Client</span>.new access_token: <span class="st">&quot;...&quot;</span>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">require <span class="st">&#39;octokit&#39;</span>
+github = <span class="dt">Octokit</span>::<span class="dt">Client</span>.new <span class="st">access_token: &quot;...&quot;</span>
 
 <span class="co"># list all repositories of a user/group</span>
 repos = github.repositories(user=<span class="st">&quot;...&quot;</span>)
 
 <span class="co"># get a list of clone urls for ghq</span>
-urls = repos.map{|x| x[<span class="st">:clone_url</span>] }</code></pre></li>
+urls = repos.map{|x| x[<span class="st">:clone_url</span>] }</code></pre></div></li>
 </ol>
 <h3 id="bitbucket">Bitbucket</h3>
 <ol style="list-style-type: decimal">
 <li><p>Get the <code>bitbucket_rest_api</code> gem</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">gem</span> install bitbucket_rest_api</code></pre></li>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">gem</span> install bitbucket_rest_api</code></pre></div></li>
 <li><p>Configure an OAuth&nbsp;consumer.</p>
 <p>At the time of writing: Go to “Manage Account”, “OAuth”, and “Add consumer”. Each consumer comes with a key and secret which you need in the next&nbsp;step.</p>
 <p><img src="/articles/git.backup/bitbucket.oauth.png" style="max-width: 723px; margin-left: auto; margin-right: auto;"></p></li>
 <li><p>Get all repositories for&nbsp;ghq</p>
-<pre class="sourceCode ruby"><code class="sourceCode ruby">require <span class="st">&#39;bitbucket_rest_api&#39;</span>
-bitbucket = <span class="dt">BitBucket</span>.new client_id: <span class="st">&quot;&lt;key&gt;&quot;</span>, client_secret: <span class="st">&quot;&lt;secret&gt;&quot;</span>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby">require <span class="st">&#39;bitbucket_rest_api&#39;</span>
+bitbucket = <span class="dt">BitBucket</span>.new <span class="st">client_id: &quot;&lt;key&gt;&quot;</span>, <span class="st">client_secret: &quot;&lt;secret&gt;&quot;</span>
 
 <span class="co"># list all repositories of a user/group</span>
 repos = bitbucket.repos.list
 
 <span class="co"># get a list of clone urls for ghq</span>
-repos.map{|x| <span class="st">&quot;git@bitbucket.org:</span><span class="ot">#{</span>x[<span class="st">&#39;owner&#39;</span>]<span class="ot">}</span><span class="st">/</span><span class="ot">#{</span>x[<span class="st">&#39;slug&#39;</span>]<span class="ot">}</span><span class="st">&quot;</span> }</code></pre></li>
+repos.map{|x| <span class="st">&quot;git@bitbucket.org:</span><span class="ot">#{</span>x[<span class="st">&#39;owner&#39;</span>]<span class="ot">}</span><span class="st">/</span><span class="ot">#{</span>x[<span class="st">&#39;slug&#39;</span>]<span class="ot">}</span><span class="st">&quot;</span> }</code></pre></div></li>
 </ol>
 <h2 id="final-thoughts">Final&nbsp;thoughts</h2>
 <p>It’s quick and simple to create a full backup of all repositories as this article has shown. The next step is to attach it to your backup system and get it running regularly. We have also opted for an encryption layer on top for data privacy which is highly recommended for all data that is not open&nbsp;source.</p>

@@ -45,46 +45,46 @@
 &lt;p&gt;After a few hours of experimentation, I was seriously asking myself, if I should switch right now, or wait a bit longer. On the list of downsides I added the preview eslint support and adding custom build tasks, which I don’t want to maintain. As for the list of advantages: Is there any killer feature that would push me towards ES6 right now?&lt;/p&gt;
 &lt;p&gt;Let’s take a look at list again.&lt;/p&gt;
 &lt;p&gt;There is &lt;a href=&quot;https://6to5.org/docs/learn-es6/#arrows&quot;&gt;arrows&lt;/a&gt;, which looks similar to CoffeeScript function definitions.&lt;/p&gt;
-&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; odds = &lt;span class=&quot;ot&quot;&gt;evens&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;map&lt;/span&gt;(v =&amp;gt; v + &lt;span class=&quot;dv&quot;&gt;1&lt;/span&gt;);&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; odds &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;va&quot;&gt;evens&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;map&lt;/span&gt;(v &lt;span class=&quot;op&quot;&gt;=&amp;gt;&lt;/span&gt; v &lt;span class=&quot;op&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;dv&quot;&gt;1&lt;/span&gt;)&lt;span class=&quot;op&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;I have always liked this clear style of function definition, but with ES6 it comes with and interesting twist. Since the meaning of &lt;code&gt;this&lt;/code&gt; is changed in the function body, it quickly broke a few code pieces I tried to refactor, leaving me with the lesson, that these “arrows” are not simply a style change.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://6to5.org/docs/learn-es6/#classes&quot;&gt;Classes&lt;/a&gt; are another feature I remember well from CoffeeScript, but not one I’d miss terribly. I have gotten used to the way JavaScript handles object creation and have never felt like I was missing classes.&lt;/p&gt;
-&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;kw&quot;&gt;class&lt;/span&gt; Dog &lt;span class=&quot;kw&quot;&gt;extends&lt;/span&gt; Cat {
-  &lt;span class=&quot;fu&quot;&gt;constructor&lt;/span&gt;(strangeness) { ... }&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;kw&quot;&gt;class&lt;/span&gt; Dog &lt;span class=&quot;kw&quot;&gt;extends&lt;/span&gt; Cat &lt;span class=&quot;op&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;at&quot;&gt;constructor&lt;/span&gt;(strangeness) &lt;span class=&quot;op&quot;&gt;{&lt;/span&gt; ... &lt;span class=&quot;op&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;a href=&quot;https://6to5.org/docs/learn-es6/#template-strings&quot;&gt;Template strings&lt;/a&gt; is indeed high up on my list, as string interpolation is something I’ve been used to in both CoffeeScript and Ruby.&lt;/p&gt;
-&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; s = `Dog eats ${insertBone}
-         &lt;span class=&quot;kw&quot;&gt;in&lt;/span&gt; multiple
-         lines`&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; s &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;vs&quot;&gt;`Dog eats &lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;${&lt;/span&gt;insertBone&lt;span class=&quot;sc&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;vs&quot;&gt;         in multiple&lt;/span&gt;
+&lt;span class=&quot;vs&quot;&gt;         lines`&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;On the other hand, Go and Scala have taught me to stop whining and just write it explicitly. The bigger advantage here is support of multi-line strings, which is a potential big plus. Then again, the problem doesn’t come up too often to warrant the argument.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://6to5.org/docs/learn-es6/#let-const&quot;&gt;Let and const&lt;/a&gt; are two constructs which I’m truly excited about. However, their scoping enhancement is &lt;a href=&quot;http://es6rocks.com/2015/01/temporal-dead-zone-tdz-demystified/&quot;&gt;not yet supported by 6to5&lt;/a&gt;, which crosses it off my list for now.&lt;/p&gt;
-&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;co&quot;&gt;// Declare in outside scope&lt;/span&gt;
-&lt;span class=&quot;kw&quot;&gt;let&lt;/span&gt; x;
-{
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;co&quot;&gt;// Declare in outside scope&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;let&lt;/span&gt; x&lt;span class=&quot;op&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;op&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;co&quot;&gt;// OK, new in block scope&lt;/span&gt;
-  &lt;span class=&quot;kw&quot;&gt;const&lt;/span&gt; x = &lt;span class=&quot;st&quot;&gt;&amp;quot;sneaky&amp;quot;&lt;/span&gt;;
+  &lt;span class=&quot;kw&quot;&gt;const&lt;/span&gt; x &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;st&quot;&gt;&amp;quot;sneaky&amp;quot;&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;;&lt;/span&gt;
   &lt;span class=&quot;co&quot;&gt;// Not possible:&lt;/span&gt;
-  x = &lt;span class=&quot;st&quot;&gt;&amp;quot;can&amp;#39;t do this&amp;quot;&lt;/span&gt;;
-}
+  x &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;st&quot;&gt;&amp;quot;can&amp;#39;t do this&amp;quot;&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;op&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;co&quot;&gt;// Already declared x, error&lt;/span&gt;
-&lt;span class=&quot;kw&quot;&gt;let&lt;/span&gt; x = &lt;span class=&quot;st&quot;&gt;&amp;quot;not again&amp;quot;&lt;/span&gt;;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;let&lt;/span&gt; x &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;st&quot;&gt;&amp;quot;not again&amp;quot;&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;a href=&quot;https://6to5.org/docs/learn-es6/#comprehensions&quot;&gt;Comprehensions&lt;/a&gt; are great, as seen in the example:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; results = [
-  &lt;span class=&quot;kw&quot;&gt;for&lt;/span&gt;(c of customers)
-    &lt;span class=&quot;kw&quot;&gt;if&lt;/span&gt; (&lt;span class=&quot;ot&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;city&lt;/span&gt; == &lt;span class=&quot;st&quot;&gt;&amp;quot;Seattle&amp;quot;&lt;/span&gt;)
-      { &lt;span class=&quot;dt&quot;&gt;name&lt;/span&gt;: &lt;span class=&quot;ot&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;name&lt;/span&gt;, &lt;span class=&quot;dt&quot;&gt;age&lt;/span&gt;: &lt;span class=&quot;ot&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;age&lt;/span&gt; }
-]&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; results &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; [
+  &lt;span class=&quot;cf&quot;&gt;for&lt;/span&gt;(c of customers)
+    &lt;span class=&quot;cf&quot;&gt;if&lt;/span&gt; (&lt;span class=&quot;va&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;city&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;st&quot;&gt;&amp;quot;Seattle&amp;quot;&lt;/span&gt;)
+      &lt;span class=&quot;op&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;dt&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;va&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dt&quot;&gt;age&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;va&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;age&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;}&lt;/span&gt;
+]&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;But can be reached just a well with lodash:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; results = &lt;span class=&quot;ot&quot;&gt;_&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;filter&lt;/span&gt;(customers, {&lt;span class=&quot;dt&quot;&gt;city&lt;/span&gt;: &lt;span class=&quot;st&quot;&gt;&amp;quot;Seattle&amp;quot;&lt;/span&gt;})
-  .&lt;span class=&quot;fu&quot;&gt;map&lt;/span&gt;(&lt;span class=&quot;kw&quot;&gt;function&lt;/span&gt;(c){
-    &lt;span class=&quot;kw&quot;&gt;return&lt;/span&gt; { &lt;span class=&quot;dt&quot;&gt;name&lt;/span&gt;: &lt;span class=&quot;ot&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;name&lt;/span&gt;, &lt;span class=&quot;dt&quot;&gt;age&lt;/span&gt;: &lt;span class=&quot;ot&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;age&lt;/span&gt; }
-  })&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; results &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;va&quot;&gt;_&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;filter&lt;/span&gt;(customers&lt;span class=&quot;op&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;dt&quot;&gt;city&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;st&quot;&gt;&amp;quot;Seattle&amp;quot;&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;}&lt;/span&gt;)
+  .&lt;span class=&quot;at&quot;&gt;map&lt;/span&gt;(&lt;span class=&quot;kw&quot;&gt;function&lt;/span&gt;(c)&lt;span class=&quot;op&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;cf&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;dt&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;va&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dt&quot;&gt;age&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;va&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;age&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;op&quot;&gt;}&lt;/span&gt;)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Admittedly, the comprehension is a bit more readable.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://6to5.org/docs/learn-es6/#modules&quot;&gt;Modules&lt;/a&gt; are great to finally make it into the core, but we have built our ways around it successfully (AMD, CommonJS).&lt;/p&gt;
 &lt;p&gt;The updated &lt;a href=&quot;https://6to5.org/docs/learn-es6/#math-number-string-object-apis&quot;&gt;object, string, number and math APIs&lt;/a&gt; are also welcome additions. So are &lt;a href=&quot;https://6to5.org/docs/learn-es6/#tail-calls&quot;&gt;tail calls&lt;/a&gt; and the &lt;a href=&quot;https://6to5.org/docs/learn-es6/#reflect-api&quot;&gt;reflect API&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Then there is the list of “nice to have”s: &lt;a href=&quot;https://6to5.org/docs/learn-es6/#enhanced-object-literals&quot;&gt;Enhanced object literals&lt;/a&gt;, &lt;a href=&quot;https://6to5.org/docs/learn-es6/#destructuring&quot;&gt;destructing&lt;/a&gt;, &lt;a href=&quot;https://6to5.org/docs/learn-es6/#default-rest-spread&quot;&gt;defaults, rest and spread&lt;/a&gt;, &lt;a href=&quot;https://6to5.org/docs/learn-es6/#unicode&quot;&gt;unicode&lt;/a&gt;, &lt;a href=&quot;https://6to5.org/docs/learn-es6/#map-set-weak-map-weak-set&quot;&gt;maps and sets&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Finally, we have native &lt;a href=&quot;https://6to5.org/docs/learn-es6/#promises&quot;&gt;promises&lt;/a&gt;.&lt;/p&gt;
-&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;kw&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;fu&quot;&gt;getDog&lt;/span&gt;().&lt;span class=&quot;fu&quot;&gt;then&lt;/span&gt;( (dog) =&amp;gt; {
-  &lt;span class=&quot;kw&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;ot&quot;&gt;dog&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;goFetch&lt;/span&gt;()
-})&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;cf&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;at&quot;&gt;getDog&lt;/span&gt;().&lt;span class=&quot;at&quot;&gt;then&lt;/span&gt;( (dog) &lt;span class=&quot;op&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;cf&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;va&quot;&gt;dog&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;goFetch&lt;/span&gt;()
+&lt;span class=&quot;op&quot;&gt;}&lt;/span&gt;)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;I was actually most excited about this feature when I initially heard about ES6. Since the rise of &lt;a href=&quot;https://6to5.org/docs/learn-es6/#promises&quot;&gt;bluebird&lt;/a&gt;, however, it’s not something I miss anymore; It is always there, in almost every project I write.&lt;/p&gt;
 &lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
 &lt;p&gt;ES6 now or later?&lt;/p&gt;
@@ -99,7 +99,7 @@
       <pubDate>Sun, 04 Jan 2015 01:00:00 +0100</pubDate>
       <guid isPermaLink="true">http://arlimus.github.io/articles/future.of.hardening/</guid>
       <author></author>
-      <description>&lt;p&gt;Over the past year, we have had a great time developing and establishing the &lt;a href=&quot;http://telekomlabs.github.io/&quot;&gt;open source hardening framework&lt;/a&gt; within our company and outside. It has been a fantastic start and we are grateful to everyone who helped us get this off the ground.&lt;/p&gt;
+      <description>&lt;p&gt;Over the past year, we have had a great time developing and establishing the &lt;a href=&quot;http://hardening.io/&quot;&gt;open source hardening framework&lt;/a&gt; within our company and outside. It has been a fantastic start and we are grateful to everyone who helped us get this off the ground.&lt;/p&gt;
 &lt;p&gt;However, to me, it is even more exciting to look forward at the potential this project holds. It is something we were so far only able to hint at.&lt;/p&gt;
 &lt;p&gt;Specifically, there are two key features missing, which could help this project tremendously: An user-interface and customization.&lt;/p&gt;
 &lt;h2 id=&quot;ui&quot;&gt;UI&lt;/h2&gt;
@@ -134,7 +134,7 @@
 &lt;p&gt;A better way is to forward the binary stream and embed it inside an archive which you stream back to the client. You can add your files to this archive first and then stream everything without ever having to save it to disk.&lt;/p&gt;
 &lt;h2 id=&quot;tar&quot;&gt;Tar&lt;/h2&gt;
 &lt;p&gt;Let’s take a look at using &lt;code&gt;tar&lt;/code&gt; first (example in Go):&lt;/p&gt;
-&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;writer := tar.NewWriter(f)
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;writer := tar.NewWriter(f)
 
 header := &amp;amp;tar.Header{
   Name: &lt;span class=&quot;st&quot;&gt;&amp;quot;test.bin&amp;quot;&lt;/span&gt;,
@@ -145,11 +145,11 @@ header := &amp;amp;tar.Header{
 }
 &lt;span class=&quot;kw&quot;&gt;if&lt;/span&gt; _, err := writer.Write([]&lt;span class=&quot;dt&quot;&gt;byte&lt;/span&gt;(data)); err != &lt;span class=&quot;ot&quot;&gt;nil&lt;/span&gt; {
   log.Fatalln(err)
-}&lt;/code&gt;&lt;/pre&gt;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;If we wanted to use &lt;code&gt;tar&lt;/code&gt; archives for this, we quickly run into a major issue: In order to add files to such an archive, you first have to know the exact size of the data you want to add. This is required in every &lt;code&gt;tar&lt;/code&gt; &lt;a href=&quot;http://en.wikipedia.org/wiki/Tar_%28computing%29&quot;&gt;file header&lt;/a&gt;. When streaming binary data from an endpoint, you often don’t get this information beforehand. You would have to wait for the full file to download and save it to disk before adding it. Not ideal at all.&lt;/p&gt;
 &lt;h2 id=&quot;zip&quot;&gt;Zip&lt;/h2&gt;
 &lt;p&gt;Using &lt;code&gt;zip&lt;/code&gt; is just as simple (example in Go):&lt;/p&gt;
-&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;writer := zip.NewWriter(f)
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;writer := zip.NewWriter(f)
 
 meta, err := zw.CreateHeader(&amp;amp;zip.FileHeader{
   Name:   &lt;span class=&quot;st&quot;&gt;&amp;quot;test.bin&amp;quot;&lt;/span&gt;
@@ -160,7 +160,7 @@ meta, err := zw.CreateHeader(&amp;amp;zip.FileHeader{
 
 &lt;span class=&quot;kw&quot;&gt;if&lt;/span&gt; err := zw.Close(); err != &lt;span class=&quot;ot&quot;&gt;nil&lt;/span&gt; {
   log.Fatalln(err)
-}&lt;/code&gt;&lt;/pre&gt;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Unlike &lt;code&gt;tar&lt;/code&gt;, &lt;code&gt;zip&lt;/code&gt; works well with streaming data due to its structure. You can add binary blobs or streams to the archive without knowing its accurate size, as seen in the example. In case of &lt;code&gt;zip&lt;/code&gt;, the &lt;a href=&quot;http://en.wikipedia.org/wiki/File:ZIP-64_Internal_Layout.svg&quot;&gt;central directory&lt;/a&gt; is written at the end of the file. This way you can add files via streams without saving them first.&lt;/p&gt;
 &lt;h2 id=&quot;considerations&quot;&gt;Considerations&lt;/h2&gt;
 &lt;p&gt;In case of streaming archives for export, &lt;code&gt;zip&lt;/code&gt; has a nice advantage over &lt;code&gt;tar&lt;/code&gt;. This turns around when considering import. Here, you have to save a complete &lt;code&gt;zip&lt;/code&gt; file first, before being able to extract its data, because the central directory is located at the very end of the archive.&lt;/p&gt;
@@ -180,9 +180,9 @@ meta, err := zw.CreateHeader(&amp;amp;zip.FileHeader{
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;h2 id=&quot;gin-gonic&quot;&gt;Gin-Gonic&lt;/h2&gt;
 &lt;p&gt;Let’s start with a simple server. First, go get Gin:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;go&lt;/span&gt; get github.com/gin-gonic/gin&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;go&lt;/span&gt; get github.com/gin-gonic/gin&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now create your server:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;package&lt;/span&gt; main
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;package&lt;/span&gt; main
 
 &lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; (
     &lt;span class=&quot;st&quot;&gt;&amp;quot;github.com/gin-gonic/gin&amp;quot;&lt;/span&gt;
@@ -197,12 +197,12 @@ meta, err := zw.CreateHeader(&amp;amp;zip.FileHeader{
     })
 
     r.Run(&lt;span class=&quot;st&quot;&gt;&amp;quot;localhost:12312&amp;quot;&lt;/span&gt;)
-}&lt;/code&gt;&lt;/pre&gt;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Run it and open your browser on &lt;a href=&quot;http://localhost:12312&quot;&gt;localhost:12312&lt;/a&gt;. You should be greeted with “We got Gin”.&lt;/p&gt;
 &lt;h2 id=&quot;gorilla&quot;&gt;Gorilla&lt;/h2&gt;
 &lt;p&gt;Time to add websockets via Gorilla web toolkit. First run &lt;code&gt;go get github.com/gorilla/websocket&lt;/code&gt; and import it.&lt;/p&gt;
 &lt;p&gt;Next, create a websocket handler. Let’s have it act as a simple echo server: It will read messages and echo them back.&lt;/p&gt;
-&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; wsupgrader = websocket.Upgrader{
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; wsupgrader = websocket.Upgrader{
     ReadBufferSize:  &lt;span class=&quot;dv&quot;&gt;1024&lt;/span&gt;,
     WriteBufferSize: &lt;span class=&quot;dv&quot;&gt;1024&lt;/span&gt;,
 }
@@ -221,16 +221,16 @@ meta, err := zw.CreateHeader(&amp;amp;zip.FileHeader{
         }
         conn.WriteMessage(t, msg)
     }
-}&lt;/code&gt;&lt;/pre&gt;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;As you can see in the &lt;code&gt;wshandler&lt;/code&gt; function, the &lt;code&gt;for&lt;/code&gt;-loop will run until the connection ends and write back whatever the client sends. Once an error is encoutered or the connection breaks, the loop is finished and the handler ends.&lt;/p&gt;
 &lt;p&gt;Finally we add it to our Gin context:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;r.GET(&lt;span class=&quot;st&quot;&gt;&amp;quot;/ws&amp;quot;&lt;/span&gt;, &lt;span class=&quot;kw&quot;&gt;func&lt;/span&gt;(c *gin.Context) {
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;r.GET(&lt;span class=&quot;st&quot;&gt;&amp;quot;/ws&amp;quot;&lt;/span&gt;, &lt;span class=&quot;kw&quot;&gt;func&lt;/span&gt;(c *gin.Context) {
     wshandler(c.Writer, c.Request)
-})&lt;/code&gt;&lt;/pre&gt;
+})&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Let’s see it in action.&lt;/p&gt;
 &lt;h2 id=&quot;client&quot;&gt;Client&lt;/h2&gt;
 &lt;p&gt;We will create a small html file which communicates with our websocket server. This client sends and receives a message via javascript every second and displays it on the site.&lt;/p&gt;
-&lt;pre class=&quot;sourceCode html&quot;&gt;&lt;code class=&quot;sourceCode html&quot;&gt;&lt;span class=&quot;kw&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode html&quot;&gt;&lt;code class=&quot;sourceCode html&quot;&gt;&lt;span class=&quot;kw&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
   &lt;span class=&quot;kw&quot;&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
     &lt;span class=&quot;kw&quot;&gt;&amp;lt;script&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; src=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;https://code.jquery.com/jquery-2.1.1.min.js&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
   &lt;span class=&quot;kw&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
@@ -240,36 +240,36 @@ meta, err := zw.CreateHeader(&amp;amp;zip.FileHeader{
     &lt;span class=&quot;kw&quot;&gt;&amp;lt;pre&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; id=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;output&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&amp;lt;/pre&amp;gt;&lt;/span&gt;
 
     &lt;span class=&quot;kw&quot;&gt;&amp;lt;script&amp;gt;&lt;/span&gt;
-      url = &lt;span class=&quot;st&quot;&gt;&amp;#39;ws://localhost:12312/ws&amp;#39;&lt;/span&gt;;
-      c = &lt;span class=&quot;kw&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;fu&quot;&gt;WebSocket&lt;/span&gt;(url);
+      url &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;st&quot;&gt;&amp;#39;ws://localhost:12312/ws&amp;#39;&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;;&lt;/span&gt;
+      c &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;at&quot;&gt;WebSocket&lt;/span&gt;(url)&lt;span class=&quot;op&quot;&gt;;&lt;/span&gt;
       
-      send = &lt;span class=&quot;kw&quot;&gt;function&lt;/span&gt;(data){
-        &lt;span class=&quot;fu&quot;&gt;$&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;#output&amp;quot;&lt;/span&gt;).&lt;span class=&quot;fu&quot;&gt;append&lt;/span&gt;((&lt;span class=&quot;kw&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;fu&quot;&gt;Date&lt;/span&gt;())+ &lt;span class=&quot;st&quot;&gt;&amp;quot; ==&amp;gt; &amp;quot;&lt;/span&gt;+data+&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;ch&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;)
-        &lt;span class=&quot;ot&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;send&lt;/span&gt;(data)
-      }
+      send &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;function&lt;/span&gt;(data)&lt;span class=&quot;op&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;at&quot;&gt;$&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;#output&amp;quot;&lt;/span&gt;).&lt;span class=&quot;at&quot;&gt;append&lt;/span&gt;((&lt;span class=&quot;kw&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;at&quot;&gt;Date&lt;/span&gt;())&lt;span class=&quot;op&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;st&quot;&gt;&amp;quot; ==&amp;gt; &amp;quot;&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;+&lt;/span&gt;data&lt;span class=&quot;op&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;)
+        &lt;span class=&quot;va&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;send&lt;/span&gt;(data)
+      &lt;span class=&quot;op&quot;&gt;}&lt;/span&gt;
 
-      &lt;span class=&quot;ot&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;onmessage&lt;/span&gt; = &lt;span class=&quot;kw&quot;&gt;function&lt;/span&gt;(msg){
-        &lt;span class=&quot;fu&quot;&gt;$&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;#output&amp;quot;&lt;/span&gt;).&lt;span class=&quot;fu&quot;&gt;append&lt;/span&gt;((&lt;span class=&quot;kw&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;fu&quot;&gt;Date&lt;/span&gt;())+ &lt;span class=&quot;st&quot;&gt;&amp;quot; &amp;lt;== &amp;quot;&lt;/span&gt;+&lt;span class=&quot;ot&quot;&gt;msg&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;data&lt;/span&gt;+&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;ch&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;)
-        &lt;span class=&quot;ot&quot;&gt;console&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;log&lt;/span&gt;(msg)
-      }
+      &lt;span class=&quot;va&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;onmessage&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;function&lt;/span&gt;(msg)&lt;span class=&quot;op&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;at&quot;&gt;$&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;#output&amp;quot;&lt;/span&gt;).&lt;span class=&quot;at&quot;&gt;append&lt;/span&gt;((&lt;span class=&quot;kw&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;at&quot;&gt;Date&lt;/span&gt;())&lt;span class=&quot;op&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;st&quot;&gt;&amp;quot; &amp;lt;== &amp;quot;&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;va&quot;&gt;msg&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt;)
+        &lt;span class=&quot;va&quot;&gt;console&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;log&lt;/span&gt;(msg)
+      &lt;span class=&quot;op&quot;&gt;}&lt;/span&gt;
 
-      &lt;span class=&quot;ot&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;onopen&lt;/span&gt; = &lt;span class=&quot;kw&quot;&gt;function&lt;/span&gt;(){
-        &lt;span class=&quot;fu&quot;&gt;setInterval&lt;/span&gt;( 
-          &lt;span class=&quot;kw&quot;&gt;function&lt;/span&gt;(){ &lt;span class=&quot;fu&quot;&gt;send&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;ping&amp;quot;&lt;/span&gt;) }
-        , &lt;span class=&quot;dv&quot;&gt;1000&lt;/span&gt; )
-      }
-    &amp;lt;&lt;span class=&quot;ot&quot;&gt;/script&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;va&quot;&gt;c&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;onopen&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;function&lt;/span&gt;()&lt;span class=&quot;op&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;at&quot;&gt;setInterval&lt;/span&gt;( 
+          &lt;span class=&quot;kw&quot;&gt;function&lt;/span&gt;()&lt;span class=&quot;op&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;at&quot;&gt;send&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;ping&amp;quot;&lt;/span&gt;) &lt;span class=&quot;op&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;op&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dv&quot;&gt;1000&lt;/span&gt; )
+      &lt;span class=&quot;op&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;op&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;/script&amp;gt;&lt;/span&gt;
 
-&lt;span class=&quot;ot&quot;&gt;  &amp;lt;/body&lt;/span&gt;&amp;gt;
-&amp;lt;&lt;span class=&quot;ot&quot;&gt;/html&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;ss&quot;&gt;  &amp;lt;/body&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;op&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;/html&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Let’s include this file in our go server:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;r.LoadHTMLFiles(&lt;span class=&quot;st&quot;&gt;&amp;quot;index.html&amp;quot;&lt;/span&gt;)
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;r.LoadHTMLFiles(&lt;span class=&quot;st&quot;&gt;&amp;quot;index.html&amp;quot;&lt;/span&gt;)
 
 r.GET(&lt;span class=&quot;st&quot;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;, &lt;span class=&quot;kw&quot;&gt;func&lt;/span&gt;(c *gin.Context) {
     c.HTML(&lt;span class=&quot;dv&quot;&gt;200&lt;/span&gt;, &lt;span class=&quot;st&quot;&gt;&amp;quot;index.html&amp;quot;&lt;/span&gt;, &lt;span class=&quot;ot&quot;&gt;nil&lt;/span&gt;)
-})&lt;/code&gt;&lt;/pre&gt;
+})&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The complete go code should now look like this:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;package&lt;/span&gt; main
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;package&lt;/span&gt; main
 
 &lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; (
     &lt;span class=&quot;st&quot;&gt;&amp;quot;fmt&amp;quot;&lt;/span&gt;
@@ -313,7 +313,7 @@ r.GET(&lt;span class=&quot;st&quot;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;, &lt;s
         }
         conn.WriteMessage(t, msg)
     }
-}&lt;/code&gt;&lt;/pre&gt;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Run it and point your browser to &lt;a href=&quot;http://localhost:12312&quot;&gt;localhost:12312&lt;/a&gt;. You should now see the ping messages and responses:&lt;/p&gt;
 &lt;p&gt;&lt;img title=&quot;Ping pong with websockets&quot; src=&quot;http://arlimus.github.io/articles/gin.and.gorilla/pingpong.png&quot; style=&quot;max-width:512px; margin-left: auto; margin-right: auto&quot;&gt;&lt;/p&gt;
 &lt;p&gt;Happy hacking. No animals were harmed in making this blog.&lt;/p&gt;
@@ -331,13 +331,13 @@ r.GET(&lt;span class=&quot;st&quot;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;, &lt;s
 &lt;h2 id=&quot;go-get-my-git&quot;&gt;Go get my git&lt;/h2&gt;
 &lt;p&gt;Let’s start with the latter: Getting all your git.&lt;/p&gt;
 &lt;p&gt;My first thought was something along these lines:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;test&lt;/span&gt; ! -d repo &lt;span class=&quot;kw&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; clone https://github.com/user/repo.git
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;test&lt;/span&gt; ! -d repo &lt;span class=&quot;kw&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; clone https://github.com/user/repo.git
 &lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; repo
 &lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; fetch --all --prune
-&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; pull&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; pull&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;It’s simple to start, but will quickly open questions like: What folder structure to keep? Will these git commands work in every situation? And finally: Shouldn’t I create a wrapper for this in &amp;lt;insert favorite scripting language&amp;gt;?&lt;/p&gt;
 &lt;p&gt;A great solution to all these questions is to use a project like &lt;a href=&quot;https://github.com/motemen/ghq&quot;&gt;ghq&lt;/a&gt; instead.&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;ghq&lt;/span&gt; get -u -p https://github.com/user/repo.git&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;ghq&lt;/span&gt; get -u -p https://github.com/user/repo.git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Which will create a folder structure with your repo:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;.
 └── github.com
@@ -346,59 +346,59 @@ r.GET(&lt;span class=&quot;st&quot;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;, &lt;s
             ├── ...
             ...&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The destination folder for your backup can be configured this way:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; config --global ghq.root &lt;span class=&quot;kw&quot;&gt;&amp;lt;&lt;/span&gt;DESTINATION&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;kw&quot;&gt;ghq&lt;/span&gt; get -u -p https://github.com/user/repo.git&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; config --global ghq.root &lt;span class=&quot;kw&quot;&gt;&amp;lt;&lt;/span&gt;DESTINATION&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;ghq&lt;/span&gt; get -u -p https://github.com/user/repo.git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This is especially important if you plan to use ghq for other purposes and change the destination. Otherwise just rely on your git-configured &lt;code&gt;ghq.root&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;A great improvement for backups is to remove your local workspace. To restore your data and any future work with the repository you only need the &lt;code&gt;.git&lt;/code&gt; folder. Local files can quickly be removed with:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;rm&lt;/span&gt; -rf github.com/*/*/*&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;rm&lt;/span&gt; -rf github.com/*/*/*&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This command will leave all your “hidden” files intact, i.e. it won’t remove the &lt;code&gt;.git&lt;/code&gt; folder. When you want to restore your workspace, it’s as simple as:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; github.com/user/repo
-&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; reset --hard HEAD&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; github.com/user/repo
+&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; reset --hard HEAD&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This practice may easily cut your total size in half.&lt;/p&gt;
 &lt;p&gt;From here you can continue with whatever method you like: Keep your repos on a backup node, copy them to FTP or even opt for a nice S3 backup (see &lt;a href=&quot;http://lollyrock.com/articles/s3cmd-with-radosgw/&quot;&gt;this guide&lt;/a&gt;)&lt;/p&gt;
 &lt;h2 id=&quot;find-my-repos&quot;&gt;Find my repos&lt;/h2&gt;
 &lt;p&gt;When you want to automate this for multiple repositories, you could always opt for a fixed list with all needed entries inside (example in ruby):&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;repos =&lt;span class=&quot;ot&quot;&gt; %w{&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;repos =&lt;span class=&quot;ot&quot;&gt; %w{&lt;/span&gt;
 &lt;span class=&quot;st&quot;&gt;  https://github.com/user/repo1.git&lt;/span&gt;
 &lt;span class=&quot;st&quot;&gt;  https://github.com/user/repo2.git&lt;/span&gt;
 &lt;span class=&quot;st&quot;&gt;  ...&lt;/span&gt;
-&lt;span class=&quot;ot&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;ot&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;It’s alright if you don’t have too many repositories or don’t mind the overhead of managing this list.&lt;/p&gt;
 &lt;p&gt;A more advanced solution, however, is to back up all repositories of a user or group. This approach depends on whichever provider you use for serving your git, i.e. Github, Bitbucket, Gitlab, or friends. All of them have different APIs for querying users and their repositories.&lt;/p&gt;
 &lt;p&gt;Let’s show two examples written in Ruby, one for Github and one Bitbucket.&lt;/p&gt;
 &lt;h3 id=&quot;github&quot;&gt;Github&lt;/h3&gt;
 &lt;ol style=&quot;list-style-type: decimal&quot;&gt;
 &lt;li&gt;&lt;p&gt;Get the &lt;code&gt;octokit&lt;/code&gt; gem&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;gem&lt;/span&gt; install octokit&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;gem&lt;/span&gt; install octokit&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Configure an access token in your Github profile.&lt;/p&gt;
 &lt;p&gt;At the time of writing: Go to your User Settings, “Applications”, under “Personal access tokens” click on “Generate new token”. This token will be used in the next step.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;http://arlimus.github.io/articles/git.backup/github.accesstoken.png&quot; style=&quot;max-width: 585px; margin-left: auto; margin-right: auto;&quot;&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Get all repositories for ghq&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;require &lt;span class=&quot;st&quot;&gt;&amp;#39;octokit&amp;#39;&lt;/span&gt;
-github = &lt;span class=&quot;dt&quot;&gt;Octokit&lt;/span&gt;::&lt;span class=&quot;dt&quot;&gt;Client&lt;/span&gt;.new access_token: &lt;span class=&quot;st&quot;&gt;&amp;quot;...&amp;quot;&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;require &lt;span class=&quot;st&quot;&gt;&amp;#39;octokit&amp;#39;&lt;/span&gt;
+github = &lt;span class=&quot;dt&quot;&gt;Octokit&lt;/span&gt;::&lt;span class=&quot;dt&quot;&gt;Client&lt;/span&gt;.new &lt;span class=&quot;st&quot;&gt;access_token: &amp;quot;...&amp;quot;&lt;/span&gt;
 
 &lt;span class=&quot;co&quot;&gt;# list all repositories of a user/group&lt;/span&gt;
 repos = github.repositories(user=&lt;span class=&quot;st&quot;&gt;&amp;quot;...&amp;quot;&lt;/span&gt;)
 
 &lt;span class=&quot;co&quot;&gt;# get a list of clone urls for ghq&lt;/span&gt;
-urls = repos.map{|x| x[&lt;span class=&quot;st&quot;&gt;:clone_url&lt;/span&gt;] }&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+urls = repos.map{|x| x[&lt;span class=&quot;st&quot;&gt;:clone_url&lt;/span&gt;] }&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id=&quot;bitbucket&quot;&gt;Bitbucket&lt;/h3&gt;
 &lt;ol style=&quot;list-style-type: decimal&quot;&gt;
 &lt;li&gt;&lt;p&gt;Get the &lt;code&gt;bitbucket_rest_api&lt;/code&gt; gem&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;gem&lt;/span&gt; install bitbucket_rest_api&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;gem&lt;/span&gt; install bitbucket_rest_api&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Configure an OAuth consumer.&lt;/p&gt;
 &lt;p&gt;At the time of writing: Go to “Manage Account”, “OAuth”, and “Add consumer”. Each consumer comes with a key and secret which you need in the next step.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;http://arlimus.github.io/articles/git.backup/bitbucket.oauth.png&quot; style=&quot;max-width: 723px; margin-left: auto; margin-right: auto;&quot;&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Get all repositories for ghq&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;require &lt;span class=&quot;st&quot;&gt;&amp;#39;bitbucket_rest_api&amp;#39;&lt;/span&gt;
-bitbucket = &lt;span class=&quot;dt&quot;&gt;BitBucket&lt;/span&gt;.new client_id: &lt;span class=&quot;st&quot;&gt;&amp;quot;&amp;lt;key&amp;gt;&amp;quot;&lt;/span&gt;, client_secret: &lt;span class=&quot;st&quot;&gt;&amp;quot;&amp;lt;secret&amp;gt;&amp;quot;&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;require &lt;span class=&quot;st&quot;&gt;&amp;#39;bitbucket_rest_api&amp;#39;&lt;/span&gt;
+bitbucket = &lt;span class=&quot;dt&quot;&gt;BitBucket&lt;/span&gt;.new &lt;span class=&quot;st&quot;&gt;client_id: &amp;quot;&amp;lt;key&amp;gt;&amp;quot;&lt;/span&gt;, &lt;span class=&quot;st&quot;&gt;client_secret: &amp;quot;&amp;lt;secret&amp;gt;&amp;quot;&lt;/span&gt;
 
 &lt;span class=&quot;co&quot;&gt;# list all repositories of a user/group&lt;/span&gt;
 repos = bitbucket.repos.list
 
 &lt;span class=&quot;co&quot;&gt;# get a list of clone urls for ghq&lt;/span&gt;
-repos.map{|x| &lt;span class=&quot;st&quot;&gt;&amp;quot;git@bitbucket.org:&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt;#{&lt;/span&gt;x[&lt;span class=&quot;st&quot;&gt;&amp;#39;owner&amp;#39;&lt;/span&gt;]&lt;span class=&quot;ot&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt;#{&lt;/span&gt;x[&lt;span class=&quot;st&quot;&gt;&amp;#39;slug&amp;#39;&lt;/span&gt;]&lt;span class=&quot;ot&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt; }&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+repos.map{|x| &lt;span class=&quot;st&quot;&gt;&amp;quot;git@bitbucket.org:&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt;#{&lt;/span&gt;x[&lt;span class=&quot;st&quot;&gt;&amp;#39;owner&amp;#39;&lt;/span&gt;]&lt;span class=&quot;ot&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt;#{&lt;/span&gt;x[&lt;span class=&quot;st&quot;&gt;&amp;#39;slug&amp;#39;&lt;/span&gt;]&lt;span class=&quot;ot&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;&lt;/span&gt; }&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h2 id=&quot;final-thoughts&quot;&gt;Final thoughts&lt;/h2&gt;
 &lt;p&gt;It’s quick and simple to create a full backup of all repositories as this article has shown. The next step is to attach it to your backup system and get it running regularly. We have also opted for an encryption layer on top for data privacy which is highly recommended for all data that is not open source.&lt;/p&gt;
@@ -416,19 +416,19 @@ repos.map{|x| &lt;span class=&quot;st&quot;&gt;&amp;quot;git@bitbucket.org:&lt;/
 &lt;p&gt;&lt;img src=&quot;http://arlimus.github.io/articles/chef.stop.failing/error.png&quot;&gt;&lt;/p&gt;
 &lt;h2 id=&quot;full-control&quot;&gt;Full control&lt;/h2&gt;
 &lt;p&gt;In case this happens to a resource you control, you have the wonderful &lt;code&gt;ignore_failure&lt;/code&gt; attribute to modify this behavior. Adding it to e.g. a service, will enable Chef to continue a run, even if this resource is failing.&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;service &lt;span class=&quot;st&quot;&gt;&amp;quot;apache&amp;quot;&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;do&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;service &lt;span class=&quot;st&quot;&gt;&amp;quot;apache&amp;quot;&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;do&lt;/span&gt;
   action &lt;span class=&quot;st&quot;&gt;:enable&lt;/span&gt;
   ignore_failure &lt;span class=&quot;dv&quot;&gt;true&lt;/span&gt;
-&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Sometimes, however, a failure may happen to a resource you don’t control yourself. To us at &lt;a href=&quot;http://sessionbird.com&quot;&gt;Sessionbird&lt;/a&gt;, this happened with the &lt;code&gt;sensu-chef&lt;/code&gt; cookbook. This opens up 2 options for you to choose.&lt;/p&gt;
 &lt;h2 id=&quot;modify-a-foreign-cookbook&quot;&gt;#1 Modify a foreign cookbook&lt;/h2&gt;
 &lt;p&gt;This is as simple as it gets: Clone/fork the repository of whatever cookbook you want to modify, alter the resource, and enjoy.&lt;/p&gt;
 &lt;p&gt;For the &lt;code&gt;sensu-chef&lt;/code&gt; example, you can modify the &lt;code&gt;client_service&lt;/code&gt; recipe to look something like this:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;sensu_service &lt;span class=&quot;st&quot;&gt;&amp;quot;sensu-client&amp;quot;&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;do&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;sensu_service &lt;span class=&quot;st&quot;&gt;&amp;quot;sensu-client&amp;quot;&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;do&lt;/span&gt;
   init_style node.sensu.init_style
   action [&lt;span class=&quot;st&quot;&gt;:enable&lt;/span&gt;, &lt;span class=&quot;st&quot;&gt;:start&lt;/span&gt;]
   ignore_failure &lt;span class=&quot;dv&quot;&gt;true&lt;/span&gt;
-&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;(One more component is missing for sensu, which we will see at the end of article)&lt;/p&gt;
 &lt;p&gt;This approach is very legible and clear. Instead of forking the repository you could have also added a modified “vendor” copy to your repo. Whichever suits you best.&lt;/p&gt;
 &lt;p&gt;However, this approach also comes at a price. You now have to actively manage the repository and updates. This means monitoring upstream changes and merging them with your modification. Your patch also sits right inside these source files.&lt;/p&gt;
@@ -436,27 +436,27 @@ repos.map{|x| &lt;span class=&quot;st&quot;&gt;&amp;quot;git@bitbucket.org:&lt;/
 &lt;h2 id=&quot;another-way&quot;&gt;#2 Another way&lt;/h2&gt;
 &lt;p&gt;In our case, we took a slightly different approach. We have chosen a test-based approach, where we pull in update regularly and verify them, instead of reviewing every modified line of code all the time. Once approved, updates are pushed to the production environment and deployed.&lt;/p&gt;
 &lt;p&gt;This approach works without altering the original source files or creating a clone. As you probably guessed, adding &lt;code&gt;ignore_failure&lt;/code&gt; wasn’t an option anymore. When you pull in a cookbook via &lt;code&gt;include_recipe&lt;/code&gt; or your run list, you have no field to add this attribute to.&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;&lt;span class=&quot;co&quot;&gt;# this will eventually include sensu::client_service&lt;/span&gt;
-include_recipe &lt;span class=&quot;st&quot;&gt;&amp;quot;monitor::default&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;&lt;span class=&quot;co&quot;&gt;# this will eventually include sensu::client_service&lt;/span&gt;
+include_recipe &lt;span class=&quot;st&quot;&gt;&amp;quot;monitor::default&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;So how can we prevent the following from happening?&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;  &lt;span class=&quot;kw&quot;&gt;*&lt;/span&gt; sensu_service[sensu-client] action start
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;  &lt;span class=&quot;kw&quot;&gt;*&lt;/span&gt; sensu_service[sensu-client] action start
     &lt;span class=&quot;kw&quot;&gt;*&lt;/span&gt; service[sensu-client] action start
       
       ================================================================================
       &lt;span class=&quot;kw&quot;&gt;Error&lt;/span&gt; executing action &lt;span class=&quot;kw&quot;&gt;`start`&lt;/span&gt; on resource &lt;span class=&quot;st&quot;&gt;&amp;#39;service[sensu-client]&amp;#39;&lt;/span&gt;
       ================================================================================
       
-      &lt;span class=&quot;kw&quot;&gt;Mixlib&lt;/span&gt;::ShellOut::ShellCommandFailed&lt;/code&gt;&lt;/pre&gt;
+      &lt;span class=&quot;kw&quot;&gt;Mixlib&lt;/span&gt;::ShellOut::ShellCommandFailed&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The solution is surprisingly simple: Just add the following line to the recipe&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;resources(&lt;span class=&quot;st&quot;&gt;&amp;#39;sensu_service[sensu-client]&amp;#39;&lt;/span&gt;).ignore_failure(&lt;span class=&quot;dv&quot;&gt;true&lt;/span&gt;)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;resources(&lt;span class=&quot;st&quot;&gt;&amp;#39;sensu_service[sensu-client]&amp;#39;&lt;/span&gt;).ignore_failure(&lt;span class=&quot;dv&quot;&gt;true&lt;/span&gt;)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The &lt;code&gt;resources&lt;/code&gt; call is a shortcut to search for a resource within the run context:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;&lt;span class=&quot;co&quot;&gt;# http://rubydoc.info/gems/chef/11.4.4/Chef/Recipe#resources-instance_method&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;&lt;span class=&quot;co&quot;&gt;# http://rubydoc.info/gems/chef/11.4.4/Chef/Recipe#resources-instance_method&lt;/span&gt;
 &lt;span class=&quot;kw&quot;&gt;def&lt;/span&gt; resources(*args)
   run_context.resource_collection.find(*args)
-&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;As the argument, you can add the resource string you see in the error message. Here, I have chosen the parent resource &lt;code&gt;sensu_service[sensu-client]&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;As a small downside, this call will fail if the resource can’t be found. Since we want to prevent failures, a better option is to add a library function instead:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;&lt;span class=&quot;kw&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;dt&quot;&gt;Chef&lt;/span&gt;::&lt;span class=&quot;dt&quot;&gt;Recipe&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;&lt;span class=&quot;kw&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;dt&quot;&gt;Chef&lt;/span&gt;::&lt;span class=&quot;dt&quot;&gt;Recipe&lt;/span&gt;
   &lt;span class=&quot;kw&quot;&gt;def&lt;/span&gt; ignore_failure lookup
     res = resources(lookup)
     &lt;span class=&quot;kw&quot;&gt;if&lt;/span&gt; res.nil?
@@ -466,9 +466,9 @@ include_recipe &lt;span class=&quot;st&quot;&gt;&amp;quot;monitor::default&amp;q
       res.ignore_failure(&lt;span class=&quot;dv&quot;&gt;true&lt;/span&gt;)  
     &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
   &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Which you can now use in your recipe:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;ignore_failure &lt;span class=&quot;st&quot;&gt;&amp;#39;sensu_service[sensu-client]&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;ignore_failure &lt;span class=&quot;st&quot;&gt;&amp;#39;sensu_service[sensu-client]&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
 &lt;p&gt;Chef isolated your components into wonderful cookbooks and recipes. In some rare border cases, you may find yourself wishing to break this idyllic system and to alter some small behavior.&lt;/p&gt;
 &lt;p&gt;You have the option to either clone and modify the code directly, thus preserving each compartment, or change its behavior with a few calls from the outside. Both methods have their merits and much depends on the style you and and your team prefer to use.&lt;/p&gt;
@@ -476,11 +476,11 @@ include_recipe &lt;span class=&quot;st&quot;&gt;&amp;quot;monitor::default&amp;q
 &lt;p&gt;There are some cases, where resources are dynamically created during the Chef run, after you have long issued your &lt;code&gt;ignore_failure&lt;/code&gt; call. This usually happens inside a &lt;code&gt;ruby_block&lt;/code&gt;, which is interpreted during resource execution. Your &lt;code&gt;ignore_failure&lt;/code&gt; call happens too early in the run, for the resource to exist, and thus won’t have any effect.&lt;/p&gt;
 &lt;p&gt;This is also true for my &lt;code&gt;service[sensu-client]&lt;/code&gt; example. In this special case, the resource is created by a LWRP and later triggered by a ruby block, which you can easily hijack to alter its behavior.&lt;/p&gt;
 &lt;p&gt;The complete code block to stop both failures is:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;ignore_failure &lt;span class=&quot;st&quot;&gt;&amp;#39;sensu_service[sensu-client]&amp;#39;&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;ignore_failure &lt;span class=&quot;st&quot;&gt;&amp;#39;sensu_service[sensu-client]&amp;#39;&lt;/span&gt;
 
 resources(&lt;span class=&quot;st&quot;&gt;&amp;quot;ruby_block[sensu_service_trigger]&amp;quot;&lt;/span&gt;).block &lt;span class=&quot;kw&quot;&gt;do&lt;/span&gt;
   ignore_failure &lt;span class=&quot;st&quot;&gt;&amp;#39;service[sensu-client]&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 </description>
     </item>
     <item>
@@ -501,27 +501,27 @@ resources(&lt;span class=&quot;st&quot;&gt;&amp;quot;ruby_block[sensu_service_tr
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;h2 id=&quot;not-enough&quot;&gt;Not enough&lt;/h2&gt;
 &lt;p&gt;This happened to me while initially writing tests for &lt;a href=&quot;https://github.com/TelekomLabs/tests-nginx-hardening&quot;&gt;Nginx hardening&lt;/a&gt;. For all configuration checks, these tests looked for values inside &lt;code&gt;/etc/nginx/nginx.conf&lt;/code&gt;:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;describe file( nginx_conf ) &lt;span class=&quot;kw&quot;&gt;do&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;describe file( nginx_conf ) &lt;span class=&quot;kw&quot;&gt;do&lt;/span&gt;
   its(&lt;span class=&quot;st&quot;&gt;:content&lt;/span&gt;) { should match(&lt;span class=&quot;ot&quot;&gt;/^\s*server_tokens off;$/&lt;/span&gt;) }
 &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
 
-...&lt;/code&gt;&lt;/pre&gt;
+...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;With that out of the way, I started the implementation in Chef. Since hardening is designed as an overlay on top of existing cookbooks, we chose &lt;code&gt;miketheman/nginx&lt;/code&gt; as the base provider.&lt;/p&gt;
 &lt;p&gt;This led to a crucial discovery: Some values were configured inside &lt;code&gt;nginx.conf&lt;/code&gt;, while others were just not available (as seen in the &lt;a href=&quot;https://github.com/miketheman/nginx/blob/master/templates/default/nginx.conf.erb&quot;&gt;template&lt;/a&gt;).&lt;/p&gt;
 &lt;p&gt;For Nginx, an easy and clean solution is to create a configuration file inside &lt;code&gt;conf.d&lt;/code&gt; and add all remaining values there. This leads to a split in configuration parameters between both configuration files, which must be reflected serverspec.&lt;/p&gt;
 &lt;p&gt;Some tests now didn’t target &lt;code&gt;nginx.conf&lt;/code&gt; anymore, but the hardening configuration &lt;code&gt;conf.d/90.hardening.conf&lt;/code&gt;:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;describe file( hardening_conf ) &lt;span class=&quot;kw&quot;&gt;do&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;describe file( hardening_conf ) &lt;span class=&quot;kw&quot;&gt;do&lt;/span&gt;
   its(&lt;span class=&quot;st&quot;&gt;:content&lt;/span&gt;) { should match(&lt;span class=&quot;ot&quot;&gt;/^\s*more_clear_headers &amp;#39;Server&amp;#39;;$/&lt;/span&gt;) }
-&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The obvious issue with this decision popped up during the implementation in Puppet. Here, a different provider for nginx was used: &lt;code&gt;jfryman/nginx&lt;/code&gt;. Its &lt;code&gt;nginx.conf&lt;/code&gt; had other values configured than the Chef equivalent (as seen in the &lt;a href=&quot;https://github.com/jfryman/puppet-nginx/blob/master/templates/conf.d/nginx.conf.erb&quot;&gt;template&lt;/a&gt;). Unfortunately, the serverspec tests were expecting parameters in &lt;code&gt;nginx.conf&lt;/code&gt;, that had now moved to &lt;code&gt;conf.d&lt;/code&gt;. There was no way to check both with the same set of tests anymore.&lt;/p&gt;
 &lt;p&gt;The ideal solution would have been to move all configuration values to the custom configuration file in &lt;code&gt;conf.d&lt;/code&gt;. However, this would have broken the overlay design. A user may still configure a parameter that ends up in both &lt;code&gt;nginx.conf&lt;/code&gt; and &lt;code&gt;conf.d&lt;/code&gt;.&lt;/p&gt;
 &lt;h2 id=&quot;extending-serverspec&quot;&gt;Extending Serverspec&lt;/h2&gt;
 &lt;p&gt;I needed a resource provider, that could check nginx configuration in multiple files at once:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;conf_paths = [ nginx_conf, hardening_conf ]
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;conf_paths = [ nginx_conf, hardening_conf ]
 
 describe multi_file( conf_paths )
   its(&lt;span class=&quot;st&quot;&gt;:content&lt;/span&gt;) { should match(&lt;span class=&quot;ot&quot;&gt;/^\s*more_clear_headers &amp;#39;Server&amp;#39;;$/&lt;/span&gt;) }
-&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;First, add a new file for the provider. Your directory structure may look like this:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;.
 └── serverspec
@@ -530,7 +530,7 @@ describe multi_file( conf_paths )
     └── type
         └── multi_file.rb&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The type provider extends &lt;code&gt;Serverspec::Type&lt;/code&gt; by adding a method &lt;code&gt;multi_file&lt;/code&gt;. This is the method you call when writing your tests. Additionally, we create a class that holds the object which is tested. This class includes methods that expose values for matchers (e.g. &lt;code&gt;:content&lt;/code&gt;) and must be extended from &lt;code&gt;Serverspec::Type::Base&lt;/code&gt;.&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;&lt;span class=&quot;kw&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;dt&quot;&gt;Serverspec&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;&lt;span class=&quot;kw&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;dt&quot;&gt;Serverspec&lt;/span&gt;
   &lt;span class=&quot;kw&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;dt&quot;&gt;Type&lt;/span&gt;
      
     &lt;span class=&quot;kw&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;dt&quot;&gt;MultiFile&lt;/span&gt; &amp;lt; &lt;span class=&quot;dt&quot;&gt;Base&lt;/span&gt;
@@ -540,7 +540,7 @@ describe multi_file( conf_paths )
       &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
      
       &lt;span class=&quot;kw&quot;&gt;def&lt;/span&gt; content
-        &lt;span class=&quot;ot&quot;&gt;@paths&lt;/span&gt;.map{|x| ::&lt;span class=&quot;dt&quot;&gt;File&lt;/span&gt;.read x }.join(&lt;span class=&quot;st&quot;&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;)
+        &lt;span class=&quot;ot&quot;&gt;@paths&lt;/span&gt;.map{|x| &lt;span class=&quot;ot&quot;&gt;@runner&lt;/span&gt;.get_file_content(x) }.join(&lt;span class=&quot;st&quot;&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;)
       &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
 
     &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
@@ -551,13 +551,13 @@ describe multi_file( conf_paths )
   &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
 &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
 
-include &lt;span class=&quot;dt&quot;&gt;Serverspec&lt;/span&gt;::&lt;span class=&quot;dt&quot;&gt;Type&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+include &lt;span class=&quot;dt&quot;&gt;Serverspec&lt;/span&gt;::&lt;span class=&quot;dt&quot;&gt;Type&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Additionally, you can create endpoints for checks like:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;describe multi_file( conf_paths )
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;describe multi_file( conf_paths )
   it { should be_valid }
-&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Simply add a method &lt;code&gt;valid?&lt;/code&gt; to your object:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;    &lt;span class=&quot;kw&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;dt&quot;&gt;MultiFile&lt;/span&gt; &amp;lt; &lt;span class=&quot;dt&quot;&gt;Base&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;    &lt;span class=&quot;kw&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;dt&quot;&gt;MultiFile&lt;/span&gt; &amp;lt; &lt;span class=&quot;dt&quot;&gt;Base&lt;/span&gt;
 
       ...
 
@@ -565,13 +565,13 @@ include &lt;span class=&quot;dt&quot;&gt;Serverspec&lt;/span&gt;::&lt;span class
         &lt;span class=&quot;co&quot;&gt;# check if the files are valid&lt;/span&gt;
       &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;
 
-    &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+    &lt;span class=&quot;kw&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;A great source of inspiration is serverspec’s own &lt;a href=&quot;https://github.com/serverspec/serverspec/tree/master/lib/serverspec/type&quot;&gt;collection of types&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Finally, don’t forget to include this file, preferably in your &lt;code&gt;spec_helper.rb&lt;/code&gt;:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;...
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode ruby&quot;&gt;&lt;code class=&quot;sourceCode ruby&quot;&gt;...
 
 &lt;span class=&quot;co&quot;&gt;# additional requirements&lt;/span&gt;
-require &lt;span class=&quot;st&quot;&gt;&amp;#39;type/multi_file&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+require &lt;span class=&quot;st&quot;&gt;&amp;#39;type/multi_file&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now, &lt;code&gt;:content&lt;/code&gt; provides the content of all files combined. Using the existing matchers, it’s easy to write the tests.&lt;/p&gt;
 &lt;h1 id=&quot;final-thoughts&quot;&gt;Final thoughts&lt;/h1&gt;
 &lt;p&gt;Our serverspec tests in the hardening project are not limited to just verifying Chef and Puppet runs. We also want them to check if a system has a valid configuration (compliance checks). Without custom resource types, this is not possible, as you sometimes cannot expect a system to be configured in a certain way. This includes configurations for Apache, MySQL, or even Sysctl, which all feature a directory structure where additional configuration files are applied.&lt;/p&gt;
@@ -591,32 +591,32 @@ require &lt;span class=&quot;st&quot;&gt;&amp;#39;type/multi_file&amp;#39;&lt;/s
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;h2 id=&quot;logstash&quot;&gt;Logstash&lt;/h2&gt;
 &lt;p&gt;First things first. You can run your log-stashing experiments against a central or remote logstash server, OR you can just quickly spin up a tiny logstash to get going locally. Here’s how:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;curl&lt;/span&gt; -O https://download.elasticsearch.org/logstash/logstash/logstash-1.4.2.tar.gz
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;curl&lt;/span&gt; -O https://download.elasticsearch.org/logstash/logstash/logstash-1.4.2.tar.gz
 &lt;span class=&quot;kw&quot;&gt;tar&lt;/span&gt; xf logstash-1.4.2.tar.gz
-&lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; logstash-1.4.2&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; logstash-1.4.2&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Ìf you want to see how it looks like with good input:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bin/logstash&lt;/span&gt; -e &lt;span class=&quot;st&quot;&gt;&amp;#39;input { stdin { } } output { stdout { codec =&amp;gt; json } }&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bin/logstash&lt;/span&gt; -e &lt;span class=&quot;st&quot;&gt;&amp;#39;input { stdin { } } output { stdout { codec =&amp;gt; json } }&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now type anything and hit return. It will respond with a JSON object (which is an easy way to see what logstash expects as valid input).&lt;/p&gt;
 &lt;p&gt;Now, let’s say you want to test your application against the default logstash tcp endpoint and see whether it works. Set it up locally:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bin/logstash&lt;/span&gt; -e &lt;span class=&quot;st&quot;&gt;&amp;#39;input { tcp { port =&amp;gt; 9998 } } output { stdout { codec =&amp;gt; json } }&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bin/logstash&lt;/span&gt; -e &lt;span class=&quot;st&quot;&gt;&amp;#39;input { tcp { port =&amp;gt; 9998 } } output { stdout { codec =&amp;gt; json } }&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Once everything is working, you can use it as a forwarder to your upstream elasticsearch like this:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bin/logstash&lt;/span&gt; -e &lt;span class=&quot;st&quot;&gt;&amp;#39;input { tcp { port =&amp;gt; 9998 } } output { stdout { codec =&amp;gt; json } elasticsearch_http { host =&amp;gt; &amp;quot;es.domain.com&amp;quot; port =&amp;gt; 12345 } }&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bin/logstash&lt;/span&gt; -e &lt;span class=&quot;st&quot;&gt;&amp;#39;input { tcp { port =&amp;gt; 9998 } } output { stdout { codec =&amp;gt; json } elasticsearch_http { host =&amp;gt; &amp;quot;es.domain.com&amp;quot; port =&amp;gt; 12345 } }&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&quot;logback&quot;&gt;Logback&lt;/h2&gt;
 &lt;p&gt;Searching for Scala logging I came across &lt;a href=&quot;https://github.com/typesafehub/scala-logging&quot;&gt;scala-logging&lt;/a&gt;. It works on top of &lt;a href=&quot;http://www.slf4j.org/&quot;&gt;SLF4J&lt;/a&gt; backends. Knowing &lt;a href=&quot;http://logging.apache.org/log4j&quot;&gt;Log4J&lt;/a&gt;, I headed off to mix &lt;a href=&quot;http://arlimus.github.io/articles/scala.logging/logback.qos.ch&quot;&gt;logback&lt;/a&gt; into this framework cocktail.&lt;/p&gt;
 &lt;p&gt;It’s simple enough to get going: Add a few dependencies to your &lt;code&gt;build.sbt&lt;/code&gt;&lt;/p&gt;
-&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;ch.qos.logback&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;logback-classic&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;1.1.2&amp;quot;&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;ch.qos.logback&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;logback-classic&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;1.1.2&amp;quot;&lt;/span&gt;
 
 libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;com.typesafe.scala-logging&amp;quot;&lt;/span&gt; %% &lt;span class=&quot;st&quot;&gt;&amp;quot;scala-logging&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;3.1.0&amp;quot;&lt;/span&gt;
 
-libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;net.logstash.logback&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;logstash-logback-encoder&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;3.0&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;net.logstash.logback&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;logstash-logback-encoder&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;3.0&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Then add a log object:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; com.&lt;span class=&quot;fu&quot;&gt;typesafe&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;scalalogging&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;Logger&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; com.&lt;span class=&quot;fu&quot;&gt;typesafe&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;scalalogging&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;Logger&lt;/span&gt;
 &lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; org.&lt;span class=&quot;fu&quot;&gt;slf4j&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;LoggerFactory&lt;/span&gt;
 
 &lt;span class=&quot;kw&quot;&gt;val&lt;/span&gt; Log = Logger(LoggerFactory.&lt;span class=&quot;fu&quot;&gt;getLogger&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;pdfmangler&amp;quot;&lt;/span&gt;))
-Log.&lt;span class=&quot;fu&quot;&gt;info&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;)&lt;/code&gt;&lt;/pre&gt;
+Log.&lt;span class=&quot;fu&quot;&gt;info&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Finally, add a configuration file in &lt;code&gt;src/main/resources/logback.xml&lt;/code&gt;:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode xml&quot;&gt;&lt;code class=&quot;sourceCode xml&quot;&gt;&lt;span class=&quot;kw&quot;&gt;&amp;lt;configuration&amp;gt;&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode xml&quot;&gt;&lt;code class=&quot;sourceCode xml&quot;&gt;&lt;span class=&quot;kw&quot;&gt;&amp;lt;configuration&amp;gt;&lt;/span&gt;
     &lt;span class=&quot;kw&quot;&gt;&amp;lt;appender&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; name=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;LOGSTASH&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; class=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;net.logstash.logback.appender.LogstashTcpSocketAppender&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
         &lt;span class=&quot;kw&quot;&gt;&amp;lt;remoteHost&amp;gt;&lt;/span&gt;HOST&lt;span class=&quot;kw&quot;&gt;&amp;lt;/remoteHost&amp;gt;&lt;/span&gt;
         &lt;span class=&quot;kw&quot;&gt;&amp;lt;port&amp;gt;&lt;/span&gt;9998&lt;span class=&quot;kw&quot;&gt;&amp;lt;/port&amp;gt;&lt;/span&gt;
@@ -625,12 +625,12 @@ Log.&lt;span class=&quot;fu&quot;&gt;info&lt;/span&gt;(&lt;span class=&quot;st&q
     &lt;span class=&quot;kw&quot;&gt;&amp;lt;root&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; level=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;DEBUG&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
         &lt;span class=&quot;kw&quot;&gt;&amp;lt;appender-ref&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; ref=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;LOGSTASH&amp;quot;&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;/&amp;gt;&lt;/span&gt;
     &lt;span class=&quot;kw&quot;&gt;&amp;lt;/root&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;kw&quot;&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Simple.&lt;/p&gt;
 &lt;p&gt;Or so I though.&lt;/p&gt;
 &lt;p&gt;Running this against my local logstash, I soon realized that it doesn’t seem to work with the current release. It will eventually get updated, but there are a few alternatives you can use.&lt;/p&gt;
 &lt;p&gt;One of them is to take the simple route via syslog. Add it to your &lt;code&gt;logback.xml&lt;/code&gt; (moved to port 11514 for local testing as non-root):&lt;/p&gt;
-&lt;pre class=&quot;sourceCode xml&quot;&gt;&lt;code class=&quot;sourceCode xml&quot;&gt;&lt;span class=&quot;kw&quot;&gt;&amp;lt;configuration&amp;gt;&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode xml&quot;&gt;&lt;code class=&quot;sourceCode xml&quot;&gt;&lt;span class=&quot;kw&quot;&gt;&amp;lt;configuration&amp;gt;&lt;/span&gt;
     &lt;span class=&quot;kw&quot;&gt;&amp;lt;appender&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; name=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;SYSLOG&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; class=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;ch.qos.logback.classic.net.SyslogAppender&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
         &lt;span class=&quot;kw&quot;&gt;&amp;lt;syslogHost&amp;gt;&lt;/span&gt;localhost&lt;span class=&quot;kw&quot;&gt;&amp;lt;/syslogHost&amp;gt;&lt;/span&gt;
         &lt;span class=&quot;kw&quot;&gt;&amp;lt;port&amp;gt;&lt;/span&gt;11514&lt;span class=&quot;kw&quot;&gt;&amp;lt;/port&amp;gt;&lt;/span&gt;
@@ -641,15 +641,15 @@ Log.&lt;span class=&quot;fu&quot;&gt;info&lt;/span&gt;(&lt;span class=&quot;st&q
     &lt;span class=&quot;kw&quot;&gt;&amp;lt;root&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; level=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;DEBUG&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
         &lt;span class=&quot;kw&quot;&gt;&amp;lt;appender-ref&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; ref=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;LOGSTASH&amp;quot;&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;/&amp;gt;&lt;/span&gt;
     &lt;span class=&quot;kw&quot;&gt;&amp;lt;/root&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;kw&quot;&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Start your testing server and see it fly:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bin/logstash&lt;/span&gt; -e &lt;span class=&quot;st&quot;&gt;&amp;#39;input { syslog { port =&amp;gt; 11514 } } output { stdout { codec =&amp;gt; json } }&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bin/logstash&lt;/span&gt; -e &lt;span class=&quot;st&quot;&gt;&amp;#39;input { syslog { port =&amp;gt; 11514 } } output { stdout { codec =&amp;gt; json } }&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Let’s add one tricky aspect: You don’t want to run syslog on UDP, but TCP instead. “There must be a parameter for that…” Unfortunately there isn’t. Unless you’re creating your own method or switch to Log4J2 (see below), there is no easy way to get this in logback.&lt;/p&gt;
 &lt;p&gt;But there are a few simple workarounds. One if &lt;a href=&quot;https://github.com/elasticsearch/logstash-forwarder&quot;&gt;logstash-forwarder&lt;/a&gt; which uses lumberjack (which supports and requires SSL key-management). Another simple alternative (but more cost-intensive), is to start a local logstash forwarder yourself:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bin/logstash&lt;/span&gt; -e &lt;span class=&quot;st&quot;&gt;&amp;#39;input { syslog { port =&amp;gt; 11514 } } output { elasticsearch_http { host =&amp;gt; &amp;quot;syslog.domain.com&amp;quot; port =&amp;gt; 514 } }&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bin/logstash&lt;/span&gt; -e &lt;span class=&quot;st&quot;&gt;&amp;#39;input { syslog { port =&amp;gt; 11514 } } output { elasticsearch_http { host =&amp;gt; &amp;quot;syslog.domain.com&amp;quot; port =&amp;gt; 514 } }&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&quot;log4j2&quot;&gt;Log4J2&lt;/h2&gt;
 &lt;p&gt;Curiously, logback isn’t the only successor of Log4J. The initial version has now reached a “#2 version stamp”, which has been remodeled and offers a new API. Let’s try that: Add a few dependencies:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;org.apache.logging.log4j&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;log4j-core&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;2.0.1&amp;quot;&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;org.apache.logging.log4j&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;log4j-core&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;2.0.1&amp;quot;&lt;/span&gt;
 
 libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;org.apache.logging.log4j&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;log4j-api&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;2.0.1&amp;quot;&lt;/span&gt;
 
@@ -657,14 +657,14 @@ libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;com.fasterxml.
 
 libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;com.fasterxml.jackson.core&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;jackson-databind&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;2.4.2&amp;quot;&lt;/span&gt;
 
-libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;com.fasterxml.jackson.core&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;jackson-annotations&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;2.4.2&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+libraryDependencies += &lt;span class=&quot;st&quot;&gt;&amp;quot;com.fasterxml.jackson.core&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;jackson-annotations&amp;quot;&lt;/span&gt; % &lt;span class=&quot;st&quot;&gt;&amp;quot;2.4.2&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Replace the usage lines&lt;/p&gt;
-&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; org.&lt;span class=&quot;fu&quot;&gt;apache&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;logging&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;log4j&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;LogManager&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; org.&lt;span class=&quot;fu&quot;&gt;apache&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;logging&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;log4j&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;LogManager&lt;/span&gt;
 
 &lt;span class=&quot;kw&quot;&gt;val&lt;/span&gt; Log = LogManager.&lt;span class=&quot;fu&quot;&gt;getLogger&lt;/span&gt;(&lt;span class=&quot;kw&quot;&gt;this&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;getClass&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;getName&lt;/span&gt;)
-Log.&lt;span class=&quot;fu&quot;&gt;info&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;)&lt;/code&gt;&lt;/pre&gt;
+Log.&lt;span class=&quot;fu&quot;&gt;info&lt;/span&gt;(&lt;span class=&quot;st&quot;&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;And add a new configuration file to &lt;code&gt;src/main/resources/log4j2.xml&lt;/code&gt;&lt;/p&gt;
-&lt;pre class=&quot;sourceCode xml&quot;&gt;&lt;code class=&quot;sourceCode xml&quot;&gt;&lt;span class=&quot;kw&quot;&gt;&amp;lt;?xml&lt;/span&gt; version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;&lt;span class=&quot;kw&quot;&gt;?&amp;gt;&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode xml&quot;&gt;&lt;code class=&quot;sourceCode xml&quot;&gt;&lt;span class=&quot;kw&quot;&gt;&amp;lt;?xml&lt;/span&gt; version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;&lt;span class=&quot;kw&quot;&gt;?&amp;gt;&lt;/span&gt;
 &lt;span class=&quot;kw&quot;&gt;&amp;lt;Configuration&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; status=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;DEBUG&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; packages=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;net.logstash.logging.log4j2.core.layout&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
     &lt;span class=&quot;kw&quot;&gt;&amp;lt;Appenders&amp;gt;&lt;/span&gt;
         &lt;span class=&quot;kw&quot;&gt;&amp;lt;Socket&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; name=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;LogStashSocket&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; host=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;logstash.domain.com&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; port=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;9998&amp;quot;&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; protocol=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;tcp&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;
@@ -677,7 +677,7 @@ Log.&lt;span class=&quot;fu&quot;&gt;info&lt;/span&gt;(&lt;span class=&quot;st&q
             &lt;span class=&quot;kw&quot;&gt;&amp;lt;AppenderRef&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; ref=&lt;/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;LogStashSocket&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;/&amp;gt;&lt;/span&gt;
         &lt;span class=&quot;kw&quot;&gt;&amp;lt;/Root&amp;gt;&lt;/span&gt;
     &lt;span class=&quot;kw&quot;&gt;&amp;lt;/Loggers&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;kw&quot;&gt;&amp;lt;/Configuration&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;&amp;lt;/Configuration&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;That should work. But at the time of this writing, it too showed a few flaws. The same workaround as above applies.&lt;/p&gt;
 &lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
 &lt;p&gt;I can’t add a summary without a fat disclaimer: Most of the JARs used here are still a bit new and Logstash has experienced a few API updates recently. Older versions may work perfectly, but I unfortunately don’t have the time to find a perfect match. For the time being, a workaround will do.&lt;/p&gt;
@@ -750,54 +750,54 @@ git_date: 2014-08-17
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;h2 id=&quot;cloning-javascript&quot;&gt;Cloning (JavaScript)&lt;/h2&gt;
 &lt;p&gt;Let’s try cloning with &lt;a href=&quot;http://lodash.com/docs&quot;&gt;lo-dash&lt;/a&gt;&lt;/p&gt;
-&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;a = {&lt;span class=&quot;dt&quot;&gt;b&lt;/span&gt;: {&lt;span class=&quot;dt&quot;&gt;c&lt;/span&gt;: &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; }}
-t = &lt;span class=&quot;ot&quot;&gt;_&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;clone&lt;/span&gt;(a)
-&lt;span class=&quot;ot&quot;&gt;t&lt;/span&gt;.&lt;span class=&quot;ot&quot;&gt;b&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// = 13&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;a &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;dt&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;dt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;}}&lt;/span&gt;
+t &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;va&quot;&gt;_&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;clone&lt;/span&gt;(a)
+&lt;span class=&quot;va&quot;&gt;t&lt;/span&gt;.&lt;span class=&quot;va&quot;&gt;b&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// = 13&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Simple.&lt;/p&gt;
 &lt;p&gt;Generally, however, you won’t clone and just read a value; Instead you’ll most likely process it in some form:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;ot&quot;&gt;t&lt;/span&gt;.&lt;span class=&quot;ot&quot;&gt;b&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;c&lt;/span&gt; = &lt;span class=&quot;dv&quot;&gt;3&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;va&quot;&gt;t&lt;/span&gt;.&lt;span class=&quot;va&quot;&gt;b&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;dv&quot;&gt;3&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Imagine a larger project where things like this happen deep in a code-cave. It’s easy to think of the object as being fully cloned, even though it isn’t:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;ot&quot;&gt;a&lt;/span&gt;.&lt;span class=&quot;ot&quot;&gt;b&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// = 3&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;&lt;span class=&quot;va&quot;&gt;a&lt;/span&gt;.&lt;span class=&quot;va&quot;&gt;b&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// = 3&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Since javascript doesn’t have (verified) immutable types, this is a typical pitfall waiting for you.&lt;/p&gt;
 &lt;p&gt;You’ll quickly find a solution to this problem:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;a = {&lt;span class=&quot;dt&quot;&gt;b&lt;/span&gt;: {&lt;span class=&quot;dt&quot;&gt;c&lt;/span&gt;: &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; }}
-t = &lt;span class=&quot;ot&quot;&gt;_&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;cloneDeep&lt;/span&gt;(a)
-&lt;span class=&quot;ot&quot;&gt;t&lt;/span&gt;.&lt;span class=&quot;ot&quot;&gt;b&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;c&lt;/span&gt; = &lt;span class=&quot;dv&quot;&gt;1&lt;/span&gt;
-&lt;span class=&quot;ot&quot;&gt;a&lt;/span&gt;.&lt;span class=&quot;ot&quot;&gt;b&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// = 12&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;a &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;dt&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;dt&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;}}&lt;/span&gt;
+t &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;va&quot;&gt;_&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;cloneDeep&lt;/span&gt;(a)
+&lt;span class=&quot;va&quot;&gt;t&lt;/span&gt;.&lt;span class=&quot;va&quot;&gt;b&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;dv&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;va&quot;&gt;a&lt;/span&gt;.&lt;span class=&quot;va&quot;&gt;b&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// = 12&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Or using jQuery’s &lt;code&gt;extend&lt;/code&gt;&lt;/p&gt;
-&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;t = &lt;span class=&quot;ot&quot;&gt;$&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;extend&lt;/span&gt;(&lt;span class=&quot;kw&quot;&gt;true&lt;/span&gt;, {}, a)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;t &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;va&quot;&gt;$&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;extend&lt;/span&gt;(&lt;span class=&quot;kw&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;op&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;op&quot;&gt;{},&lt;/span&gt; a)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Or plain old JSON (if you don’t care about methods)&lt;/p&gt;
-&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;t = &lt;span class=&quot;ot&quot;&gt;JSON&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;parse&lt;/span&gt;(&lt;span class=&quot;ot&quot;&gt;JSON&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;stringify&lt;/span&gt;(a))&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode javascript&quot;&gt;&lt;code class=&quot;sourceCode javascript&quot;&gt;t &lt;span class=&quot;op&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;va&quot;&gt;JSON&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;parse&lt;/span&gt;(&lt;span class=&quot;va&quot;&gt;JSON&lt;/span&gt;.&lt;span class=&quot;at&quot;&gt;stringify&lt;/span&gt;(a))&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;For more inspiration take a look at this &lt;a href=&quot;http://jsperf.com/deep-cloning-of-objects&quot;&gt;benchmark here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&quot;pointers-go&quot;&gt;Pointers (Go)&lt;/h2&gt;
 &lt;p&gt;The tricky part about javascript is, that this behavior isn’t always apparent. Other languages are much more explicit with copies and references.&lt;/p&gt;
 &lt;p&gt;Here’s the same example in Go:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;type&lt;/span&gt; B &lt;span class=&quot;kw&quot;&gt;struct&lt;/span&gt; { C &lt;span class=&quot;dt&quot;&gt;int&lt;/span&gt; }
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;type&lt;/span&gt; B &lt;span class=&quot;kw&quot;&gt;struct&lt;/span&gt; { C &lt;span class=&quot;dt&quot;&gt;int&lt;/span&gt; }
 &lt;span class=&quot;kw&quot;&gt;type&lt;/span&gt; A &lt;span class=&quot;kw&quot;&gt;struct&lt;/span&gt; { B B }
-a := A{B: B{C: &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt;}}&lt;/code&gt;&lt;/pre&gt;
+a := A{B: B{C: &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt;}}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Versus:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;type&lt;/span&gt; B &lt;span class=&quot;kw&quot;&gt;struct&lt;/span&gt; { C &lt;span class=&quot;dt&quot;&gt;int&lt;/span&gt; }
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;type&lt;/span&gt; B &lt;span class=&quot;kw&quot;&gt;struct&lt;/span&gt; { C &lt;span class=&quot;dt&quot;&gt;int&lt;/span&gt; }
 &lt;span class=&quot;kw&quot;&gt;type&lt;/span&gt; A &lt;span class=&quot;kw&quot;&gt;struct&lt;/span&gt; { B *B }
-a := A{B: &amp;amp;B{C: &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt;}}&lt;/code&gt;&lt;/pre&gt;
+a := A{B: &amp;amp;B{C: &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt;}}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This explicit pointer &lt;code&gt;*&lt;/code&gt; makes a huge difference in reasoning about the program. It clearly shows that it doesn’t hold the value itself, but a copy. It doesn’t necessarily make cloning the object any easier, but it simplifies the search for errors a lot: You know that it’s either a value &lt;code&gt;{ A Structure }&lt;/code&gt; (or a copy of such), or a pointer to some object &lt;code&gt;{ A *Structure }&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The larger your project gets, the more likely you’ll have these and similar constructs with potential cloning pits waiting (though less likely here).&lt;/p&gt;
 &lt;h2 id=&quot;constants-scala&quot;&gt;Constants (Scala)&lt;/h2&gt;
 &lt;p&gt;Go supports constants, but only in a very limited way:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;const&lt;/span&gt; c = &lt;span class=&quot;dv&quot;&gt;123&lt;/span&gt;    &lt;span class=&quot;co&quot;&gt;// possible&lt;/span&gt;
-&lt;span class=&quot;kw&quot;&gt;const&lt;/span&gt; a = A{...} &lt;span class=&quot;co&quot;&gt;// not&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode go&quot;&gt;&lt;code class=&quot;sourceCode go&quot;&gt;&lt;span class=&quot;kw&quot;&gt;const&lt;/span&gt; c = &lt;span class=&quot;dv&quot;&gt;123&lt;/span&gt;    &lt;span class=&quot;co&quot;&gt;// possible&lt;/span&gt;
+&lt;span class=&quot;kw&quot;&gt;const&lt;/span&gt; a = A{...} &lt;span class=&quot;co&quot;&gt;// not&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Let’s have a look at a final language for constants: Scala.&lt;/p&gt;
 &lt;p&gt;Mutability is handled explicitly here:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; a = &lt;span class=&quot;dv&quot;&gt;123&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// mutable&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;var&lt;/span&gt; a = &lt;span class=&quot;dv&quot;&gt;123&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// mutable&lt;/span&gt;
 &lt;span class=&quot;kw&quot;&gt;val&lt;/span&gt; b = &lt;span class=&quot;dv&quot;&gt;123&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// immutable&lt;/span&gt;
 a = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// ok&lt;/span&gt;
-b = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// won&amp;#39;t compile&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+b = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// won&amp;#39;t compile&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Even if you take more complex structures like maps and lists, you’ll usually have the choice of going mutable or immutable:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;val&lt;/span&gt; a = List(&lt;span class=&quot;dv&quot;&gt;1&lt;/span&gt;,&lt;span class=&quot;dv&quot;&gt;2&lt;/span&gt;,&lt;span class=&quot;dv&quot;&gt;3&lt;/span&gt;)
-&lt;span class=&quot;fu&quot;&gt;a&lt;/span&gt;(&lt;span class=&quot;dv&quot;&gt;0&lt;/span&gt;) = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// won&amp;#39;t compile&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;val&lt;/span&gt; a = List(&lt;span class=&quot;dv&quot;&gt;1&lt;/span&gt;,&lt;span class=&quot;dv&quot;&gt;2&lt;/span&gt;,&lt;span class=&quot;dv&quot;&gt;3&lt;/span&gt;)
+&lt;span class=&quot;fu&quot;&gt;a&lt;/span&gt;(&lt;span class=&quot;dv&quot;&gt;0&lt;/span&gt;) = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// won&amp;#39;t compile&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Versus&lt;/p&gt;
-&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; collection.&lt;span class=&quot;fu&quot;&gt;mutable&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;LinkedList&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode scala&quot;&gt;&lt;code class=&quot;sourceCode scala&quot;&gt;&lt;span class=&quot;kw&quot;&gt;import&lt;/span&gt; collection.&lt;span class=&quot;fu&quot;&gt;mutable&lt;/span&gt;.&lt;span class=&quot;fu&quot;&gt;LinkedList&lt;/span&gt;
 &lt;span class=&quot;kw&quot;&gt;val&lt;/span&gt; b = LinkedList(&lt;span class=&quot;dv&quot;&gt;1&lt;/span&gt;,&lt;span class=&quot;dv&quot;&gt;2&lt;/span&gt;,&lt;span class=&quot;dv&quot;&gt;3&lt;/span&gt;)
-&lt;span class=&quot;fu&quot;&gt;b&lt;/span&gt;(&lt;span class=&quot;dv&quot;&gt;0&lt;/span&gt;) = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// ok&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;fu&quot;&gt;b&lt;/span&gt;(&lt;span class=&quot;dv&quot;&gt;0&lt;/span&gt;) = &lt;span class=&quot;dv&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;co&quot;&gt;// ok&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;This is much more explicit with regard to what can be changed and what can’t. Using Scala’s type system you get a lot of control over how users may use your custom objects.&lt;/p&gt;
 &lt;h2 id=&quot;final-words&quot;&gt;Final words&lt;/h2&gt;
 &lt;p&gt;In my opinion, opening up mutability in many situations gains a lot of simplicity and flexibility. Unless you’re around languages with more advanced language constructs like Scala or Haskell, you’ll often work with more mutable state than not (even if you don’t want to).&lt;/p&gt;
@@ -1000,20 +1000,20 @@ kano:*:16280:7:60:7:::&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;I wanted to see if I could recreate Gitlab 2.8 with all of my old data on a new box. It’s certainly possible, but I soon realized it’s not as easy as it looks. Copying all files and migrating MySQL data wasn’t enough, as a persistent “500 Error” quickly told me. Since the goal isn’t necessarily to upgrade Gitlab itself but only to get all the data into a new Gitlab, I decided to go a different route.&lt;/p&gt;
 &lt;h1 id=&quot;bootstrapping-gitlab-6.4&quot;&gt;Bootstrapping Gitlab 6.4&lt;/h1&gt;
 &lt;p&gt;Instead of recreating Gitlab 2.8, I went for the version I wanted to end up with: Gitlab 6.4. I used &lt;a href=&quot;https://github.com/matschaffer/knife-solo&quot;&gt;knife-solo&lt;/a&gt; for deployment and the &lt;a href=&quot;https://github.com/ogom/cookbook-gitlab&quot;&gt;gitlab cookbook&lt;/a&gt;. Simply whip up a kitchen:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;knife&lt;/span&gt; solo init .&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;knife&lt;/span&gt; solo init .&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;and configure gitlab for the destination node. It’s well described in the &lt;a href=&quot;https://github.com/ogom/cookbook-gitlab/blob/master/README.md#usage&quot;&gt;readme&lt;/a&gt;. After all is done, deployment was easy:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;knife&lt;/span&gt; solo prepare git.mydomain.com
-&lt;span class=&quot;kw&quot;&gt;knife&lt;/span&gt; solo cook git.mydomain.com --no-chef-check&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;knife&lt;/span&gt; solo prepare git.mydomain.com
+&lt;span class=&quot;kw&quot;&gt;knife&lt;/span&gt; solo cook git.mydomain.com --no-chef-check&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h1 id=&quot;harsh-upgrade&quot;&gt;Harsh upgrade&lt;/h1&gt;
 &lt;p&gt;So the ‘only’ issue was getting all data into shape. The brute-force way of doing this is taking all data, throwing it into Gitlab 6.4 and pressing the migrate button.&lt;/p&gt;
 &lt;p&gt;Collecting old data was easy:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;co&quot;&gt;# get all mysql data&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;co&quot;&gt;# get all mysql data&lt;/span&gt;
 &lt;span class=&quot;kw&quot;&gt;mysqldump&lt;/span&gt; -uUSER -pPASS gitlabhq_production &lt;span class=&quot;kw&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;gzip&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt; gitlab.sql-dump.gz
 
 &lt;span class=&quot;co&quot;&gt;# get all repositories and keys&lt;/span&gt;
-&lt;span class=&quot;kw&quot;&gt;tar&lt;/span&gt; czf gitlab.repo-dump.tar.gz /home/git/repositories /home/git/.ssh/authorized_keys&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;tar&lt;/span&gt; czf gitlab.repo-dump.tar.gz /home/git/repositories /home/git/.ssh/authorized_keys&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;So was extracting it on the new machine:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;co&quot;&gt;# extract the repositories&lt;/span&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;co&quot;&gt;# extract the repositories&lt;/span&gt;
 &lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; /
 &lt;span class=&quot;kw&quot;&gt;tar&lt;/span&gt; xf /root/gitlab.repo-dump.tar.gz
 
@@ -1021,18 +1021,18 @@ kano:*:16280:7:60:7:::&lt;/code&gt;&lt;/pre&gt;
 &lt;span class=&quot;co&quot;&gt;# 1. create the structure in mysql&lt;/span&gt;
 &lt;span class=&quot;co&quot;&gt;# 2. inject the data&lt;/span&gt;
 &lt;span class=&quot;kw&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;st&quot;&gt;&amp;quot;create database gitlabhq_production;&amp;quot;&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;mysql&lt;/span&gt; -u root -p&lt;span class=&quot;ot&quot;&gt;$MYSQL_PW&lt;/span&gt;
-&lt;span class=&quot;kw&quot;&gt;gunzip&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;&amp;lt;&lt;/span&gt; /root/gitlab.sql-dump.gz &lt;span class=&quot;kw&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;mysql&lt;/span&gt; -u root -p&lt;span class=&quot;ot&quot;&gt;$MYSQL_PW&lt;/span&gt; gitlabhq_production&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;gunzip&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;&amp;lt;&lt;/span&gt; /root/gitlab.sql-dump.gz &lt;span class=&quot;kw&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;kw&quot;&gt;mysql&lt;/span&gt; -u root -p&lt;span class=&quot;ot&quot;&gt;$MYSQL_PW&lt;/span&gt; gitlabhq_production&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now, how about about a DB migration?&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bundle&lt;/span&gt; exec rake db:migrate RAILS_ENV=production&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;bundle&lt;/span&gt; exec rake db:migrate RAILS_ENV=production&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Errors, as expected. After straightening out some migration sections, the core ran through, but I was greeted with the familiar “500 Error” again.&lt;/p&gt;
 &lt;h1 id=&quot;chain-of-fools&quot;&gt;Chain of fools&lt;/h1&gt;
 &lt;p&gt;Remember the &lt;a href=&quot;http://www.youtube.com/watch?v=vPnehDhGa14&quot;&gt;chain of fools&lt;/a&gt;? Upgrading Windows from caveman to to the modern-age pain in the rear we know so well? Great stuff, let’s try that.&lt;/p&gt;
 &lt;p&gt;Gitlab comes with &lt;a href=&quot;https://github.com/gitlabhq/gitlabhq/tree/master/doc/update&quot;&gt;great update instructions&lt;/a&gt;. Since we already have the latest version, we only have to worry about whatever transforms data and ignore everything that transforms Gitlab itself.&lt;/p&gt;
 &lt;p&gt;The basic steps boil down to:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; reset --hard HEAD
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; reset --hard HEAD
 &lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; checkout -t origin/XXX-stable
 &lt;span class=&quot;kw&quot;&gt;bundle&lt;/span&gt; install
-&lt;span class=&quot;kw&quot;&gt;...&lt;/span&gt; do upgrade ...&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;...&lt;/span&gt; do upgrade ...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;After some cutting, the versions I ended up stepping through were: 3.1, 4.0, 4.1, 4.2, 5.0, 5.1, 5.4, 6.0, 6.2, and finally 6.4. It doesn’t just run through, however, it requries some work.&lt;/p&gt;
 &lt;p&gt;The final script is found &lt;a href=&quot;https://gist.github.com/arlimus/8365108&quot;&gt;here&lt;/a&gt;. The adjustments required are:&lt;/p&gt;
 &lt;ul&gt;
@@ -1146,18 +1146,18 @@ git push -u origin master&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
       <description>&lt;p&gt;I have a few bare servers lying around, pre-installed with Ubuntu, not integrated in any chef/puppte/saltstack workflow, with a lot of power ready to go. They are a perfect place for some labour-intensive vagrant boxes, which have recently been eating up my SSD. Due to the lack of bootstrap, I have found myself installing and configuring the same components one too many times.&lt;/p&gt;
 &lt;p&gt;At this point I decided to revisit &lt;a href=&quot;https://github.com/matschaffer/knife-solo&quot;&gt;knife solo&lt;/a&gt; and take it out for a spin.&lt;span class=&quot;more&quot;&gt;&lt;/span&gt; The result is &lt;a href=&quot;https://github.com/arlimus/kitchen-server&quot;&gt;kitchen-server&lt;/a&gt;, an easy way to configure a server and make it your second home away from home.&lt;/p&gt;
 &lt;p&gt;The only requirement to get started is &lt;a href=&quot;https://github.com/matschaffer/knife-solo&quot;&gt;knife-solo&lt;/a&gt;.&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;gem&lt;/span&gt; install knife-solo&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;gem&lt;/span&gt; install knife-solo&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Let’s say my server is running at &lt;code&gt;192.168.200.204&lt;/code&gt;. I have the user &lt;code&gt;ubuntu&lt;/code&gt; preconfigured and ready to go (with ssh key on server). The basic setup is as easy as:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; clone https://github.com/arlimus/kitchen-server
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;git&lt;/span&gt; clone https://github.com/arlimus/kitchen-server
 &lt;span class=&quot;kw&quot;&gt;cd&lt;/span&gt; kitchen-server
 
 &lt;span class=&quot;kw&quot;&gt;./setup.sh&lt;/span&gt; ubuntu@192.168.200.204
 
-&lt;span class=&quot;kw&quot;&gt;ssh&lt;/span&gt; knife@192.168.200.204&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;ssh&lt;/span&gt; knife@192.168.200.204&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;I tend to use the extended version, to have zsh and git configured:&lt;/p&gt;
-&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;./setup.sh&lt;/span&gt; ubuntu@192.168.200.204 ext
+&lt;div class=&quot;sourceCode&quot;&gt;&lt;pre class=&quot;sourceCode bash&quot;&gt;&lt;code class=&quot;sourceCode bash&quot;&gt;&lt;span class=&quot;kw&quot;&gt;./setup.sh&lt;/span&gt; ubuntu@192.168.200.204 ext
 
-&lt;span class=&quot;kw&quot;&gt;ssh&lt;/span&gt; katana@192.168.200.204&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&quot;kw&quot;&gt;ssh&lt;/span&gt; katana@192.168.200.204&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The kitchen itself is simply a configuration stack on top of many great cookbooks out there. The default configuration will get you started with vagrant quickly and easily. Feel free to fork and edit it as you like.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/arlimus/kitchen-server&quot;&gt;&lt;img id=&quot;fork-me-ribbon&quot; src=&quot;https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png&quot; alt=&quot;Fork me on GitHub&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 </description>
