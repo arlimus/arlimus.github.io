@@ -75,7 +75,7 @@ module Serverspec
       end
      
       def content
-        @paths.map{|x| ::File.read x }.join("\n")
+        @paths.map{|x| @runner.get_file_content(x) }.join("\n")
       end
 
     end
